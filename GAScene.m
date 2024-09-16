@@ -3,6 +3,13 @@ classdef GAScene
     %
     % See also GA, GASceneItem.
 
+    % PGABLE, Copyright (c) 2024, University of Waterloo
+    % Copying, use and development for non-commercial purposes permitted.
+    %          All rights for commercial use reserved; for more information
+    %          contact Stephen Mann (smann@uwaterloo.ca)
+    %
+    %          This software is unsupported.
+
     properties (Access = private)
         fig;   % The figure to be drawn to
         items; % The items that exist in the scene

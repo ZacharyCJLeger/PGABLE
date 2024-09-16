@@ -2,6 +2,14 @@ classdef PGA < GA
     % PGA  is a child class of GA for elements of Projective/Plane-based Geometric Algebra.
     %
     % See also GA, OGA, CGA.
+
+    % PGABLE, Copyright (c) 2024, University of Waterloo
+    % Copying, use and development for non-commercial purposes permitted.
+    %          All rights for commercial use reserved; for more information
+    %          contact Stephen Mann (smann@uwaterloo.ca)
+    %
+    %          This software is unsupported.
+    
     properties (Access = private)
         % A 1x16 matrix of real numbers corresponding to the coefficients of entries 1, e0, e1, ..., e01, ..., e0123. 
         m

@@ -1,4 +1,12 @@
 classdef GASceneItem
+    % A GA scene item.
+
+    % PGABLE, Copyright (c) 2024, University of Waterloo
+    % Copying, use and development for non-commercial purposes permitted.
+    %          All rights for commercial use reserved; for more information
+    %          contact Stephen Mann (smann@uwaterloo.ca)
+    %
+    %          This software is unsupported.
     
     % TODO: Create GASceneItem, which holds a GA object and drawings associated with it.
     % TODO: Perhaps make these properties private

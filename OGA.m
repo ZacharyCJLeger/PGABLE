@@ -2,6 +2,14 @@ classdef OGA < GA
     % OGA  is a child class of GA for elements of Projective/Plane-based Geometric Algebra.
     %
     % See also GA, PGA, CGA.
+
+    % PGABLE, Copyright (c) 2024, University of Waterloo
+    % Copying, use and development for non-commercial purposes permitted.
+    %          All rights for commercial use reserved; for more information
+    %          contact Stephen Mann (smann@uwaterloo.ca)
+    %
+    %          This software is unsupported.
+    
     properties (Access = private)
         % A 1x8 matrix of real numbers corresponding to the coefficients of entries 1, e1, e2, e3, e12, e13, e23, e123. 
         m
