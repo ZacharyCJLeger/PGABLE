@@ -140,8 +140,8 @@ pause(2); disp(' ');
 disp('The e0 part of the point contains the location of the point.  Basically,');
 disp('each e0 term has a missing basis vector; the coefficient of the term is');
 disp('the coordinate of the missing basis vector.  For example, P, the point we');
-disp('have created, has e0(0.25e1^e2 + 0.5*e1^e3 + e2^e3), and thus has');
-disp('coordinates 0.25 e3, 0.5 e2, and 1 e1');
+disp('have created, has e0(e3^e2 + 0.5*e1^e3 + 0.25e2^e1), and thus has');
+disp('coordinates 1 e1, 0.5 e2, and 0.25 e3');
 
 disp(' ');GAprompt;disp(' ');
 
