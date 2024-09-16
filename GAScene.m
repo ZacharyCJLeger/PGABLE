@@ -175,9 +175,9 @@ classdef GAScene
             end
 
             if isdashed
-                h = plot3(x, y, z, '--');
+                h = plot3(x, y, z, '--', 'LineWidth', 1.5);
             else
-                h = plot3(x, y, z);
+                h = plot3(x, y, z, 'LineWidth', 1.5);
             end
             h.Color = c;
         end
