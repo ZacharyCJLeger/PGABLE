@@ -11,7 +11,7 @@ function GAdemo
 %          This software is unsupported.
 try
 clc
-GA.model(OGA);
+GA.model(OGA, true);
 GAScene.clearitems();
 disp('Welcome to the PGABLE demonstration of OGA!');disp(' ');
 disp('This script demonstrates some of the basic features of OGA in PGABLE.');

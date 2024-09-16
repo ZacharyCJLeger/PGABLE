@@ -11,7 +11,8 @@ function PGAdemo
 %          This software is unsupported.
 try
 clc
-GA.model(PGA);
+GA.model(PGA, true);
+GAScene.clearitems();
 disp('Welcome to the PGABLE demonstration of PGA!');disp(' ');
 disp('This script demonstrates some of the basic features of PGA in PGABLE.');
 disp('At any prompt, you may hit return to continue the demo or type');
