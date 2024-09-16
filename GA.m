@@ -29,7 +29,9 @@ classdef (Abstract) GA
             disp("   compact_pseudoscalar: " + GA.compact_pseudoscalar())
             disp("   epsilon_tolerance:    " + GA.epsilon_tolerance())
             disp("   indicate_model:       " + GA.indicate_model())
+            disp("   increasing_order:     " + GA.increasing_order())
             disp("   model:                " + GA.model())
+            
         end
 
         % TODO: Mention in documentation that this function will now no longer convert GA elements to scalars, only scalars to GA elements
@@ -264,6 +266,44 @@ classdef (Abstract) GA
                     end
                 else
                     error('compact_pseudoscalar must have value true or false.')
+                end
+            end
+        end
+
+        function val = increasing_order(newval, surpress_output)
+            %COMPACT_NOTATION - Set/retrieve the COMPACT_NOTATION setting.
+            %   The COMPACT_NOTATION setting is either true or false.
+            %   When set to true, GA elements will be displayed in compact notation.
+            %   For example, the element e1^e2^e3 will be written as e123.
+            %   When set to false, GA elements will be written in the full outer product form.
+            %   If no argument is provided, COMPACT_NOTATION returns the current value of the COMPACT_NOTATION setting.
+            %
+            %   See also COMPACT_PSEUDOSCALAR.
+
+            arguments
+                newval = [];
+                surpress_output = false;
+            end
+
+            persistent currentval;
+            
+            % By default the compact_notation setting is set to false
+            if isempty(currentval)
+                currentval = false;
+            end
+
+            if isempty(newval)
+                % User is trying to retrieve the current value
+                val = currentval;
+            else
+                % User is trying to set the value
+                if islogical(newval)
+                    currentval = newval;
+                    if ~surpress_output
+                        disp("   increasing_order set to " + currentval)
+                    end
+                else
+                    error('increasing_order must have value true or false.')
                 end
             end
         end

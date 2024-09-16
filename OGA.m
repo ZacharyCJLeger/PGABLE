@@ -466,9 +466,15 @@ classdef OGA < GA
             [s, pl] = GA.charify_val_(p.m(4), 'e3', s, pl);
                         
             if GA.compact_notation()
-                [s, pl] = GA.charify_val_(p.m(5), 'e12', s, pl);
-                [s, pl] = GA.charify_val_(p.m(6), 'e13', s, pl);
-                [s, pl] = GA.charify_val_(p.m(7), 'e23', s, pl);
+                if ~GA.increasing_order()
+                    [s, pl] = GA.charify_val_(p.m(7), 'e23', s, pl);
+                    [s, pl] = GA.charify_val_(-p.m(6), 'e31', s, pl);
+                    [s, pl] = GA.charify_val_(p.m(5), 'e12', s, pl);
+                else
+                    [s, pl] = GA.charify_val_(p.m(5), 'e12', s, pl);
+                    [s, pl] = GA.charify_val_(p.m(6), 'e13', s, pl);
+                    [s, pl] = GA.charify_val_(p.m(7), 'e23', s, pl);
+                end
 
                 if GA.compact_pseudoscalar()
                     [s, pl] = GA.charify_val_(p.m(8), 'I3', s, pl);
@@ -476,9 +482,15 @@ classdef OGA < GA
                     [s, pl] = GA.charify_val_(p.m(8), 'e123', s, pl);
                 end
             else
-                [s, pl] = GA.charify_val_(p.m(5), 'e1^e2', s, pl);
-                [s, pl] = GA.charify_val_(p.m(6), 'e1^e3', s, pl);
-                [s, pl] = GA.charify_val_(p.m(7), 'e2^e3', s, pl);
+                if ~GA.increasing_order()
+                    [s, pl] = GA.charify_val_(p.m(5), 'e1^e2', s, pl);
+                    [s, pl] = GA.charify_val_(p.m(6), 'e1^e3', s, pl);
+                    [s, pl] = GA.charify_val_(p.m(7), 'e2^e3', s, pl);
+                else 
+                    [s, pl] = GA.charify_val_(p.m(7), 'e2^e3', s, pl);
+                    [s, pl] = GA.charify_val_(-p.m(6), 'e3^e1', s, pl);
+                    [s, pl] = GA.charify_val_(p.m(5), 'e1^e2', s, pl);
+                end
 
                 if GA.compact_pseudoscalar()
                     [s, pl] = GA.charify_val_(p.m(8), 'I3', s, pl);
