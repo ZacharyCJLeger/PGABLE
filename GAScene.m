@@ -303,9 +303,6 @@ classdef GAScene
             dir1 = beta*dir1;
             dir2 = beta*dir2;
 
-            display(dir1)
-            display(dir2)
-
             cx = center.getx();
             cy = center.gety();
             cz = center.getz();
