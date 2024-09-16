@@ -12,6 +12,7 @@ function GAdemo
 try
 clc
 GA.model(OGA);
+GAScene.clearitems();
 disp('Welcome to the PGABLE demonstration of OGA!');disp(' ');
 disp('This script demonstrates some of the basic features of OGA in PGABLE.');
 disp('At any prompt, you may hit return to continue the demo or type');
