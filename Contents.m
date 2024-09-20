@@ -3,7 +3,14 @@
 %=====================================================================
 %
 %GA is a parent class of all geometric algebra models.
-%OGA and PGA are currently implemented. Below is a summary of the operations PGA provides:
+%OGA and PGA are currently implemented.
+%To switch between the two models, run GA.model(OGA) and GA.model(PGA)
+%Run "GA.settings", "PGA.settings" and "OGA.settings" for more settings.
+%
+%The method draw allows GA elements to be drawn to a figure. To see how to manage this
+%figure, run "help GAScene".
+% 
+%Below is a summary of the operations PGA provides:
 %
 %PGA  is a child class of GA for elements of Projective/Plane-based Geometric Algebra.
 %   Elements

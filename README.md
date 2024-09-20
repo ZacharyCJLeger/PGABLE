@@ -10,5 +10,7 @@ TODO: write about installation
 
 ## Basics
 
+To receive help with this plugin, run help PGABLE
+
 ## Changes from GABLE
 
