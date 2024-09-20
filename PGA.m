@@ -27,7 +27,7 @@ classdef PGA < GA
             %SETTINGS - Displays the current configuration settings for PGA in PGABLE.
             %   To retrieve a particular settings, run PGA.[setting].
             %   For example, to retrieve the value of increasing_order, run
-            %   GA.increasing_order.
+            %   PGA.increasing_order.
             %   To change the value of a particular setting, run PGA.[setting]([value]).
             %   For example, to set the value of increasing_order to true, run
             %   PGA.increasing_order(true).
@@ -956,7 +956,7 @@ classdef PGA < GA
                 [s, pl] = GA.charify_val_(p.m(7), 'e02', s, pl);
                 [s, pl] = GA.charify_val_(p.m(8), 'e03', s, pl);
 
-                if ~GA.increasing_order()
+                if ~PGA.increasing_order()
                     [s, pl] = GA.charify_val_(p.m(11), 'e23', s, pl);
                     [s, pl] = GA.charify_val_(-p.m(10), 'e31', s, pl);
                     [s, pl] = GA.charify_val_(p.m(9), 'e12', s, pl);
@@ -986,7 +986,7 @@ classdef PGA < GA
                 [s, pl] = GA.charify_val_(p.m(7), 'e0^e2', s, pl);
                 [s, pl] = GA.charify_val_(p.m(8), 'e0^e3', s, pl);
 
-                if ~GA.increasing_order()
+                if ~PGA.increasing_order()
                     [s, pl] = GA.charify_val_(p.m(11), 'e2^e3', s, pl);
                     [s, pl] = GA.charify_val_(-p.m(10), 'e3^e1', s, pl);
                     [s, pl] = GA.charify_val_(p.m(9), 'e1^e2', s, pl);
