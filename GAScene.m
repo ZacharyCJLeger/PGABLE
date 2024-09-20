@@ -154,12 +154,13 @@ classdef GAScene
             handle = patch(x, y, z, c, 'FaceAlpha', alpha, 'LineStyle', line_style);
         end
 
-        function h = plotline(A, c, isdashed)
+        function h = plotline(A, c, isdashed, isthick)
             % plot3(A, c): plot a 3d line connecting end points of A in color c
             arguments
                 A;
                 c = [0, 0, 1, 1];
                 isdashed = false;
+                isthick = false;
             end
 
             if length(A) == 0;
@@ -175,9 +176,17 @@ classdef GAScene
             end
 
             if isdashed
-                h = plot3(x, y, z, '--', 'LineWidth', 1.5);
+                if isthick
+                    h = plot3(x, y, z, '--', 'LineWidth', 1.5);
+                else
+                    h = plot3(x, y, z, '--');
+                end
             else
-                h = plot3(x, y, z, 'LineWidth', 1.5);
+                if isthick
+                    h = plot3(x, y, z, 'LineWidth', 1.5);
+                else
+                    h = plot3(x, y, z);
+                end
             end
             h.Color = c;
         end
@@ -231,7 +240,7 @@ classdef GAScene
             point_b = inverse(trans) * p * trans;
             
             
-            h = GAScene.plotline({point_a, point_b}, c);
+            h = GAScene.plotline({point_a, point_b}, c, false, true);
 
             % Drawing hairs
             num_hairs = 20;
@@ -259,7 +268,7 @@ classdef GAScene
 
             for i = 1:num_hairs
                 hair_base = hair_trans_rot * hair_base * inverse(hair_trans_rot);
-                h = [h GAScene.plotline({hair_base, hair_tip}, c)];
+                h = [h GAScene.plotline({hair_base, hair_tip}, c, false, true)];
                 hair_tip = hair_trans_rot * hair_tip * inverse(hair_trans_rot);
             end
         end

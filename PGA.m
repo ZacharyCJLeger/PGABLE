@@ -271,7 +271,7 @@ classdef PGA < GA
 
             points = arrayfun(@(p)GAScene.boundingboxclip(xrange, yrange, zrange, p), points);
 
-            h = GAScene.plotline(points, c, true);
+            h = GAScene.plotline(points, c, true, true);
 
             
             for i=1:(length(points)-1)
