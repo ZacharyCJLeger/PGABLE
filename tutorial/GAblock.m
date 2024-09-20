@@ -57,8 +57,8 @@ elseif ( GAn == 2 )
      disp('>>      draw(a); draw(Ra,''m''); draw(RRa,''r''); %% Draw the objects');
      draw(a); draw(Ra,'m'); draw(RRa,'r'); %% Draw the objects
   GAprompt;
-     disp('>>      axisR = unit( -GAZ(sLog(R))/I3 );');
-     axisR = unit( -GAZ(sLog(R))/I3 );
+     disp('>>      axisR = unit( -GAZ(glog(R))/I3 );');
+     axisR = unit( -GAZ(glog(R))/I3 );
      disp('>>      draw(axisR,''g''); % Draw the axis of rotation');
      draw(axisR,'g'); % Draw the axis of rotation
   GAps = 'Refer to the tutorial before continuing >> ';
@@ -81,8 +81,8 @@ elseif ( GAn == 3 )
      Rtot =  RB/RA
      disp('>>      n = 8;                          % we rotate in 8 steps');
      n = 8;                          % we rotate in 8 steps
-     disp('>>      R = gexp(sLog(Rtot)/n);');
-     R = gexp(sLog(Rtot)/n);
+     disp('>>      R = gexp(glog(Rtot)/n);');
+     R = gexp(glog(Rtot)/n);
   GAps = 'Refer to the tutorial before continuing >> ';
   disp(' ');  GAprompt;
   GAps = 'GAblock >> ';
@@ -102,8 +102,8 @@ elseif ( GAn == 3 )
      disp('>>      DrawBivector(RB*u/RB,RB*v/RB,''g'');  axis(view);                  %%');
      DrawBivector(RB*u/RB,RB*v/RB,'g');  axis(view);                  %%
   GAprompt;
-     disp('>>      axisR = unit(GAZ(-sLog(R)/I3));   % reorientation axis: ');
-     axisR = unit(GAZ(-sLog(R)/I3));   % reorientation axis: 
+     disp('>>      axisR = unit(GAZ(-glog(R)/I3));   % reorientation axis: ');
+     axisR = unit(GAZ(-glog(R)/I3));   % reorientation axis: 
      disp('>>      draw(axisR,''r'');                 %% displayed for visualization ');
      draw(axisR,'r');                 %% displayed for visualization 
   GAprompt;
@@ -675,12 +675,12 @@ elseif ( GAn == 16 )
      P1 = e3; P2 = e3+e1; P3 = e3+e2;
      disp('>>      DrawPolyline({P1,P2,P3,P1}, ''k''); GAview([0,90]);');
      DrawPolyline({P1,P2,P3,P1}, 'k'); GAview([0,90]);
-     disp('>>      R1 = (P3-P1)*(P2-P1); R13 = gexp(sLog(R1)/3);');
-     R1 = (P3-P1)*(P2-P1); R13 = gexp(sLog(R1)/3);
-     disp('>>      R2 = (P1-P2)*(P3-P2); R23 = gexp(sLog(R2)/3);');
-     R2 = (P1-P2)*(P3-P2); R23 = gexp(sLog(R2)/3);
-     disp('>>      R3 = (P2-P3)*(P1-P3); R33 = gexp(sLog(R3)/3);');
-     R3 = (P2-P3)*(P1-P3); R33 = gexp(sLog(R3)/3);
+     disp('>>      R1 = (P3-P1)*(P2-P1); R13 = gexp(glog(R1)/3);');
+     R1 = (P3-P1)*(P2-P1); R13 = gexp(glog(R1)/3);
+     disp('>>      R2 = (P1-P2)*(P3-P2); R23 = gexp(glog(R2)/3);');
+     R2 = (P1-P2)*(P3-P2); R23 = gexp(glog(R2)/3);
+     disp('>>      R3 = (P2-P3)*(P1-P3); R33 = gexp(glog(R3)/3);');
+     R3 = (P2-P3)*(P1-P3); R33 = gexp(glog(R3)/3);
   GAps = 'Refer to the tutorial before continuing >> ';
   disp(' ');  GAprompt;
   GAps = 'GAblock >> ';

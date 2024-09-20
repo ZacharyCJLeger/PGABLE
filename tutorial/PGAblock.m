@@ -137,7 +137,7 @@ elseif ( GAn == 6 )
   GAps = 'GAblock >> ';
      disp("         % ROTATIONS");
      % ROTATIONS
-     Pisp("         n1=e1-0.25*e0;");
+     disp("         n1=e1-0.25*e0;");
      n1=e1-0.25*e0;
      disp("         n2=(5*e1+e2+e3)/norm(5*e1+e2+e3)-0.25*e0;");
      n2=(5*e1+e2+e3)/norm(5*e1+e2+e3)-0.25*e0;
