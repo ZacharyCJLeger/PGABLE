@@ -1,6 +1,6 @@
 classdef (Abstract) GA
     % GA  is an abstract class that encompasses all geometric algebra objects.
-    %
+    %   
     %   To see settings, run GA.settings
     %
     % See also PGA, OGA.
@@ -773,10 +773,11 @@ classdef (Abstract) GA
         % Cleaning
 
         function R = zeroepsilons(A)
-            %ZEROEPSILONS  Takes a multivector A and sets to zeros any 
-            %   blade with coefficient size less than GA.epsilon_tolerance.
+            %ZEROEPSILONS  Sets any episilons to zero.
+            %   I.e. it takes any basis blade within the multivector with coefficient size
+            %   less than GA.epsilon_tolerance and sets it to zero.
             %
-            %See also GAZ.
+            %   See also GAZ.
 
             R = zeroepsilons_(A);
         end
@@ -784,7 +785,7 @@ classdef (Abstract) GA
         function R = GAZ(A)
             %GAZ  is shorthand for zeroepsilons.
             %
-            %See also zeroepsilons.
+            %   See also zeroepsilons.
 
             R = zeroepsilons_(A);
         end
@@ -865,12 +866,16 @@ classdef (Abstract) GA
         %   See also PGA.GAisa, OGA.GAisa.
         GAisa(A, t);
 
-        %PGACAST  Casts a GA element directly into PGA, without geometric considerations,
-        %   and removing any incompatible elements.
+        %PGACAST  Casts a GA element directly into PGA without geometric considerations.
+        %   It converts elements directly, removing any incompatible elements.
+        %   For example, PGAcast(e1(OGA) + e2(OGA)) will result in the PGA element e1+e2.
+        %   (despite the fact that e1+e2 is a vector in OGA but a plane in PGA).
         PGAcast(A);
 
-        %PGACAST  Casts a GA element directly into OGA, without geometric considerations,
-        %   and removing any incompatible elements.
+        %OGACAST  Casts a GA element directly into OGA without geometric considerations.
+        %    It converts elements directly, removing any incompatible elements.
+        %    For example, OGAcast(e0(PGA)+e1(PGA)) will result in the OGA element e1.
+        %    (since the element e0 does not exist in OGA).
         OGAcast(A);
 
         %DRAW  Draws the GA element to the GA Scene figure.
@@ -879,10 +884,10 @@ classdef (Abstract) GA
         %   Not all elements can be drawn. You will receive an error if it cannot be drawn.
         draw(A, c);
         
-        %MODELNAME  returns the name of the model of the element.
+        %MODELNAME  Returns the name of the model of the element.
         modelname();
 
-        %CAST  converts the input into an element of the model if an implicit conversion
+        %CAST  Converts the input into an element of the model if an implicit conversion
         %   is possible.
         cast(A);
     end

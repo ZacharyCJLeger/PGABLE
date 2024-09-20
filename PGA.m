@@ -1,7 +1,8 @@
 classdef PGA < GA
-    % PGA  is a child class of GA for elements of Projective/Plane-based Geometric Algebra.
+    %PGA  is a child class of GA for elements of Projective/Plane-based Geometric Algebra.
+    %   
     %
-    % See also GA, OGA, CGA.
+    %   See also GA, OGA, CGA.
 
     % PGABLE, Copyright (c) 2024, University of Waterloo
     % Copying, use and development for non-commercial purposes permitted.
@@ -511,8 +512,6 @@ classdef PGA < GA
         end
 
         function R = leftcontraction_(A, B)
-            % LCONT_  Protected method for left contraction.
-
             [S0, S1, S2, S3] = PGA.signature();
             S01 = S0*S1;
             S02 = S0*S2;
@@ -568,7 +567,6 @@ classdef PGA < GA
         end
 
         function R = rightcontraction_(A, B)
-            % RCONT_ Unimplemented!
 
             % TODO: implement right contraction.
             error('Right contraction is not currently implemented.')
@@ -660,9 +658,9 @@ classdef PGA < GA
         % ***** Equality and Inequality *****
 
         function b = eq_(A, B)
+            b = norm_(A - B) + vnorm_(A - B) < GA.epsilon_tolerance;
             % TODO: Double check that confirming the norm and vnorm are close to 0
             %       is actually sufficient for determining equality.
-            b = norm_(A - B) + vnorm_(A - B) < GA.epsilon_tolerance;
         end
 
         function b = eeq_(A, B)
@@ -749,10 +747,6 @@ classdef PGA < GA
         end
 
         function R = grade_(A, n)
-            % grade(A, n): return the part of an object of a particular grade.
-            %  Return the part of M of grade n.
-            %  If n is omitted, return the grade of M (-1 if M is of mixed grade) 
-            
             if nargin == 1 || n == -1
                 [scalar_nz, vector_nz, bivector_nz, trivector_nz, fourvector_nz] = grade_status_(A);
                 if sum([scalar_nz vector_nz bivector_nz trivector_nz fourvector_nz]) ~= 1
@@ -836,7 +830,6 @@ classdef PGA < GA
         % end
 
         function R = gexp_(A)
-            %gexp(A): Computes the geometric product exponential of a multivector.
             rm = productleftexpand_(A);
             E = expm(rm);
             R = PGA(E(1:16,1));
@@ -849,9 +842,6 @@ classdef PGA < GA
         end
 
         function R = sqrt_(A)
-            %if grade_(A, 0) == -1
-            %    A = A + 0.1;
-            %end
             rm = productleftexpand_(A);
             S = sqrtm(rm);
             R = PGA(S(1:16, 1));
@@ -909,27 +899,21 @@ classdef PGA < GA
 
         % TODO: Decide behaviour for non-points.
         function r = getx_(A)
-            %GETX_ retreives the x position of the element
-
+            r = -A.m(14)/A.m(15);
             % 14 is the position of e023
             % 15 is the position of e123
-            r = -A.m(14)/A.m(15);
         end
         
         function r = gety_(A)
-            %GETY_ retreives the y position of the element
-
+            r = A.m(13)/A.m(15);
             % 13 is the position of e013
             % 15 is the position of e123
-            r = A.m(13)/A.m(15);
         end
         
-        function r = getz_(A)
-            %GETZ_ retreives the z position of the element
-
+        function r = getz_(A)            
+            r = -A.m(12)/A.m(15);
             % 12 is the position of e012
             % 15 is the position of e123
-            r = -A.m(12)/A.m(15);
         end
   
         function s = char_(p)
