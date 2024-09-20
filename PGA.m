@@ -24,22 +24,34 @@ classdef PGA < GA
     methods (Static = true)
 
         function settings()
-            %SETTINGS - Displays the current configuration settings for PGABLE.
-            %   To retrieve a particular settings, run GA.[setting].
-            %   For example, to retrieve the value of autoscalar, run GA.autoscalar.
-            %   To change the value of a particular setting, run GA.[setting]([value]).
-            %   For example, to set the value of autoscalar to false, run GA.autoscalar(false).
-            %   For more information on a particular setting, run help GA.[setting].
+            %SETTINGS - Displays the current configuration settings for PGA in PGABLE.
+            %   To retrieve a particular settings, run PGA.[setting].
+            %   For example, to retrieve the value of increasing_order, run
+            %   GA.increasing_order.
+            %   To change the value of a particular setting, run PGA.[setting]([value]).
+            %   For example, to set the value of increasing_order to true, run
+            %   PGA.increasing_order(true).
+            %   For more information on a particular setting, run help PGA.[setting].
+            %
+            %   See also GA.settings.
+
             [S0, S1, S2, S3] = PGA.signature();
 
             disp("   ~~~~~~~~~~ PGA Settings ~~~~~~~~~~")
-            disp("   signature: e0*e0 = " + S0 + ", e1*e1 = " + S1 + ", e2*e2 = " + S2 + ", e3*e3 = " + S3)
+            disp("   signature:        e0*e0 = " + S0 + ", e1*e1 = " + S1 + ", e2*e2 = " + S2 + ", e3*e3 = " + S3)
+            disp("   increasing_order: " + PGA.increasing_order())
             disp("   ~~~~~~~~~~ PGA Point Settings ~~~~~~~~~~")
-            disp("   pointsize: " + PGA.pointsize())
+            disp("   pointsize:        " + PGA.pointsize())
         end
-        % TODO: Consider removing this functionality, perhaps?
-        % TODO: Consider renaming to just 'signature'
+        
         function [S0, S1, S2, S3] = signature(sign0, sign1, sign2, sign3)
+            %SIGNATURE - Sets/retrieve the current signature of the model.
+            %   This settings is NOT recommended for beginners.
+            %   If no arguments are provided, the signatures for e0, e1, e2, e3 are returned
+            %   as a vector [S0, S1, S2, S3].
+            %   If 4 arguments are provided, the inputs sign0, sign1, sign2, sign3 correspond
+            %   to the signatures of e0, e1, e2, e3 respectively.
+
             persistent signature0;
             persistent signature1;
             persistent signature2;
@@ -67,9 +79,10 @@ classdef PGA < GA
 
         function val = pointsize(newval, surpress_output)
             %POINTSIZE - Set/retreive the POINTSIZE setting.
-            %   The POINTSIZE setting is a double indicated the radius of the octahedron representing
-            %   a point.
-            %   If no argument is provided, POINTSIZE returns the current value of the POINTSIZE setting.
+            %   The POINTSIZE setting is a double indicated the radius of the octahedron
+            %   representing a point.
+            %   If no argument is provided, POINTSIZE returns the current value of the
+            %   POINTSIZE setting.
             
             arguments
                 newval = [];
@@ -96,6 +109,44 @@ classdef PGA < GA
                     error('pointsize must have a numeric value.')
                 end
             end 
+        end
+
+        function val = increasing_order(newval, surpress_output)
+            %INCREASING_ORDER - Set/retrieve the INCREASING_ORDER setting.
+            %   The INCREASING setting is either true or false.
+            %   When set to true, PGA elements are represented by the basis:
+            %   1, e0, e1, e2, e3, e01, e02, e03, e12, e13, e23, e012, e013, e023, e123, e0123
+            %   When set to false, PGA elements are represented by the basis:
+            %   1, e0, e1, e2, e3, e01, e02, e03, e23, e31, e12, e032, e013, e021, e123, e0123
+            %   If no argument is provided, INCREASING_ORDER returns the current value of the
+            %   INCREASING_ORDER setting.
+
+            arguments
+                newval = [];
+                surpress_output = false;
+            end
+
+            persistent currentval;
+            
+            % By default the compact_notation setting is set to false
+            if isempty(currentval)
+                currentval = false;
+            end
+
+            if isempty(newval)
+                % User is trying to retrieve the current value
+                val = currentval;
+            else
+                % User is trying to set the value
+                if islogical(newval)
+                    currentval = newval;
+                    if ~surpress_output
+                        disp("   increasing_order set to " + currentval)
+                    end
+                else
+                    error('increasing_order must have value true or false.')
+                end
+            end
         end
 
         %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
@@ -328,7 +379,7 @@ classdef PGA < GA
                 b = ~(scalar_nz || vector_nz ||                trivector_nz || fourvector_nz);
             elseif strcmp(t,'trivector') || strcmp(t,'point')
                 b = ~(scalar_nz || vector_nz || bivector_nz ||                 fourvector_nz);
-            elseif strcmp(t,'4vector') || strcmp(t,'fourvector') || strcmp(t,'quadvector')
+            elseif strcmp(t,'4vector') || strcmp(t,'fourvector') || strcmp(t,'quadvector') || strcmp(t,'pseudoscalar')
                 b = ~(scalar_nz || vector_nz || bivector_nz || trivector_nz                 );
             elseif strcmp(t,'multivector')
                 b = sum([scalar_nz vector_nz bivector_nz trivector_nz fourvector_nz]) > 1;
@@ -973,9 +1024,30 @@ classdef PGA < GA
 
     methods (Access = public)
         function obj = PGA(m0, m1, m2, m3, m4)
-            % Constructor.
+            %PGA - The constructor for PGA elements.
+            %   If no arugment is provided, the 0 element in PGA is returned.
+            %   If 1 arugment is provided and it is a PGA element, the element itself will
+            %   be returned. If the argument is a double, a PGA element of that scalar will
+            %   be return.
+            %   If 5 arguments are provided, it is assumed they have the following format:
+            %   The first argument is a double for the scalar portion of the multivector
+            %   The second argument is [c0, c1, c2, c3], where ci is a double corresponding
+            %   to the coefficient for ei.
+            %   The third argument is [c01, c02, c03, c12, c13, c23], where cij is a double
+            %   corresponding to the coefficient for eij.
+            %   The fourth argument is [c012, c013, c023, c123], where cijk is a double
+            %   corresponding to the coefficient for eijk.
+            %   The fifth argument is a double corresponding to the coefficient for e0123.
+            %   For any of the arguments, one can optionally simply put 0 to have zero
+            %   for all the corresponding coefficients. 
+            %
+            %   It is not generally recommended to construct PGA elements this way.
+            %   Instead, consider writing equations of the form
+            %                              e1 + e2^e3
+            %   while in the PGA model (see help GA.settings and help GA.model)
+            %   or while not in the PGA model as
+            %                              e1(PGA) + e2(PGA)^e3(PGA)
         
-            % TODO: Leave detailed description.
             if nargin == 0
                 obj = PGA(0);
             elseif nargin == 5
@@ -1021,13 +1093,18 @@ classdef PGA < GA
             end
         end
 
-        % Returns the matrix for the PGA object. For debugging purposes.
         % TODO: add to change notes: method m in GA is now called matrix in PGA.
+
         function rm = matrix(A)
             rm = A.m;
         end
 
         function b = GAisa(A, t)
+            %GAISA - Determines in a multivector and a string representing a type of multivector
+            %   and returns true if the multivector is of that type.
+            %   In PGA, valid types are:
+            %   scalar, vector, plane, bivector, line, trivector, point, quadvector,
+            %   pseudoscalar, multivector
             arguments
                 A PGA;
                 t (1, 1) string;

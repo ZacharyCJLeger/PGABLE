@@ -21,12 +21,16 @@ classdef (Abstract) GA
         %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
 
         function settings()
-            %SETTINGS - Displays the current configuration settings for PGABLE.
+            %SETTINGS  Displays the current configuration settings for PGABLE.
             %   To retrieve a particular settings, run GA.[setting].
             %   For example, to retrieve the value of autoscalar, run GA.autoscalar.
             %   To change the value of a particular setting, run GA.[setting]([value]).
-            %   For example, to set the value of autoscalar to false, run GA.autoscalar(false).
+            %   For example, to set the value of autoscalar to false, run
+            %   GA.autoscalar(false).
             %   For more information on a particular setting, run help GA.[setting].
+            %   To surpress the console output of changing a settings, set the second
+            %   parameter to true, for example GA.epsilon_tolerance(1E-13, true) will set
+            %   the epsilon tolerance to 1E-13 without printing the change to the console.
 
             disp("   ~~~~~~~~~~ Settings ~~~~~~~~~~")
             disp("   autoscalar:           " + GA.autoscalar())
@@ -41,11 +45,13 @@ classdef (Abstract) GA
 
         % TODO: Mention in documentation that this function will now no longer convert GA elements to scalars, only scalars to GA elements
         function val = autoscalar(newval, surpress_output)
-            %AUTOSCALAR - Set/retreive the AUTOSCALAR setting.
+            %AUTOSCALAR  Set/retreive the AUTOSCALAR setting.
             %   The AUTOSCALAR setting is either true or false.
-            %   When set to true, doubles in equations will automatically be converted to GA elements.
+            %   When set to true, doubles in equations will automatically be converted to GA
+            %   scalar elements.
             %   When set to false, doubles will return an error.
-            %   If no argument is provided, AUTOSCALAR returns the current value of the AUTOSCALAR setting.
+            %   If no argument is provided, AUTOSCALAR returns the current value of the
+            %   AUTOSCALAR setting.
             
             arguments
                 newval = [];
@@ -76,19 +82,25 @@ classdef (Abstract) GA
         end
 
         function val = model(newval, surpress_output)
-            %MODEL - Set/retreive the MODEL setting.
+            %MODEL  Set/retreive the MODEL setting.
             %   The MODEL setting is a string indicating the current model.
             %   The argument must be either an element in the desired model or a string
-            %   of the exact name of the desired model. Thus, both GA.model(PGA) and
-            %   GA.model("PGA") will set the current model to PGA.
+            %   of the exact name of the desired model. Thus, for example, both GA.model(PGA)
+            %   and GA.model("PGA") will set the current model to PGA.
             %   If no argument is provided, MODEL returns a string of the name of the
             %   current model.
             %
             %   The value of MODEL indicates which model of geometric algebra is in use.
             %   This determines, for example:
-            %      - What class does the element e1 belong to
-            %      - How drawing the element e12 should be interpreted
+            %      - What model to construct elements such as e1
+            %      - How drawing an element such as e12 should be interpreted
             %      - Whether the element e0 is a valid element or not
+            %   
+            %   To construct an element outside of the current model, a model can be indicated
+            %   as an argument. For example, e1(PGA) will always construct e1 as a PGA
+            %   element, regardless of the current selected model.
+            %
+            %   See also e1, origin, point.
 
             arguments
                 newval = [];
@@ -122,10 +134,12 @@ classdef (Abstract) GA
         end
 
         function val = indicate_model(newval, surpress_output)
-            %INDICATE_MODEL - Set/retreive the INDICATE_MODEL setting.
+            %INDICATE_MODEL  Set/retreive the INDICATE_MODEL setting.
             %   The INDICATE_MODEL setting is either true or false.
-            %   When set to true, the current model will be displayed with the value of each GA element
-            %   When set to false, the current model will be hidden when the value of a GA element is displayed.
+            %   When set to true, the current model will be displayed with the value of each
+            %   GA element.
+            %   When set to false, the current model will be hidden when the value of a GA
+            %   element is displayed.
 
             arguments
                 newval = [];
@@ -156,10 +170,11 @@ classdef (Abstract) GA
         end
 
         function val = epsilon_tolerance(newval, surpress_output)
-            %EPSILON_TOLERANCE - Set/retreive the tolerance for epsilon.
-            %   The EPSILON_TOLERANCE is a non-negative real number which indicates the value for which
-            %   all values whose magnitude is smaller than it will be considered epsilon.
-            %   Thus, for any value x, x will be considered an epsilon is abs(x) < GA.epsilon_tolerance.
+            %EPSILON_TOLERANCE  Set/retreive the tolerance for epsilon.
+            %   The EPSILON_TOLERANCE is a non-negative real number which indicates the value
+            %   for which all values whose magnitude is smaller than it will be considered
+            %   epsilon. Thus, for any value x, x will be considered an epsilon if
+            %                           abs(x) < GA.epsilon_tolerance.
             %   These values will be displayed as ε or -ε.
             %   By default, the value of epsilon_tolerance is 1e-15.
 
@@ -196,12 +211,13 @@ classdef (Abstract) GA
         end
 
         function val = compact_notation(newval, surpress_output)
-            %COMPACT_NOTATION - Set/retrieve the COMPACT_NOTATION setting.
+            %COMPACT_NOTATION  Set/retrieve the COMPACT_NOTATION setting.
             %   The COMPACT_NOTATION setting is either true or false.
             %   When set to true, GA elements will be displayed in compact notation.
             %   For example, the element e1^e2^e3 will be written as e123.
             %   When set to false, GA elements will be written in the full outer product form.
-            %   If no argument is provided, COMPACT_NOTATION returns the current value of the COMPACT_NOTATION setting.
+            %   If no argument is provided, COMPACT_NOTATION returns the current value of the
+            %   COMPACT_NOTATION setting.
             %
             %   See also COMPACT_PSEUDOSCALAR.
 
@@ -233,10 +249,9 @@ classdef (Abstract) GA
             end
         end
 
-        % TODO: add comment about CGA when implemented
-        % TODO: Document surpress_output
+        % TODO: add comment about CGA if/when implemented
         function val = compact_pseudoscalar(newval, surpress_output)
-            %COMPACT_PSEUDOSCALAR - Set/retrieve the COMPACT_PSEUDOSCALAR setting.
+            %COMPACT_PSEUDOSCALAR  Set/retrieve the COMPACT_PSEUDOSCALAR setting.
             %   The COMPACT_PSEUDOSCALAR setting is either true or false.
             %   When set to true, The pseudoscalar of the GA model will be represented via I[dim]
             %   where [dim] is the dimensionality of the space. Thus the following notation is used:
@@ -271,44 +286,6 @@ classdef (Abstract) GA
                     end
                 else
                     error('compact_pseudoscalar must have value true or false.')
-                end
-            end
-        end
-
-        function val = increasing_order(newval, surpress_output)
-            %COMPACT_NOTATION - Set/retrieve the COMPACT_NOTATION setting.
-            %   The COMPACT_NOTATION setting is either true or false.
-            %   When set to true, GA elements will be displayed in compact notation.
-            %   For example, the element e1^e2^e3 will be written as e123.
-            %   When set to false, GA elements will be written in the full outer product form.
-            %   If no argument is provided, COMPACT_NOTATION returns the current value of the COMPACT_NOTATION setting.
-            %
-            %   See also COMPACT_PSEUDOSCALAR.
-
-            arguments
-                newval = [];
-                surpress_output = false;
-            end
-
-            persistent currentval;
-            
-            % By default the compact_notation setting is set to false
-            if isempty(currentval)
-                currentval = false;
-            end
-
-            if isempty(newval)
-                % User is trying to retrieve the current value
-                val = currentval;
-            else
-                % User is trying to set the value
-                if islogical(newval)
-                    currentval = newval;
-                    if ~surpress_output
-                        disp("   increasing_order set to " + currentval)
-                    end
-                else
-                    error('increasing_order must have value true or false.')
                 end
             end
         end
@@ -744,6 +721,7 @@ classdef (Abstract) GA
         end
 
         % TODO: proper arguments block, rename 2nd parameter, cleanup
+
         function rg = versorbatchiterate(V, multivector_list, iterations, include_zero)
             arguments
                 V GA;
@@ -781,12 +759,38 @@ classdef (Abstract) GA
     % ******************** Abstract Public Methods ********************
     
     methods (Abstract, Access = public)
+        %MATRIX  Returns the internal matrix representation of a multivector.
+        %   This is for debugging purposes.
         matrix(A);
+
+        %GAISA  Determines in a multivector and a string representing a type of multivector
+        %   and returns true if the multivector is of that type.
+        %   Which types are valid depends on the GA model. Thus, to see which types are
+        %   permissable, run help [model].GAisa to see the list of options.
+        %   For example, to see the options for PGA, run "help PGA.GAisa".
+        %
+        %   See also PGA.GAisa, OGA.GAisa.
         GAisa(A, t);
+
+        %PGACAST  Casts a GA element directly into PGA, without geometric considerations,
+        %   and removing any incompatible elements.
         PGAcast(A);
+
+        %PGACAST  Casts a GA element directly into OGA, without geometric considerations,
+        %   and removing any incompatible elements.
         OGAcast(A);
+
+        %DRAW  Draws the GA element to the GA Scene figure.
+        %   Note that the geometric interpretation of elements depends on the model.
+        %   Thus, draw(e1(OGA)) may draw something different than draw(e1(PGA)).
+        %   Not all elements can be drawn. You will receive an error if it cannot be drawn.
         draw(A, c);
+        
+        %MODELNAME  returns the name of the model of the element.
         modelname();
+
+        %CAST  converts the input into an element of the model if an implicit conversion
+        %   is possible.
         cast(A);
     end
 
