@@ -340,6 +340,8 @@ classdef (Abstract) GA
         %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
 
         function s = char(p, indicate_model)
+            %CHAR  Returns the string representation of a GA element.
+            
             arguments
                 p;
                 indicate_model = false;
@@ -516,109 +518,184 @@ classdef (Abstract) GA
         % Norms and normalization
 
         function r = norm(A)
+            %NORM  returns the norm of the multivector.
+
             r = norm_(A);
         end
 
         function r = vnorm(A)
+            %VNORM  Returns the vanishing norm of the multivector.
+
             r = vnorm_(A);
         end
 
         function R = normalize(A)
+            %NORMALIZE  Returns the normalized multivector.
+
             R = normalize_(A);
         end
 
         % Dual
 
         function R = dual(A)
+            %DUAL  Computes the dual.
+            %
+            %   See also d.
+
             R = dual_(A);
         end
 
         function R = d(A)
+            %D  Shorthand for computing the dual.
+            %
+            %   See also dual.
+
             R = dual_(A);
         end
 
         % Inverse dual
 
         function R = inversedual(A)
+            %INVERSEDUAL  Computes the inverse dual.
+            %
+            %   See also invdual, id.
             R = inversedual_(A);
         end
 
         function R = invdual(A)
+            %INVDUAL  Shorthand for computing the inverse dual.
+            %
+            %   See also inversedual, id.
+
             R = inversedual_(A);
         end
 
         function R = id(A)
+            %ID  Shorthand for computing the inverse dual.
+            %
+            %   See also inversedual, id.
+
             R = inversedual_(A);
         end
 
         % Hodge dual
 
         function R = hodgedual(A)
+            %HODGEDUAL  Computes the hodge dual.
+            %
+            %   See also hdual, hd.
             R = hodgedual_(A);
         end
 
         function R = hdual(A)
+            %HDUAL  Shorthand for computing the hodge dual.
+            %
+            %   See also hodgedual, hd.
             R = hodgedual_(A);
         end
 
         function R = hd(A)
+            %HD  Shorthand for computing the hodge dual.
+            %
+            %   See also hodgedual, hdual.
             R = hodgedual_(A);
         end
 
         % Inverse Hodge dual
 
         function R = inversehodgedual(A)
+            %INVERSEHODGEDUAL  Computes the inverse hodge dual.
+            %
+            %   See also invhodgedual, invhdual, ihd.
+
             R = inversehodgedual_(A);
         end
 
         function R = invhodgedual(A)
+            %INVHODGEDUAL  Shorthand for computing the inverse hodge dual.
+            %
+            %   See also inversehodgedual, invhdual, ihd.
+
             R = inversehodgedual_(A);
         end
 
         function R = invhdual(A)
+            %INVHDUAL  Shorthand for computing the inverse hodge dual.
+            %
+            %   See also inversehodgedual, invhodgedual, ihd.
             R = inversehodgedual_(A);
         end
 
         function R = ihd(A)
+            %IHD  Shorthand for computing the inverse hodge dual.
+            %
+            %   See also inversehodgedual, invhodgedual, invhdual.
             R = inversehodgedual_(A);
         end
 
         % JMap
 
         function R = jmap(A)
+            %JMAP  Computes the jmap, also called the poincare dual.
+            %
+            %   See also poincaredual, pdual, pd.
+
             R = jmap_(A);
         end
 
         function R = poincaredual(A)
+            %POINCAREDUAL  Computes the poincare dual, also called the jmap.
+            %
+            %   See also jmap, pdual, pd.
+
             R = jmap_(A);
         end
 
         function R = pdual(A)
+            %PDUAL  Shorthand for computing the poincare dual.
+            %
+            %   See also jmap, poincaredual, pd
+
             R = jmap_(A);
         end
 
         function R = pd(A)
+            %PD  Shorthand for computing the poincare dual.
+            %
+            %   See also jmap, poincaredual, pdual.
             R = jmap_(A);
         end
 
         % Reverse
 
         function R = reverse(A)
+            %REVERSE  Computes the reverse.
+            %
+            %   See also rev.
+
             R = reverse_(A);
         end
 
         function R = rev(A)
+            %REV  Shorthand for computing the reverse.
+            %
+            %   See also reverse.
+
             R = reverse_(A);
         end
 
         % Meet and join
 
         function R = meet(A, B)
+            %MEET  Computes the meet of two multivectors.
+
             C = GA.getdominating_(A, B);
             R = meet_(C.cast(A), C.cast(B));
         end
 
         function R = join(A, B)
+            %JOIN  Computes the join of two multivectors.
+
             C = GA.getdominating_(A, B);
             R = join_(C.cast(A), C.cast(B));
         end
@@ -626,18 +703,34 @@ classdef (Abstract) GA
         % Conjugate and involution
 
         function R = conjugate(A)
+            %CONJUGATE  Computes the conjugate.
+            %
+            %   See also conj.
+
             R = conjugate_(A);
         end
 
         function R = conj(A)
+            %CONJ  Shorthand for computing the conjugate
+            %
+            %   See also conjugate.
+
             R = conjugate_(A);
         end
 
         function R = gradeinvolution(A)
+            %GRADEINVOLUTION  Computing the grade involution.
+            %
+            %   See also gi.
+
             R = gradeinvolution_(A);
         end
 
         function R = gi(A)
+            %GI  Shorthand for computing the grade involution.
+            %
+            %   See also gradeinvolution.
+
             R = gradeinvolution_(A);
         end
 
@@ -653,9 +746,9 @@ classdef (Abstract) GA
         end
 
         function b = isgrade(A, g)
-            % ISGRADE  returns true if the multivector A is a blade of grade g, and false otherwise.
+            % ISGRADE  Returns true if the multivector A is a blade of grade g, and false otherwise.
             %
-            %   See also PGA.GAisa, OGA.GAisa, CGA.GAisa.
+            %   See also PGA.GAisa, OGA.GAisa.
             arguments
                 A GA;
                 g (1, 1) uint32;
