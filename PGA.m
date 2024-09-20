@@ -273,26 +273,28 @@ classdef PGA < GA
 
             h = GAScene.plotline(points, c, true);
 
-            % TODO: Fix the code below to have arrows on vanishing lines work correctly.
-            % TODO: not totally sure taking an affine combination of points in PGA is smart.
-            % for i=1:4
-            %     point_1 = points{i};
-            %     point_2 = points{i+1};
-            %     % TODO: This is very bad. Very bad. Getting imaginary parts. Draws the points correctly though.
-            %     ap_move = gexp(glog(point_1/point_2)*0.5);
-            %     ap = sqrt(ap_move)*point_2/sqrt(ap_move);
-            %     % Now we want to draw the line from AP to AP moved in the direction where things will go
-            %     % Then, we point with an arrow type thing.
-            %     ap_short_move = gexp(glog(point_1/point_2)*0.45);
-            %     ap_long_move = gexp(glog(point_1/point_2)*0.55);
-            %     ap_short = sqrt(ap_short_move)*point_2/sqrt(ap_short_move);
-            %     ap_long = sqrt(ap_long_move)*point_2/sqrt(ap_long_move);
+            
+            for i=1:(length(points)-1)
+                point_1 = points{i};
+                point_2 = points{i+1};
+                % TODO: This is very bad. Very bad. Getting imaginary parts. Draws the points correctly though.
+                ap_move = gexp(glog(point_1/point_2)*0.5);
+                ap = sqrt(ap_move)*point_2/sqrt(ap_move);
+                % Now we want to draw the line from AP to AP moved in the direction where things will go
+                % Then, we point with an arrow type thing.
+                ap_short_move = gexp(glog(point_1/point_2)*0.45);
+                ap_long_move = gexp(glog(point_1/point_2)*0.55);
+                ap_short = sqrt(ap_short_move)*point_2/sqrt(ap_short_move);
+                ap_long = sqrt(ap_long_move)*point_2/sqrt(ap_long_move);
 
-            %     R = gexp(-0.05*vl/2)
-            %     ap_tip = R*ap/R;
+                R = gexp(-0.05*vl/2);
+                ap_tip = R*ap/R;
+
+                arrow_points = {ap_short, ap_tip, ap_long};
+                arrow_points = arrayfun(@(p)GAScene.boundingboxclip(xrange, yrange, zrange, p), arrow_points);
                 
-            %     h = [h GAScene.patch({ap_short, ap_tip, ap_long}, c)];
-            % end
+                h = [h GAScene.patch(arrow_points, c)];
+            end
             
         end
     end
