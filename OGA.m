@@ -1,7 +1,44 @@
 classdef OGA < GA
-    % OGA  is a child class of GA for elements of Projective/Plane-based Geometric Algebra.
+    %OGA  is a child class of GA for elements of Ordinary Geometric Algebra.
+    %   Elements
+    %      Basic elements include e1, e2, e3, e12, e31, e23, e123.
     %
-    % See also GA, PGA, CGA.
+    %   Operations
+    %      You can use these special characters for these basic operations:
+    %         • +  for addition               also: plus(A, B)
+    %         • -  for subtraction            also: minus(A, B)
+    %         • *  for the geometric product  also: product(A, B)
+    %         • /  for division               also: divide(A, B)
+    %         • ^  for the outer product      also: outer(A, B)
+    %         • .* for the inner product      also: inner(A, B)
+    %         • == for equality               also: eq(A, B)
+    %         • ~= for inequality             also: neq(A, B)
+    %      Additonally, there are basic operations:
+    %         • meet(A, B)                    to compute the meet of two multivectors
+    %           (Note: not yet implemented)
+    %         • join(A, B)                    to compute the join of two multivectors
+    %           (Note: not yet implemented)
+    %         • dual(A)                       to compute the dual
+    %         • inverse(A)                    to compute the inverse
+    %         • gradeinvolution(A)            to compute the grade involution
+    %         • conjugate(A)                  to compute the conjugate
+    %         • reverse(A)                    to compute the reverse
+    %         • norm(A)                       to compute the norm
+    %         • normalize(A)                  to normalize the multivector
+    %         • getx(A)                       to get the x coordinate of an OGA point
+    %         • gety(A)                       to get the y coordinate of an OGA point
+    %         • getz(A)                       to get the z coordinate of an OGA point
+    %         • zeroepsilons(A)               to zero-out epsilons (small errors)
+    %         • draw(A)                       to draw the multivector
+    %         (See also GAScene for more information on draw calls)
+    %         • grade(A, g)                   to select the grade-g component of a multivector
+    %         • isgrade(A, g)                 to determine if a multivector is of grade g
+    %      There are also more advanced operations:
+    %         • sqrt(A)                       to compute the square root
+    %         • glog(A)                       to compute the geometric log
+    %         • gexp(A)                       to compute the geometric exponent
+    %
+    %   See also GA, OGA, GAScene.
 
     % PGABLE, Copyright (c) 2024, University of Waterloo
     % Copying, use and development for non-commercial purposes permitted.

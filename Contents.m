@@ -1,57 +1,43 @@
-% PGABLE is a Matlab toolkit for geometric algebra.
-%  
-%=====================================================================
+%   PGABLE is a Matlab toolkit for geometric algebra.
 %
-%GA is a parent class of all geometric algebra models.
-%OGA and PGA are currently implemented.
-%To switch between the two models, run GA.model(OGA) and GA.model(PGA)
-%Run "GA.settings", "PGA.settings" and "OGA.settings" for more settings.
+%   GA is a parent class of all geometric algebra models.
+%   The models OGA and PGA are currently implemented as child classes of GA.
+%   There are general settings stored in GA which apply to all GA models, and there
+%   are settings stored for each model of GA.
+%   To access each of these settings, run "GA.settings", "OGA.settings", or
+%   "PGA.settings".
 %
-%The method draw allows GA elements to be drawn to a figure. To see how to manage this
-%figure, run "help GAScene".
-% 
-%Below is a summary of the operations PGA provides:
+%   ~ BASICS YOU SHOULD KNOW ABOUT ~
+%   By default you are running the PGA model.
+%   To switch between PGA and OGA, run GA.model(OGA) or GA.model(PGA)
 %
-%PGA  is a child class of GA for elements of Projective/Plane-based Geometric Algebra.
-%   Elements
-%      Basic elements include e0, e1, e2, e3, e01, e02, e03, e12, e31, e23, e021,
-%      e013, e032, e123, e0123.
-%      Additionally, we have e13 = -e31, e012 = -e21, e023 = -e032.
-%      We also have method for creating PGA points, point(x, y, z), which creates a
-%      PGA point with coordinates (x, y, z). We also have origin() = point(0, 0, 0).
+%   To create elements of PGA or OGA, it is recommened to write equations using the basis
+%   elements. For example, one could run "a = e1 + 2*e12" to create the corresponding
+%   PGA element. However, if the model you are currently running is OGA, this will
+%   create an OGA element of the same form. If you are unsure what model you are
+%   currently using, simply run "GA.model". If you are unsure what model a particular
+%   element is, run "modelname(x)" where "x" is the element you wish to investigate.
+%   If you would like to consistently see the model elements belong to, consider
+%   running "GA.indicate_model(true)".
+%   When switching models, elements created in OGA will remain as OGA elements.
+%   Similarly, elements created in PGA will remain as PGA elements. Thus, switching models
+%   only changes the process of creating NEW elements. If you wish to create an OGA element
+%   in PGA (perhaps because you are being lazy), you can specify which model you wish to
+%   use as such "a = e1(PGA) + e12(PGA)". This will create a PGA element regardless of which
+%   model you are in. Scalars automatically conform to the model of the rest of the equation.
+%   Thus, we do not specify the model of scalars and "e1(PGA) + 1" will work with no issues.
+%   Elements of differing models cannot be used together, i.e. if one were to have the
+%   OGA element "a = e1 + e2" and the PGA element "b = e2 + e3", their sum "a + b" would
+%   result in an error (after all, which model should this new element belong to?).
+%   There are methods to convert OGA elements to PGA elements and vice versa, if needed.
 %
-%   Operations
-%      You can use these special characters for these basic operations:
-%         • +  for addition               also: plus(A, B)
-%         • -  for subtraction            also: minus(A, B)
-%         • *  for the geometric product  also: product(A, B)
-%         • /  for division               also: divide(A, B)
-%         • ^  for the outer product      also: outer(A, B)
-%         • .* for the inner product      also: inner(A, B)
-%         • == for equality               also: eq(A, B)
-%         • ~= for inequality             also: neq(A, B)
-%      Additonally, there are basic operations:
-%         • meet(A, B)                    to compute the meet of two multivectors
-%         • join(A, B)                    to compute the join of two multivectors
-%         • dual(A)                       to compute the dual
-%         • inverse(A)                    to compute the inverse
-%         • gradeinvolution(A)            to compute the grade involution
-%         • conjugate(A)                  to compute the conjugate
-%         • reverse(A)                    to compute the reverse
-%         • norm(A)                       to compute the norm
-%         • normalize(A)                  to normalize the multivector
-%         • poincaredual(A)               to compute the poincare dual
-%         • hodgedual(A)                  to compute the hodge dual
-%         • inversehodgedual(A)           to compute the inverse hodge dual
-%         • getx(A)                       to get the x coordinate of a PGA point
-%         • gety(A)                       to get the y coordinate of a PGA point
-%         • getz(A)                       to get the z coordinate of a PGA point
-%         • zeroepsilons(A)               to zero-out epsilons (small errors)
-%         • draw(A)                       to draw the multivector
-%         (See also GAScene for more information on draw calls)
-%         • grade(A, g)                   to select the grade-g component of a multivector
-%         • isgrade(A, g)                 to determine if a multivector is of grade g
-%      There are also more advanced operations:
-%         • sqrt(A)                       to compute the square root
-%         • glog(A)                       to compute the geometric log
-%         • gexp(A)                       to compute the geometric exponent
+%   The method "draw(x)" allows one to draw a representation of the geometric
+%   interpretation of the element "x". This geometric interpretation depends on the model
+%   of the element, of course, and so the result of "draw(e1 + e2)" will depend on the
+%   model you are in.
+%   All GA elements are drawn to a figure called "GA Scene", and this figure is managed
+%   by the class GAScene. GAScene has publically accessable functions, however it
+%   is generally not recommended to use them, except for:
+%    - GAScene.clearitems() to clear the items of the figure
+%    - GAScene.displayitems() to see a list of items in the figure
+%   For more information on how to manage your GA scene, run "help GAScene".

@@ -1,9 +1,15 @@
 classdef (Abstract) GA
-    % GA  is an abstract class that encompasses all geometric algebra objects.
+    %GA  is an abstract class that encompasses all geometric algebra objects.
+    %   Specific models of geometric algebra are child classes of this abstract class,
+    %   namely OGA and PGA. To see more specific information on elements and methods
+    %   of those particular models, run "help OGA" or "help PGA".
+    %   To learn how the drawing routines work, run "help GAScene".
     %   
-    %   To see settings, run GA.settings
+    %   Settings common to all GA models are stored by static variables in this class.
+    %   To see which settings are available, run "GA.settings".
+    %   To see how to use GA.settings, run "help GA.settings".
     %
-    % See also PGA, OGA.
+    %   See also PGA, OGA.
 
     % PGABLE, Copyright (c) 2024, University of Waterloo
     % Copying, use and development for non-commercial purposes permitted.
@@ -22,14 +28,14 @@ classdef (Abstract) GA
 
         function settings()
             %SETTINGS  Displays the current configuration settings for PGABLE.
-            %   To retrieve a particular settings, run GA.[setting].
-            %   For example, to retrieve the value of autoscalar, run GA.autoscalar.
-            %   To change the value of a particular setting, run GA.[setting]([value]).
+            %   To retrieve a particular setting, run "GA.[setting]".
+            %   For example, to retrieve the value of autoscalar, run "GA.autoscalar".
+            %   To change the value of a particular setting, run "GA.[setting]([value])".
             %   For example, to set the value of autoscalar to false, run
-            %   GA.autoscalar(false).
-            %   For more information on a particular setting, run help GA.[setting].
+            %   "GA.autoscalar(false)".
+            %   For more information on a particular setting, run help "GA.[setting]".
             %   To surpress the console output of changing a settings, set the second
-            %   parameter to true, for example GA.epsilon_tolerance(1E-13, true) will set
+            %   parameter to true, for example "GA.epsilon_tolerance(1E-13, true)" will set
             %   the epsilon tolerance to 1E-13 without printing the change to the console.
 
             disp("   ~~~~~~~~~~ Settings ~~~~~~~~~~")

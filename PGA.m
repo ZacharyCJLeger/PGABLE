@@ -1,7 +1,7 @@
 classdef PGA < GA
     %PGA  is a child class of GA for elements of Projective/Plane-based Geometric Algebra.
     %   Elements
-    %      Basic elements include e0, e1, e2, e3, e01, e02, e03, e12, e31, e23, e021,
+    %      Basic elements include 1, e0, e1, e2, e3, e01, e02, e03, e12, e31, e23, e021,
     %      e013, e032, e123, e0123.
     %      Additionally, we have e13 = -e31, e012 = -e21, e023 = -e032.
     %      We also have method for creating PGA points, point(x, y, z), which creates a
@@ -20,12 +20,13 @@ classdef PGA < GA
     %      Additonally, there are basic operations:
     %         • meet(A, B)                    to compute the meet of two multivectors
     %         • join(A, B)                    to compute the join of two multivectors
-    %         • dual(A)                       to compute the dual
     %         • inverse(A)                    to compute the inverse
+    %           (Note: the inverse may not always exist in PGA)
     %         • gradeinvolution(A)            to compute the grade involution
     %         • conjugate(A)                  to compute the conjugate
     %         • reverse(A)                    to compute the reverse
     %         • norm(A)                       to compute the norm
+    %         • vnorm(A)                      to compute the vanishing norm
     %         • normalize(A)                  to normalize the multivector
     %         • poincaredual(A)               to compute the poincare dual
     %         • hodgedual(A)                  to compute the hodge dual
@@ -43,7 +44,7 @@ classdef PGA < GA
     %         • glog(A)                       to compute the geometric log
     %         • gexp(A)                       to compute the geometric exponent
     %
-    %   See also GA, OGA, CGA.
+    %   See also GA, OGA, GAScene.
 
     % PGABLE, Copyright (c) 2024, University of Waterloo
     % Copying, use and development for non-commercial purposes permitted.

@@ -6,7 +6,7 @@ classdef GAScene
     %   If you need to make modifications to the figure itself, you can acquire the figure handle by running
     %      • GAScene.getfigure()
     %
-    % See also GA.
+    % See also GA, OGA, PGA.
 
     % PGABLE, Copyright (c) 2024, University of Waterloo
     % Copying, use and development for non-commercial purposes permitted.
