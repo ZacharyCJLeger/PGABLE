@@ -57,8 +57,25 @@ classdef OGA < GA
     %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
 
     methods (Static = true)
-        % TODO: Consider removing this functionality, perhaps?
-        % TODO: Consider renaming to just 'signature'
+        function settings()
+            %SETTINGS - Displays the current configuration settings for OGA in PGABLE.
+            %   To retrieve a particular settings, run OGA.[setting].
+            %   For example, to retrieve the value of increasing_order, run
+            %   OGA.increasing_order.
+            %   To change the value of a particular setting, run OGA.[setting]([value]).
+            %   For example, to set the value of increasing_order to true, run
+            %   OGA.increasing_order(true).
+            %   For more information on a particular setting, run help OGA.[setting].
+            %
+            %   See also GA.settings.
+
+            [S1, S2, S3] = OGA.signature();
+
+            disp("   ~~~~~~~~~~ PGA Settings ~~~~~~~~~~")
+            disp("   signature:        e1*e1 = " + S1 + ", e2*e2 = " + S2 + ", e3*e3 = " + S3)
+            disp("   increasing_order: " + OGA.increasing_order())
+        end
+
         function [S1, S2, S3] = signature(sign1, sign2, sign3)
             persistent signature1;
             persistent signature2;
@@ -79,6 +96,44 @@ classdef OGA < GA
             S1 = signature1;
             S2 = signature2;
             S3 = signature3;
+        end
+
+        function val = increasing_order(newval, surpress_output)
+            %INCREASING_ORDER - Set/retrieve the INCREASING_ORDER setting.
+            %   The INCREASING setting is either true or false.
+            %   When set to true, OGA elements are represented by the basis:
+            %   1, e1, e2, e3, e12, e13, e23, e123
+            %   When set to false, PGA elements are represented by the basis:
+            %   1, e1, e2, e3, e23, e31, e12, e123
+            %   If no argument is provided, INCREASING_ORDER returns the current value of the
+            %   INCREASING_ORDER setting.
+
+            arguments
+                newval = [];
+                surpress_output = false;
+            end
+
+            persistent currentval;
+            
+            % By default the increasing_order setting is set to false
+            if isempty(currentval)
+                currentval = true;
+            end
+
+            if isempty(newval)
+                % User is trying to retrieve the current value
+                val = currentval;
+            else
+                % User is trying to set the value
+                if islogical(newval)
+                    currentval = newval;
+                    if ~surpress_output
+                        disp("   increasing_order set to " + currentval)
+                    end
+                else
+                    error('increasing_order must have value true or false.')
+                end
+            end
         end
     end
 
@@ -511,7 +566,7 @@ classdef OGA < GA
             [s, pl] = GA.charify_val_(p.m(4), 'e3', s, pl);
                         
             if GA.compact_notation()
-                if ~GA.increasing_order()
+                if ~OGA.increasing_order()
                     [s, pl] = GA.charify_val_(p.m(7), 'e23', s, pl);
                     [s, pl] = GA.charify_val_(-p.m(6), 'e31', s, pl);
                     [s, pl] = GA.charify_val_(p.m(5), 'e12', s, pl);
@@ -527,7 +582,7 @@ classdef OGA < GA
                     [s, pl] = GA.charify_val_(p.m(8), 'e123', s, pl);
                 end
             else
-                if ~GA.increasing_order()
+                if ~OGA.increasing_order()
                     [s, pl] = GA.charify_val_(p.m(5), 'e1^e2', s, pl);
                     [s, pl] = GA.charify_val_(p.m(6), 'e1^e3', s, pl);
                     [s, pl] = GA.charify_val_(p.m(7), 'e2^e3', s, pl);

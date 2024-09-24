@@ -171,7 +171,7 @@ classdef PGA < GA
 
             persistent currentval;
             
-            % By default the compact_notation setting is set to false
+            % By default the increasing_order setting is set to false
             if isempty(currentval)
                 currentval = false;
             end
