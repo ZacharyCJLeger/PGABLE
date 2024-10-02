@@ -39,6 +39,7 @@ disp('properties of e0 in PGA now by typing   inner(e0,e0)  and   e0==0');
 
 disp(' ');GAprompt;disp(' ');
 
+clc;
 disp('The second important difference between OGA and PGA is in what the');
 disp('vectors, bivectors, and trivectors represent.  A vector in PGA');
 disp('represents a plane (thus the name "Plane-based Geometric Algebra);');
@@ -49,13 +50,14 @@ disp(' ');
 
 disp('In PGA, a vector that is a linear combination of e1,e2,e3 only is');
 disp('know as a Euclidean vector.  If we have a unit Euclidean vector nv');
-disp('then n = nv - d e0 represents the plane with normal n that is a');
+disp('then n = nv - d e0 represents the plane with normal nv that is a');
 disp('distance d from the origin.');
 
 disp(' ');GAprompt;disp(' ');
 
 disp('Let''s first draw the three coordinate planes, each offset from');
 disp('the origin by different amounts:');
+pause(1);
 disp(' >> clf;');
 clf;
 disp(' >> n1=e1 - e0; draw(n1,''r'');');
@@ -74,21 +76,22 @@ disp(' ');
 pause(2);
 disp('In the graphics window, you should see three planes.  The red one');
 disp('represents the plane n1 with normal e1 offset from the origin by a distance');
-disp('of 1; the magenta represents the plane n2 with normal e2 offset from the');
+disp('of 1; the magenta one represents the plane n2 with normal e2 offset from the');
 disp('origin by a distance 0.5; and the blue one represents the plane n3 with');
 disp('with normal e3 offset from the origin by a distance of 0.25.');
 disp('You may wish to rotate these planes in Matlab using the Matlab rotation');
-disp('widget.');
+disp('widget or with GAorbiter.');
 
 disp(' ');GAprompt;disp(' ');
 
-clc
 disp('In PGA, we use the outer product to compute the intersection of two or');
 disp('more planes.  Thus, if we take the outer product of two planes, we');
 disp('get their line of intersection.');
-pause(1);
+pause(2);
+disp(' ');
 disp('Intersecting n1 and n2 give us L12=n1^n2:');
-pause(1);
+pause(2);
+disp('>> L12 = n1^n2; draw(L12)');
 L12 = n1^n2
 draw(L12,'y');
 
@@ -98,9 +101,11 @@ disp('Note two things.  First, in the graphics window, you see a yellow line');
 disp('with ''hairs'' on it; these hairs indicate the direction of the line.');
 disp('In this case, line L12 lies on plane n1 (the red plane) and on plane n2');
 disp('(the magenta plane).');
-pause(2);
+pause(4);
+disp(' ');
 disp('The second thing to note is that in the text window, the line L12 is');
-disp('a bivector that has a Euclidean part, e1^e2, and an e0 part, e0(0.5e1-e2).');
+disp('a bivector that has a Euclidean part, e1^e2, and an e0 part,');
+disp('e0^(0.5e1-e2).');
 disp('The Euclidean part represents the bivector perpendicular to the ');
 disp('direction of the line.');
 disp('Computing the Euclidean dual (by dividing by I3) of this bivector,');
@@ -138,7 +143,7 @@ disp('e1^e2^e3 represents the point at the origin.  In a normalized point,');
 disp('the coefficient of e1^e2^e3 is 1, as in this example.');
 pause(2); disp(' ');
 disp('The e0 part of the point contains the location of the point.  Basically,');
-disp('each e0 term has a missing basis vector; the coefficient of the term is');
+disp('each e0 term has a missing basis vector; the coefficient of a term is');
 disp('the coordinate of the missing basis vector.  For example, P, the point we');
 disp('have created, has e0(e3^e2 + 0.5*e1^e3 + 0.25e2^e1), and thus has');
 disp('coordinates 1 e1, 0.5 e2, and 0.25 e3');
@@ -152,28 +157,27 @@ disp('parallel planes:'); disp(' ');
 clf
 n1 = e1;
 n2 = e1-e0;
-disp('n1 = e1; draw(n1);');
+disp('>> n1 = e1; draw(n1);');
 draw(n1);
+disp('>> n2 = e1-e0; draw(n2);');
 n2 = e1-e0;
 draw(n2);
-disp('n2 = e1-e0; draw(n2);');
 
 disp(' ');GAprompt;disp(' ');
 
-disp('We know intersect planes n1,n2 (using the outer product) and draw the');
+disp('We now intersect planes n1,n2 (using the outer product) and draw the');
 disp('result:'); disp(' ');
-nv = n1^n2
-draw(nv);
-disp('nv = n1^n2'); 
-disp('draw(nv);');
+disp('>> Li = n1^n2; draw(Li);');
+Li = n1^n2
+draw(Li);
 disp(' ');
-disp('In the text window, note that the line nv has only an e0 component,');
-disp('where as the line we saw earlier also had a Euclidean component.');
+disp('In the text window, note that the line Li has only an e0 component,');
+disp('whereas the line we saw earlier also had a Euclidean component.');
 disp('The e0 component of the earlier line was an offset from the origin');
-disp('to the closest point on the line.  For nv, the e0 component gives');
+disp('to the closest point on the line.  For Li, the e0 component gives');
 disp('the direction to the line at infinity.');
 disp(' ');
-disp('In the graphics window, we have chosen to draw nv as a dashed line ');
+disp('In the graphics window, we have chosen to draw Li as a dashed line ');
 disp('around the Matlab drawing volume.  Technically, where this line would');
 disp('appear depends on where you view it from; we have chosen to draw this');
 disp('line as if viewed from the center of the Matlab drawing volume.');
@@ -184,21 +188,22 @@ clc
 disp('If we intersect a line at infinity with another plane, we get a');
 disp('point at infinity, also known as a vanishing point:');
 disp(' ');
-disp('pv = nv^e2');
-pv = nv^e2
-draw(pv);
+disp('>> Pi = Li^e2');
+disp('>> draw(Pi);');
+Pi = Li^e2
+draw(Pi);
 view([-15 40])
 
 disp(' ');GAprompt;disp(' ');
 
-disp('Comparing pv to the P we saw earlier,');
+disp('Comparing Pi to the P we saw earlier,');
 P
-disp('we see that pv only has an e0 component and doesn''t have a purely Euclidean');
-disp('component.  The e0 component of pv is a bivector that is perpendicular to');
-disp('the direction in which pv lies at infinity.');
-disp('We draw pv as a star on the boundary of the Matlab box, with a short ');
-disp('line segment to indicate this direction.  As expected, pv lies on the ');
-disp('line nv (since pv is the intersection of nv and a plane).');
+disp('we see that Pi only has an e0 component and doesn''t have a purely Euclidean');
+disp('component.  The e0 component of Pi is a bivector that is perpendicular to');
+disp('the direction in which Pi lies at infinity.');
+disp('We draw Pi as a star on the boundary of the Matlab box, with a short ');
+disp('line segment to indicate this direction.  As expected, Pi lies on the ');
+disp('line Li (since Pi is the intersection of Li and a plane).');
 
 disp(' ');GAprompt;disp(' ');
 disp('This is the end of our brief introduction to PGA in PGABLE, showing.');
