@@ -210,4 +210,7 @@ disp('This is the end of our brief introduction to PGA in PGABLE, showing.');
 disp('planes, lines, points, vanishing lines, and vanishing planes.  ');
 disp('Transformations in PGA are similar to OGA, but for a further discussion');
 disp('on these transformations and on PGA in general, see our tutorial.');
+disp(' ');
+disp('One last thing: to clear vanishing objects from the screen, you should');
+disp('use the function "pclf".');
 catch ; end
