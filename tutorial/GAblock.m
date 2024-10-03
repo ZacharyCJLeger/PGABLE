@@ -8,6 +8,7 @@ function GAblock(GAn)
 %
 %          This software is unsupported.
 
+GA.model(OGA);
 try
 if ( GAn == 1 ) 
   GAps = 'GAblock >> ';
@@ -35,6 +36,7 @@ if ( GAn == 1 )
   GAprompt;
      disp('>>      GAorbiter');
      GAorbiter
+  GAprompt;
   disp(' ');    disp('End of GAblock sequence.  Returning to Matlab.');
 elseif ( GAn == 2 ) 
   GAps = 'GAblock >> ';
@@ -57,8 +59,8 @@ elseif ( GAn == 2 )
      disp('>>      draw(a); draw(Ra,''m''); draw(RRa,''r''); %% Draw the objects');
      draw(a); draw(Ra,'m'); draw(RRa,'r'); %% Draw the objects
   GAprompt;
-     disp('>>      axisR = unit( -GAZ(glog(R))/I3 );');
-     axisR = unit( -GAZ(glog(R))/I3 );
+     disp('>>      axisR = normalize( -GAZ(glog(R))/I3 );');
+     axisR = normalize( -GAZ(glog(R))/I3 );
      disp('>>      draw(axisR,''g''); % Draw the axis of rotation');
      draw(axisR,'g'); % Draw the axis of rotation
   GAps = 'Refer to the tutorial before continuing >> ';
@@ -66,6 +68,7 @@ elseif ( GAn == 2 )
   GAps = 'GAblock >> ';
      disp('>>      draw(dual(axisR),''g'');');
      draw(dual(axisR),'g');
+  GAprompt;
   disp(' ');    disp('End of GAblock sequence.  Returning to Matlab.');
 elseif ( GAn == 3 ) 
   GAps = 'GAblock >> ';
@@ -102,8 +105,8 @@ elseif ( GAn == 3 )
      disp('>>      DrawBivector(RB*u/RB,RB*v/RB,''g'');  axis(view);                  %%');
      DrawBivector(RB*u/RB,RB*v/RB,'g');  axis(view);                  %%
   GAprompt;
-     disp('>>      axisR = unit(GAZ(-glog(R)/I3));   % reorientation axis: ');
-     axisR = unit(GAZ(-glog(R)/I3));   % reorientation axis: 
+     disp('>>      axisR = normalize(GAZ(-glog(R)/I3));   % reorientation axis: ');
+     axisR = normalize(GAZ(-glog(R)/I3));   % reorientation axis: 
      disp('>>      draw(axisR,''r'');                 %% displayed for visualization ');
      draw(axisR,'r');                 %% displayed for visualization 
   GAprompt;
@@ -124,10 +127,12 @@ elseif ( GAn == 3 )
          DrawBivector(ui,vi);
      disp('>>          drawnow;');
          drawnow;
+	 pause(0.5);
      disp('>>      end');
      end
-     disp('>>      GAorbiter(125);');
-     GAorbiter(125);
+     disp('>>      GAorbiter(190);');
+     GAorbiter(190);
+  GAprompt;
   disp(' ');    disp('End of GAblock sequence.  Returning to Matlab.');
   disp('Try also running bivectorSlider for an interactive version of this demo.');
 elseif ( GAn == 4 ) 
@@ -325,8 +330,8 @@ elseif ( GAn == 8 )
      disp('>>      draw(dprime,''r'');                    %% Draw proj support');
      draw(dprime,'r');                    %% Draw proj support
   GAprompt;
-     disp('>>      DrawSimplex({px,px+unit(uprime)},''n'',''r''); %% Projected line');
-     DrawSimplex({px,px+unit(uprime)},'n','r'); %% Projected line
+     disp('>>      DrawSimplex({px,px+normalize(uprime)},''n'',''r''); %% Projected line');
+     DrawSimplex({px,px+normalize(uprime)},'n','r'); %% Projected line
   GAprompt;
      disp('>>      DrawSimplex({e1,dprime},''n'',''m'');    %% Perpendicular support in plane');
      DrawSimplex({e1,dprime},'n','m');    %% Perpendicular support in plane
