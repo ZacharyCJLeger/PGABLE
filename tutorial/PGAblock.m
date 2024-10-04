@@ -49,6 +49,7 @@ elseif ( GAn == 2 )
      GAprompt;
   disp(' ');    disp('End of PGAblock sequence.  Returning to Matlab.');
 elseif ( GAn == 3 )
+     %PGAblock(3)
      disp("         % POINTS ON PLANES");
      % POINTS ON PLANES
      disp("         n = e3-0.5*e0;");
@@ -73,8 +74,7 @@ elseif ( GAn == 3 )
   disp(' ');    disp('End of PGAblock sequence.  Returning to Matlab.');
 elseif ( GAn == 4 ) 
   GAps = 'PGAblock >> ';
-     disp('        %PGAblock(3)');
-     %PGAblock(3)
+     %PGAblock(4)
      disp('        % REFLECTION IN A PLANE');
      % REFLECTION IN A PLANE
      disp('        n1 = e1-0.5*e0;    % construct a plane to reflect through');
@@ -88,8 +88,8 @@ elseif ( GAn == 4 )
      disp('        Pt1r = n1*Pt1*n1;               % compute its reflection');
       
      Pt1r = n1*Pt1*n1;
-     disp("        clf; draw(n1); draw(Pt1); draw(Pt1r,'r'); GAview([-15 21]);%%");
-     clf; draw(n1); draw(Pt1); draw(Pt1r,'r'); GAview([-15 21]);%%
+     disp("        pclf; draw(n1); draw(Pt1); draw(Pt1r,'r'); GAview([-15 21]);%%");
+     pclf; draw(n1); draw(Pt1); draw(Pt1r,'r'); GAview([-15 21]);%%
      GAprompt;
      disp('        n2r =  -n1*n2*n1;               % reflect plane n2 through plane n1');
      n2r = -n1*n2*n1;
@@ -114,8 +114,8 @@ elseif ( GAn == 5 )
      n2=(e1+e2+e3)/norm(e1+e2+e3)-1.5*e0;
      disp("         Pt = (1-e0*(e1+e3))*e123;");
      Pt = (1-e0*(e1+e3))*e123;
-     disp("         clf; draw(n1); draw(n2,'b'); draw(Pt);  GAview([30,36]) %%");
-     clf; draw(n1); draw(n2,'b'); draw(Pt);  GAview([30,36]) %% 
+     disp("         pclf; draw(n1); draw(n2,'b'); draw(Pt);  GAview([30,36]) %%");
+     pclf; draw(n1); draw(n2,'b'); draw(Pt);  GAview([30,36]) %% 
      GAprompt;
      disp("         Ptr1 = n1*Pt*n1; draw(Ptr1,'m');  GAview([30,36])       %% First reflection ");
      Ptr1 = n1*Pt*n1; draw(Ptr1,'m');  GAview([30,36])       %% First reflection
@@ -153,8 +153,8 @@ elseif ( GAn == 6 )
      Tr = n2*n1;
      disp("         Pt = (1-e0*(e1+e3))*e123;");
      Pt = (1-e0*(e1+e3))*e123;
-     disp("         clf; draw(n1); draw(n2,'b'); draw(Pt);");
-     clf; draw(n1); draw(n2,'b'); draw(Pt);
+     disp("         pclf; draw(n1); draw(n2,'b'); draw(Pt);");
+     pclf; draw(n1); draw(n2,'b'); draw(Pt);
      GAprompt
      disp("         for i=1:10");
      for i=1:10
