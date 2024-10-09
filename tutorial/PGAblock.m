@@ -85,9 +85,9 @@ elseif ( GAn == 4 )
      Pt1 = n2^e1^e2;                 % construct point on plane n2
      disp('        Pt1 = -Pt1/inner(Pt1,e1^e2^e3); % normalize the point');
      Pt1 = -Pt1/inner(Pt1,e1^e2^e3); % normalize the point
-     disp('        Pt1r = n1*Pt1*n1;               % compute its reflection');
+     disp('        Pt1r = -n1*Pt1*n1;               % compute its reflection');
       
-     Pt1r = n1*Pt1*n1;
+     Pt1r = -n1*Pt1*n1;
      disp("        pclf; draw(n1); draw(Pt1); draw(Pt1r,'r'); GAview([-15 21]);%%");
      pclf; draw(n1); draw(Pt1); draw(Pt1r,'r'); GAview([-15 21]);%%
      GAprompt;
@@ -98,8 +98,8 @@ elseif ( GAn == 4 )
      GAprompt;
      disp('        L = e1^e2;                      % construct a line');
      L = e1^e2;  % Construct a line
-     disp('        Lr = -n1*L*n1;                  % reflect line L through plane n1');
-     Lr = -n1*L*n1;
+     disp('        Lr = n1*L*n1;                  % reflect line L through plane n1');
+     Lr = n1*L*n1;
      disp("        draw(L); draw(Lr); GAview([-5,50]);   %%");
      draw(L); draw(Lr); GAview([-5,50]);
      GAprompt;
