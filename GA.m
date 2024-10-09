@@ -572,37 +572,46 @@ classdef (Abstract) GA
         % Logs, exponentials, roots
 
         function R = wexp(A)
+            %WEXP  Computes the exponential of the outer product.
+
             R = wexp_(A);
         end
 
         function R = gexp(A)
+            %GEXP Computes the exponential of the geometric product.
+
             R = gexp_(A);
         end
 
         function R = glog(A)
+            %GLOG  Computes the logarithm of the geometric product.
+
             R = glog_(A);
         end
 
         function R = sqrt(A)
+            %SQRT  Computes the square root of a multivector (such that the geometric product
+            %   of the resulting element with itself results in the input).
+
             R = sqrt_(A);
         end
 
         % Norms and normalization
 
         function r = norm(A)
-            %NORM  returns the norm of the multivector.
+            %NORM  Computes the norm of the multivector.
 
             r = norm_(A);
         end
 
         function r = vnorm(A)
-            %VNORM  Returns the vanishing norm of the multivector.
+            %VNORM  Computes the vanishing norm of the multivector.
 
             r = vnorm_(A);
         end
 
         function R = normalize(A)
-            %NORMALIZE  Returns the normalized multivector.
+            %NORMALIZE  Computes the normalized multivector.
 
             R = normalize_(A);
         end
@@ -618,7 +627,7 @@ classdef (Abstract) GA
         end
 
         function R = d(A)
-            %D  Shorthand for computing the dual.
+            %D  Shorthand for dual.
             %
             %   See also dual.
 
@@ -635,7 +644,7 @@ classdef (Abstract) GA
         end
 
         function R = invdual(A)
-            %INVDUAL  Shorthand for computing the inverse dual.
+            %INVDUAL  Shorthand for inversedual.
             %
             %   See also inversedual, id.
 
@@ -643,7 +652,7 @@ classdef (Abstract) GA
         end
 
         function R = id(A)
-            %ID  Shorthand for computing the inverse dual.
+            %ID  Shorthand for inversedual.
             %
             %   See also inversedual, id.
 
@@ -660,14 +669,14 @@ classdef (Abstract) GA
         end
 
         function R = hdual(A)
-            %HDUAL  Shorthand for computing the hodge dual.
+            %HDUAL  Shorthand for hodgedual.
             %
             %   See also hodgedual, hd.
             R = hodgedual_(A);
         end
 
         function R = hd(A)
-            %HD  Shorthand for computing the hodge dual.
+            %HD  Shorthand for hodgedual.
             %
             %   See also hodgedual, hdual.
             R = hodgedual_(A);
@@ -684,7 +693,7 @@ classdef (Abstract) GA
         end
 
         function R = invhodgedual(A)
-            %INVHODGEDUAL  Shorthand for computing the inverse hodge dual.
+            %INVHODGEDUAL  Shorthand for inversehodgedual.
             %
             %   See also inversehodgedual, invhdual, ihd.
 
@@ -692,14 +701,14 @@ classdef (Abstract) GA
         end
 
         function R = invhdual(A)
-            %INVHDUAL  Shorthand for computing the inverse hodge dual.
+            %INVHDUAL  Shorthand for inversehodgedual.
             %
             %   See also inversehodgedual, invhodgedual, ihd.
             R = inversehodgedual_(A);
         end
 
         function R = ihd(A)
-            %IHD  Shorthand for computing the inverse hodge dual.
+            %IHD  Shorthand for inversehodgedual.
             %
             %   See also inversehodgedual, invhodgedual, invhdual.
             R = inversehodgedual_(A);
@@ -724,7 +733,7 @@ classdef (Abstract) GA
         end
 
         function R = pdual(A)
-            %PDUAL  Shorthand for computing the poincare dual.
+            %PDUAL  Shorthand for poincaredual.
             %
             %   See also jmap, poincaredual, pd
 
@@ -732,7 +741,7 @@ classdef (Abstract) GA
         end
 
         function R = pd(A)
-            %PD  Shorthand for computing the poincare dual.
+            %PD  Shorthand for poincaredual.
             %
             %   See also jmap, poincaredual, pdual.
             R = jmap_(A);
@@ -749,7 +758,7 @@ classdef (Abstract) GA
         end
 
         function R = rev(A)
-            %REV  Shorthand for computing the reverse.
+            %REV  Shorthand for reverse.
             %
             %   See also reverse.
 
@@ -783,7 +792,7 @@ classdef (Abstract) GA
         end
 
         function R = conj(A)
-            %CONJ  Shorthand for computing the conjugate
+            %CONJ  Shorthand for conjugate.
             %
             %   See also conjugate.
 
@@ -799,7 +808,7 @@ classdef (Abstract) GA
         end
 
         function R = gi(A)
-            %GI  Shorthand for computing the grade involution.
+            %GI  Shorthand for gradeinvolution.
             %
             %   See also gradeinvolution.
 
@@ -809,6 +818,12 @@ classdef (Abstract) GA
         % Grades
 
         function R = grade(A, n)
+            %GRADE  If only a multivector is provided, returns the a non-negative integer
+            %   representing the grade of the element (or -1 if the element contains
+            %   multiple grades).
+            %   If a multivector and an integer n is provided, returns true if the mutlivector
+            %   is of grade n and returns false otherwise.
+
             arguments
                 A GA;
                 n (1, 1) int32 = -1;
@@ -820,7 +835,8 @@ classdef (Abstract) GA
         function b = isgrade(A, g)
             % ISGRADE  Returns true if the multivector A is a blade of grade g, and false otherwise.
             %
-            %   See also PGA.GAisa, OGA.GAisa.
+            %   See also GAisa, PGA.GAisa, OGA.GAisa.
+
             arguments
                 A GA;
                 g (1, 1) uint32;
@@ -831,31 +847,43 @@ classdef (Abstract) GA
         % Coordinates
 
         function r = getx(A)
+            %GETX  Computes the x coordinate of an element.
+            %   The enterpretation of this computation (and which elements are valid input)
+            %   highly depends on the model. Thus, for more help, run "help [model].getx".
+
             r = getx_(A);
         end
 
         function r = gety(A)
+            %GETY  Computes the y coordinate of an element.
+            %   The enterpretation of this computation (and which elements are valid input)
+            %   highly depends on the model. Thus, for more help, run "help [model].gety".
+
             r = gety_(A);
         end
 
         function r = getz(A)
+            %GETZ  Computes the z coordinate of an element.
+            %   The enterpretation of this computation (and which elements are valid input)
+            %   highly depends on the model. Thus, for more help, run "help [model].getz".
+
             r = getz_(A);
         end
 
         % Cleaning
 
         function R = zeroepsilons(A)
-            %ZEROEPSILONS  Sets any episilons to zero.
+            %ZEROEPSILONS  Sets any epsilons to zero.
             %   I.e. it takes any basis blade within the multivector with coefficient size
             %   less than GA.epsilon_tolerance and sets it to zero.
             %
-            %   See also GAZ.
+            %   See also GAZ, GA.epsilon_tolerance.
 
             R = zeroepsilons_(A);
         end
 
         function R = GAZ(A)
-            %GAZ  is shorthand for zeroepsilons.
+            %GAZ  Shorthand for zeroepsilons.
             %
             %   See also zeroepsilons.
 
@@ -865,6 +893,9 @@ classdef (Abstract) GA
         % Conversion
 
         function r = double(A)
+            %DOUBLE  Converts a scalar GA element into a double.
+            %   Returns an error if the GA element is not a scalar.
+
             r = double_(A);
         end
 
@@ -929,8 +960,8 @@ classdef (Abstract) GA
         %   This is for debugging purposes.
         matrix(A);
 
-        %GAISA  Determines in a multivector and a string representing a type of multivector
-        %   and returns true if the multivector is of that type.
+        %GAISA  Takes a multivector and a string representing a type of a multivector
+        %   as input and returns true if the multivector is of that type.
         %   Which types are valid depends on the GA model. Thus, to see which types are
         %   permissable, run help [model].GAisa to see the list of options.
         %   For example, to see the options for PGA, run "help PGA.GAisa".
