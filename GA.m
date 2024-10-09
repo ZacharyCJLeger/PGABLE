@@ -998,50 +998,46 @@ classdef (Abstract) GA
     % ******************** Abstract Protected Methods ********************
 
     methods (Abstract, Access = protected)
-        % TODO: Organize/order these methods
-
-        plus_(A, B);
-        minus_(A, B);
-        uminus_(A);
-        outer_(A, B);
-        inner_(A, B);
-        leftcontraction_(A, B);
-        rightcontraction_(A, B);
-        eq_(A, B);
-        eeq_(A, B);
-        ne_(A, B);
-        product_(A, B);
-        inverse_(A);
-        divide_(A, B);
-        gexp_(A);
-        glog_(A);
-        norm_(A);
-        vnorm_(A);
-        normalize_(A);
-        dual_(A);
-        inversedual_(A);
-        hodgedual_(A);
-        inversehodgedual_(A);
-        jmap_(A);
-        reverse_(A);
-        meet_(A, B);
-        join_(A, B);
+        char_(A);
         conjugate_(A);
-        gradeinvolution_(A);
-        grade_(A, n);
-        isgrade_(A, g);
+        divide_(A, B);
+        double_(A);
+        dual_(A);
+        eeq_(A, B);
+        eq_(A, B);
         getx_(A);
         gety_(A);
         getz_(A);
-        zeroepsilons_(A);
-        char_(A);
-        double_(A);
+        gexp_(A);
+        glog_(A);
+        grade_(A, n);
+        gradeinvolution_(A);
+        hodgedual_(A);
+        inner_(A, B);
+        inverse_(A);
+        inversedual_(A);
+        inversehodgedual_(A);
+        isgrade_(A, g);
+        jmap_(A);
+        join_(A, B);
+        leftcontraction_(A, B);
+        meet_(A, B);
+        minus_(A, B);
+        ne_(A, B);
+        norm_(A);
+        normalize_(A);
+        outer_(A, B);
+        plus_(A, B);
+        product_(A, B);
+        reverse_(A);
+        rightcontraction_(A, B);
         sqrt_(A);
-
-
+        uminus_(A);
+        vnorm_(A);
+        zeroepsilons_(A);
+        
         % TODO: Perhaps implement the methods below
         % wexp_(A);
-        % GASignature
     end
 
 end
