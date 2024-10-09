@@ -55,7 +55,7 @@ classdef (Abstract) GA
             %   The AUTOSCALAR setting is either true or false.
             %   When set to true, doubles in equations will automatically be converted to GA
             %   scalar elements.
-            %   When set to false, doubles will return an error.
+            %   When set to false, doubles in equations will return an error.
             %   If no argument is provided, AUTOSCALAR returns the current value of the
             %   AUTOSCALAR setting.
             
@@ -255,7 +255,6 @@ classdef (Abstract) GA
             end
         end
 
-        % TODO: add comment about CGA if/when implemented
         function val = compact_pseudoscalar(newval, surpress_output)
             %COMPACT_PSEUDOSCALAR  Set/retrieve the COMPACT_PSEUDOSCALAR setting.
             %   The COMPACT_PSEUDOSCALAR setting is either true or false.
@@ -301,7 +300,7 @@ classdef (Abstract) GA
     % ******************** Protected Static Methods ********************
 
     methods (Access = protected, Static)
-        function [s_new, pl_new] = charify_val_(val, str, s, pl)
+        function [s_new, pl_new] = charifyval_(val, str, s, pl)
             s_new = s;
             pl_new = pl;
             
@@ -347,6 +346,9 @@ classdef (Abstract) GA
 
         function s = char(p, indicate_model)
             %CHAR  Returns the string representation of a GA element.
+            %   The (optional) second argument, indicate_model, determines if the model is
+            %   included in the string representation of the element.
+            %   The default value of indicate_model is false.
             
             arguments
                 p;
@@ -370,6 +372,7 @@ classdef (Abstract) GA
         end
 
         function display(p)
+            %DISPLAY  Displays the element in the console.
             disp(' ');
             disp([inputname(1),' = '])
             disp(' ');
@@ -384,31 +387,44 @@ classdef (Abstract) GA
         % Addition, subtraction, negation
         
         function R = plus(A, B)
+            %PLUS  Computes the addition of GA multivectors.
+
             C = GA.getdominating_(A, B);
             R = plus_(C.cast(A), C.cast(B));
         end
 
         function R = uplus(A)
+            %UPLUS  Handles +A notation for multivector A.
+
             R = A;
         end
 
         function R = minus(A, B)
+            %MINUS  Computes the subtraction of GA multivectors.
+
             C = GA.getdominating_(A, B);
             R = minus_(C.cast(A), C.cast(B));
         end
 
         function R = uminus(A)
+            %UMINUS  Handles -A notation for multivector A.
+
             R = uminus_(A);
         end
 
         % Outer product
 
         function R = outer(A, B)
+             %OUTER  Computes the outer product of GA multivectors.
+
             C = GA.getdominating_(A, B);
             R = outer_(C.cast(A), C.cast(B));
         end
 
         function R = mpower(A, B)
+            %MPOWER  Handles A^B notation of GA multivectors and computes the outer product
+            %   between the multivectors.
+
             C = GA.getdominating_(A, B);
             R = outer_(C.cast(A), C.cast(B));
         end
@@ -416,15 +432,16 @@ classdef (Abstract) GA
         % Inner product
 
         function R = inner(A, B)
-            % INNER  Compute the inner product of A and B.
-            %
-            % See also lcont, rcont, outer, product
+            % INNER  Computes the inner product of multivectors.
 
             C = GA.getdominating_(A, B);
             R = inner_(C.cast(A), C.cast(B));
         end
 
         function R = times(A, B)
+            %TIMES  Handles A.*B notation of GA multivectors and computes the inner product
+            %   between the multivectors.
+
             C = GA.getdominating_(A, B);
             R = inner_(C.cast(A), C.cast(B));
         end
@@ -432,21 +449,37 @@ classdef (Abstract) GA
         % Contractions
 
         function R = leftcontraction(A, B)
+            %LEFTCONTRACTION  Computes the left contraction of A onto B.
+            %
+            %   See also lcont.
+
             C = GA.getdominating_(A, B);
             R = leftcontraction_(C.cast(A), C.cast(B));
         end
 
         function R = lcont(A, B)
+            %LCONT  Shorthand for leftcontraction.
+            %
+            %   See also leftcontraction.
+
             C = GA.getdominating_(A, B);
             R = leftcontraction_(C.cast(A), C.cast(B));
         end
 
         function R = rightcontraction(A, B)
+            %RIGHTCONTRACTION  Computes the right contraction of A contracted by B.
+            %
+            %   See also rcont.
+
             C = GA.getdominating_(A, B);
             R = rightcontraction_(C.cast(A), C.cast(B));
         end
 
         function R = rcont(A, B)
+            %RCONT  Shorthand for rightcontraction.
+            %
+            %   See also rightcontraction.
+            
             C = GA.getdominating_(A, B);
             R = rightcontraction_(C.cast(A), C.cast(B));
         end

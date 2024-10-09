@@ -831,25 +831,6 @@ classdef PGA < GA
             end
         end
             
-
-        % TODO: This isn't used anywhere. Perhaps depricate.
-        % TODO: Upgrade to PGA if not depricating.
-        % function r = unit(A)
-        %     if isGrade(A,0)
-        %         r = unit(A.m(1));
-        %     elseif isGrade(A,1)
-        %         s = sqrt(A.m(2)*A.m(2)+A.m(3)*A.m(3)+A.m(4)*A.m(4));
-        %         r = A/s;
-        %     elseif isGrade(A,2)
-        %         s = sqrt(A.m(5)*A.m(5)+A.m(6)*A.m(6)+A.m(7)*A.m(7));
-        %         r = A/s;
-        %     elseif isGrade(A,3)
-        %         r = A/abs(A.m(8));
-        %     else
-        %         error('Unit can only be applied to blades.');
-        %     end
-        % end
-
         % TODO: Needs to be upgraded to PGA
         % TODO: make private and wrap for public
         % function r = blade(A)
@@ -940,6 +921,8 @@ classdef PGA < GA
         % end
 
         % TODO: Decide behaviour for non-points.
+
+
         function r = getx_(A)
             r = -A.m(14)/A.m(15);
             % 14 is the position of e023
@@ -972,70 +955,70 @@ classdef PGA < GA
                 pl = ' + ';
             end
 
-            [s, pl] = GA.charify_val_(p.m(2), 'e0', s, pl);
-            [s, pl] = GA.charify_val_(p.m(3), 'e1', s, pl);
-            [s, pl] = GA.charify_val_(p.m(4), 'e2', s, pl);
-            [s, pl] = GA.charify_val_(p.m(5), 'e3', s, pl);
+            [s, pl] = GA.charifyval_(p.m(2), 'e0', s, pl);
+            [s, pl] = GA.charifyval_(p.m(3), 'e1', s, pl);
+            [s, pl] = GA.charifyval_(p.m(4), 'e2', s, pl);
+            [s, pl] = GA.charifyval_(p.m(5), 'e3', s, pl);
 
             if GA.compact_notation()
-                [s, pl] = GA.charify_val_(p.m(6), 'e01', s, pl);
-                [s, pl] = GA.charify_val_(p.m(7), 'e02', s, pl);
-                [s, pl] = GA.charify_val_(p.m(8), 'e03', s, pl);
+                [s, pl] = GA.charifyval_(p.m(6), 'e01', s, pl);
+                [s, pl] = GA.charifyval_(p.m(7), 'e02', s, pl);
+                [s, pl] = GA.charifyval_(p.m(8), 'e03', s, pl);
 
                 if ~PGA.increasing_order()
-                    [s, pl] = GA.charify_val_(p.m(11), 'e23', s, pl);
-                    [s, pl] = GA.charify_val_(-p.m(10), 'e31', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(9), 'e12', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(11), 'e23', s, pl);
+                    [s, pl] = GA.charifyval_(-p.m(10), 'e31', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(9), 'e12', s, pl);
 
-                    [s, pl] = GA.charify_val_(-p.m(14), 'e032', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(13), 'e013', s, pl);
-                    [s, pl] = GA.charify_val_(-p.m(12), 'e021', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(15), 'e123', s, pl);
+                    [s, pl] = GA.charifyval_(-p.m(14), 'e032', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(13), 'e013', s, pl);
+                    [s, pl] = GA.charifyval_(-p.m(12), 'e021', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(15), 'e123', s, pl);
                 else 
-                    [s, pl] = GA.charify_val_(p.m(9), 'e12', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(10), 'e13', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(11), 'e23', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(9), 'e12', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(10), 'e13', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(11), 'e23', s, pl);
 
-                    [s, pl] = GA.charify_val_(p.m(12), 'e012', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(13), 'e013', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(14), 'e023', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(15), 'e123', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(12), 'e012', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(13), 'e013', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(14), 'e023', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(15), 'e123', s, pl);
                 end
 
                 if GA.compact_pseudoscalar()
-                    [s, pl] = GA.charify_val_(p.m(16), 'I4', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(16), 'I4', s, pl);
                 else
-                    [s, pl] = GA.charify_val_(p.m(16), 'e0123', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(16), 'e0123', s, pl);
                 end
             else
-                [s, pl] = GA.charify_val_(p.m(6), 'e0^e1', s, pl);
-                [s, pl] = GA.charify_val_(p.m(7), 'e0^e2', s, pl);
-                [s, pl] = GA.charify_val_(p.m(8), 'e0^e3', s, pl);
+                [s, pl] = GA.charifyval_(p.m(6), 'e0^e1', s, pl);
+                [s, pl] = GA.charifyval_(p.m(7), 'e0^e2', s, pl);
+                [s, pl] = GA.charifyval_(p.m(8), 'e0^e3', s, pl);
 
                 if ~PGA.increasing_order()
-                    [s, pl] = GA.charify_val_(p.m(11), 'e2^e3', s, pl);
-                    [s, pl] = GA.charify_val_(-p.m(10), 'e3^e1', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(9), 'e1^e2', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(11), 'e2^e3', s, pl);
+                    [s, pl] = GA.charifyval_(-p.m(10), 'e3^e1', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(9), 'e1^e2', s, pl);
 
-                    [s, pl] = GA.charify_val_(-p.m(14), 'e0^e3^e2', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(13), 'e0^e1^e3', s, pl);
-                    [s, pl] = GA.charify_val_(-p.m(12), 'e0^e2^e1', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(15), 'e1^e2^e3', s, pl);
+                    [s, pl] = GA.charifyval_(-p.m(14), 'e0^e3^e2', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(13), 'e0^e1^e3', s, pl);
+                    [s, pl] = GA.charifyval_(-p.m(12), 'e0^e2^e1', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(15), 'e1^e2^e3', s, pl);
                 else
-                    [s, pl] = GA.charify_val_(p.m(9), 'e1^e2', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(10), 'e1^e3', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(11), 'e2^e3', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(9), 'e1^e2', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(10), 'e1^e3', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(11), 'e2^e3', s, pl);
 
-                    [s, pl] = GA.charify_val_(p.m(12), 'e0^e1^e2', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(13), 'e0^e1^e3', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(14), 'e0^e2^e3', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(15), 'e1^e2^e3', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(12), 'e0^e1^e2', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(13), 'e0^e1^e3', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(14), 'e0^e2^e3', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(15), 'e1^e2^e3', s, pl);
                 end
 
                 if GA.compact_pseudoscalar()
-                    [s, pl] = GA.charify_val_(p.m(16), 'I4', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(16), 'I4', s, pl);
                 else
-                    [s, pl] = GA.charify_val_(p.m(16), 'e0^e1^e2^e3', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(16), 'e0^e1^e2^e3', s, pl);
                 end
             end
             
