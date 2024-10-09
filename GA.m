@@ -479,7 +479,7 @@ classdef (Abstract) GA
             %RCONT  Shorthand for rightcontraction.
             %
             %   See also rightcontraction.
-            
+
             C = GA.getdominating_(A, B);
             R = rightcontraction_(C.cast(A), C.cast(B));
         end
@@ -487,16 +487,27 @@ classdef (Abstract) GA
         % Equalities and inequalities
 
         function b = eq(A, B)
+            %EQ  Tests equality between GA mutlivectors (within a tolerance of epsilon).
+            %
+            %   See also ne, eeq.
+
             C = GA.getdominating_(A, B);
             b = eq_(C.cast(A), C.cast(B));
         end
 
         function b = eeq(A, B)
+            %EEQ  Tests equality between GA mutlivectors (exact equality of all coefficients).
+            %
+            %   See also eq, ne.
+
             C = GA.getdominating_(A, B);
             b = eeq_(C.cast(A), C.cast(B));
         end
 
         function b = ne(A, B)
+            %NE  Tests inequality between GA multivectors (within a tolerance of epsilon).
+            %
+            %   See also eq, eeq.
             C = GA.getdominating_(A, B);
             b = ne_(C.cast(A), C.cast(B));
         end
@@ -504,16 +515,27 @@ classdef (Abstract) GA
         % Geometric product
 
         function R = product(A, B)
+            %PRODUCT  Computes the geometric product between multivectors.
+            %
+            %   See also prod, mtimes.
             C = GA.getdominating_(A, B);
             R = product_(C.cast(A), C.cast(B));
         end
 
         function R = prod(A, B)
+            %PROD  Shorthand for product.
+            %
+            %   See also product, mtimes.
             C = GA.getdominating_(A, B);
             R = product_(C.cast(A), C.cast(B));
         end
 
         function R = mtimes(A, B)
+            %MTIMES  Handles A*B notation of GA multivectors and computes the geometric
+            %   product between the multivectors.
+            %
+            %   See also product, prod.
+
             C = GA.getdominating_(A, B);
             R = product_(C.cast(A), C.cast(B));
         end
@@ -521,17 +543,28 @@ classdef (Abstract) GA
         % Inverse
 
         function R = inverse(A)
+            %INVERSE  Computes the inverse of a GA multivector.
+
             R = inverse_(A);
         end
 
         % Divide
 
         function R = divide(A, B)
+            %DIVIDE  Computes the division of A over B.
+            %
+            %   See also mrdivide.
+
             C = GA.getdominating_(A, B);
             R = divide_(C.cast(A), C.cast(B));
         end
 
         function R = mrdivide(A, B)
+            %MTIMES  Handles A/B notation of GA multivectors and computes the division
+            %    of multivector A over multivector B.
+            %
+            %   See also divide.
+
             C = GA.getdominating_(A, B);
             R = divide_(C.cast(A), C.cast(B));
         end
