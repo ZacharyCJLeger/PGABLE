@@ -1,5 +1,5 @@
 classdef GAScene
-    %GASCENE  is a class which renders of a figure for a specific set of GA objects.
+    %GASCENE - A class which renders of a figure for a specific set of GA objects.
     %   Only the following methods should be used by a beginner:
     %      • GAScene.clearitems()      to clear items in the GA Scene
     %      • GAScene.displayitems()    to see a list of items displayed in the GAScene

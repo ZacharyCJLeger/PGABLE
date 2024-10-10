@@ -1,5 +1,5 @@
 classdef PGA < GA
-    %PGA  is a child class of GA for elements of Projective/Plane-based Geometric Algebra.
+    %PGA - A child class of GA for elements of Projective/Plane-based Geometric Algebra.
     %   Elements
     %      Basic elements include 1, e0, e1, e2, e3, e01, e02, e03, e12, e31, e23, e021,
     %      e013, e032, e123, e0123.
@@ -57,8 +57,6 @@ classdef PGA < GA
         % A 1x16 matrix of real numbers corresponding to the coefficients of entries 1, e0, e1, ..., e01, ..., e0123. 
         m
     end
-
-    % TODO: Add description for each method.
 
     %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
     %           Settings           %
@@ -876,52 +874,7 @@ classdef PGA < GA
             %R = ((1+A)/sqrt(denom))*(1 - grade_(A, 4)/denom);
         end
 
-
-        % TODO: Needs to be updated to PGA
-        % function r = wexp_(A)
-        %     %GAwexp(A): Gives the wedge product exponential of a GA objects.
-        
-        %     M =[A.m(1)    0       0       0       0       0       0       0;
-        %     A.m(2)  A.m(1)    0       0       0       0       0       0;
-        %     A.m(3)    0     A.m(1)    0       0       0       0       0;
-        %     A.m(4)    0       0     A.m(1)    0       0       0       0;
-        %     A.m(5) -A.m(3)  A.m(2)    0     A.m(1)    0       0       0;
-        %     A.m(6)    0    -A.m(4)  A.m(3)    0     A.m(1)    0       0;
-        %     A.m(7)  A.m(4)    0    -A.m(2)    0       0     A.m(1)    0;
-        %     A.m(8)  A.m(6)  A.m(7)  A.m(5)  A.m(4)  A.m(2)  A.m(3)  A.m(1)];
-        %     E = expm(M);
-        %     r = PGA(E(1:8,1));
-        % end
-
-        % TODO: Needs to be upgraded to PGA (maybe depricate?)
-        % function r = bilinear_(A, B)
-        %     %bilinear(A, B): Computes the bilinear form of two GA objects.
-
-        %     S = GAsignature;
-        %     N = [B.m(1);S(1)*B.m(2);S(2)*B.m(3);S(3)*B.m(4);S(1)*S(2)*B.m(5);S(2)*S(3)*B.m(6);S(3)*S(1)*B.m(7);S(1)*S(2)*S(3)*B.m(8)];
-        %     r = PGA((A.m')*N);
-        % end
-
-        % TODO: maybe depricate?
-        % function r = connection(e,A,B)
-        %     %connection(e,A,B): Compute the translational moment from A to B.
-        %     %  Both A and B must be in homogeneous form.
-        %     %  This is what you need to add to A to make its meet with B non-trivial.
-        %     e = PGA(e);
-        %     A = PGA(A);
-        %     B = PGA(B);
-
-        %     tA = inner(e,A);
-        %     tB = inner(e,B);
-        %     ejAB = e^(join(tA,tB)*meet(tA,tB));
-        %     Ato0 = PGAZ((A-contraction(A,ejAB)/ejAB)/inner(e,A));
-        %     Bto0 = PGAZ((B-contraction(B,ejAB)/ejAB)/inner(e,B));
-
-        %     r = PGA.returnGA_(PGAZ(PGA(Bto0-Ato0))^tA);
-        % end
-
-        % TODO: Decide behaviour for non-points.
-
+        % TODO: Decide behaviour for non-points for get functions.
 
         function r = getx_(A)
             r = -A.m(14)/A.m(15);

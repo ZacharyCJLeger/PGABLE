@@ -1,5 +1,5 @@
 classdef OGA < GA
-    %OGA  is a child class of GA for elements of Ordinary Geometric Algebra.
+    %OGA - A child class of GA for elements of Ordinary Geometric Algebra.
     %   Elements
     %      Basic elements include e1, e2, e3, e12, e31, e23, e123.
     %
