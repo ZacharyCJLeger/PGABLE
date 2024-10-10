@@ -66,7 +66,7 @@ classdef PGA < GA
 
         function settings()
             %SETTINGS - Displays the current configuration settings for PGA in PGABLE.
-            %   To retrieve a particular settings, run PGA.[setting].
+            %   To retrieve a particular setting, run PGA.[setting].
             %   For example, to retrieve the value of increasing_order, run
             %   PGA.increasing_order.
             %   To change the value of a particular setting, run PGA.[setting]([value]).
@@ -86,7 +86,7 @@ classdef PGA < GA
         end
         
         function [S0, S1, S2, S3] = signature(sign0, sign1, sign2, sign3)
-            %SIGNATURE - Sets/retrieve the current signature of the model.
+            %SIGNATURE - Set/retrieve the current signature of the model.
             %   This settings is NOT recommended for beginners.
             %   If no arguments are provided, the signatures for e0, e1, e2, e3 are returned
             %   as a vector [S0, S1, S2, S3].
@@ -195,6 +195,10 @@ classdef PGA < GA
         %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
 
         function h = drawvanishingpoint(vp, c)
+            %DRAWVANISHINGPOINT - Draws a single instance of a vanishing point.
+            %   This function is NOT intended for a user to draw a vanishing point to the
+            %   scene. To draw a vanishing point, run "draw(vanishing_point)".
+
             ax = gca;
 
             xrange = ax.XLim;
@@ -293,6 +297,10 @@ classdef PGA < GA
         end
 
         function h = drawvanishingline(vl, c)
+            %DRAWVANISHINGLINE - Draws a single instance of a vanishing line.
+            %   This function is NOT intended for a user to draw a vanishing line to the
+            %   scene. To draw a vanishing line, run "draw(vanishing_line)".
+
             h = [];
 
             ax = gca;
@@ -1067,6 +1075,7 @@ classdef PGA < GA
             %   In PGA, valid types are:
             %   scalar, vector, plane, bivector, line, trivector, point, quadvector,
             %   pseudoscalar, multivector
+            
             arguments
                 A PGA;
                 t (1, 1) string;
@@ -1146,11 +1155,15 @@ classdef PGA < GA
         end
 
         function R = euclidean(A)
+            %EUCLIDEAN - Returns the euclidean portion of the multivector.
+
             [scal, E0, E1, E2, E3, E01, E02, E03, E12, E13, E23, E012, E013, E023, E123, E0123] = decompose_(A);
             R = PGA(scal, [0, E1, E2, E3], [0, 0, 0, E12, E13, E23], [0, 0, 0, E123], 0);
         end
 
         function R = noneuclidean(A)
+            %NONEUCLIDEAN - Returns the non-euclidean portion of the multivector.
+
             [scal, E0, E1, E2, E3, E01, E02, E03, E12, E13, E23, E012, E013, E023, E123, E0123] = decompose_(A);
             R = PGA(E0, [0, E01, E02, E03], [0, 0, 0, E012, E013, E023], [0, 0, 0, E0123], 0);
         end
@@ -1170,76 +1183,106 @@ classdef PGA < GA
         end
 
         function r = e0coeff(A)
+            %E0COEFF - Returns the coefficient of e0.
+
             M = matrix(A);
             r = M(2);
         end
 
         function r = e1coeff(A)
+            %E1COEFF - Returns the coefficient of e1.
+
             M = matrix(A);
             r = M(3);
         end
 
         function r = e2coeff(A)
+            %E2COEFF - Returns the coefficient of e2.
+
             M = matrix(A);
             r = M(4);
         end
 
         function r = e3coeff(A)
+            %E3COEFF - Returns the coefficient of e3.
+
             M = matrix(A);
             r = M(5);
         end
 
         function r = e01coeff(A)
+            %E01COEFF - Returns the coefficient of e01.
+
             M = matrix(A);
             r = M(6);
         end
 
         function r = e02coeff(A)
+            %E02COEFF - Returns the coefficient of e02.
+
             M = matrix(A);
             r = M(7);
         end
 
         function r = e03coeff(A)
+            %E03COEFF - Returns the coefficient of e03.
+
             M = matrix(A);
             r = M(8);
         end
 
         function r = e12coeff(A)
+            %E12COEFF - Returns the coefficient of e12.
+
             M = matrix(A);
             r = M(9);
         end
 
         function r = e13coeff(A)
+            %E13COEFF - Returns the coefficient of e13.
+
             M = matrix(A);
             r = M(10);
         end
 
         function r = e23coeff(A)
+            %E23COEFF - Returns the coefficient of e23.
+
             M = matrix(A);
             r = M(11);
         end
 
         function r = e012coeff(A)
+            %E012COEFF - Returns the coefficient of e012.
+
             M = matrix(A);
             r = M(12);
         end
 
         function r = e013coeff(A)
+            %E013COEFF - Returns the coefficient of e013.
+
             M = matrix(A);
             r = M(13);
         end
 
         function r = e023coeff(A)
+            %E023COEFF - Returns the coefficient of e023.
+
             M = matrix(A);
             r = M(14);
         end
 
         function r = e123coeff(A)
+            %E123COEFF - Returns the coefficient of e123.
+
             M = matrix(A);
             r = M(15);
         end
 
         function r = e0123coeff(A)
+            %E0123COEFF - Returns the coefficient of e0123.
+
             M = matrix(A);
             r = M(16);
         end
