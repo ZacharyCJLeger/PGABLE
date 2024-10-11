@@ -849,7 +849,7 @@ classdef (Abstract) GA
         function r = getx(A)
             %GETX - Computes the x coordinate of an element.
             %   The enterpretation of this computation (and which elements are valid input)
-            %   highly depends on the model. Thus, for more help, run "help [model].getx".
+            %   highly depends on the model. Thus, for more help, run "help [model].getx_".
 
             r = getx_(A);
         end

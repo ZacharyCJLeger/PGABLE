@@ -87,7 +87,7 @@ classdef PGA < GA
         
         function [S0, S1, S2, S3] = signature(sign0, sign1, sign2, sign3)
             %SIGNATURE - Set/retrieve the current signature of the model.
-            %   This settings is NOT recommended for beginners.
+            %   This setting is NOT recommended for beginners.
             %   If no arguments are provided, the signatures for e0, e1, e2, e3 are returned
             %   as a vector [S0, S1, S2, S3].
             %   If 4 arguments are provided, the inputs sign0, sign1, sign2, sign3 correspond
@@ -885,18 +885,27 @@ classdef PGA < GA
         % TODO: Decide behaviour for non-points for get functions.
 
         function r = getx_(A)
+            %GETX_ - A private function for computing the x coordinate of a PGA element.
+            %   Returns the x coordinate of a point. Non-points return an error.
+
             r = -A.m(14)/A.m(15);
             % 14 is the position of e023
             % 15 is the position of e123
         end
         
         function r = gety_(A)
+            %GETY_ - A private function for computing the y coordinate of a PGA element.
+            %   Returns the y coordinate of a point. Non-points return an error.
+
             r = A.m(13)/A.m(15);
             % 13 is the position of e013
             % 15 is the position of e123
         end
         
-        function r = getz_(A)            
+        function r = getz_(A)
+            %GETZ_ - A private function for computing the z coordinate of a PGA element.
+            %   Returns the z coordinate of a point. Non-points return an error.
+
             r = -A.m(12)/A.m(15);
             % 12 is the position of e012
             % 15 is the position of e123
@@ -998,7 +1007,7 @@ classdef PGA < GA
             %   If no arugment is provided, the 0 element in PGA is returned.
             %   If 1 arugment is provided and it is a PGA element, the element itself will
             %   be returned. If the argument is a double, a PGA element of that scalar will
-            %   be return.
+            %   be returned.
             %   If 5 arguments are provided, it is assumed they have the following format:
             %   The first argument is a double for the scalar portion of the multivector
             %   The second argument is [c0, c1, c2, c3], where ci is a double corresponding
@@ -1075,7 +1084,7 @@ classdef PGA < GA
             %   In PGA, valid types are:
             %   scalar, vector, plane, bivector, line, trivector, point, quadvector,
             %   pseudoscalar, multivector
-            
+
             arguments
                 A PGA;
                 t (1, 1) string;
