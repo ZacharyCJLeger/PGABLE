@@ -30,7 +30,122 @@ classdef GAScene
         %        Item Management       %
         %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
 
-        function manage_items(in)
+        function displayitems()
+            GAScene.manage_items_(false);
+            GAScene.manage_dynamic_items_(false, false);
+        end
+
+        function clearitems()
+            GAScene.manage_items_(true);
+            GAScene.manage_dynamic_items_(false, true);
+        end
+
+        function additem(item)
+            arguments
+                item GASceneItem;
+            end
+            GAScene.manage_items_(item);
+        end
+
+        function adddynamicitem(item)
+            arguments
+                item GASceneDynamicItem;
+            end
+            GAScene.manage_dynamic_items_(false, item);
+        end
+
+        function deleteitem(itemindex)
+            arguments
+                itemindex uint32;
+            end
+            GAScene.manage_items_(itemindex);
+        end
+
+        function refreshdynamicitems()
+            GAScene.manage_dynamic_items_(true, true);
+        end
+
+        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
+        %       Figure Management      %
+        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
+
+        function obj = getfigure()
+            persistent static_fig;
+            
+            if ~isempty(static_fig) && isvalid(static_fig)
+                obj = static_fig;
+            else
+                GAScene.clearitems();
+                % TODO: make figure name changable
+                static_fig = figure('Name', "GA Scene",'NumberTitle','off');
+                axis equal
+                view(3)
+
+                ax = gca;
+                addlistener(ax, {'XLim', 'YLim', 'ZLim'}, 'PostSet', @(obj, evd)GAScene.manage_dynamic_items_(true, obj, evd));
+                
+                obj = static_fig;
+            end
+        end
+
+        function usefigure()
+            figure(GAScene.getfigure());
+            axis equal;
+            view(3)
+        end
+
+        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
+        %        Generic Tooling       %
+        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
+
+        function R = boundingboxclip(xrange, yrange, zrange, p)
+            arguments
+                xrange;
+                yrange;
+                zrange;
+                p;
+            end
+            p = p{1};
+
+            x = p.getx();
+            y = p.gety();
+            z = p.getz();
+            R = {point(clip(x, xrange(1), xrange(2)), clip(y, yrange(1), yrange(2)), clip(z, zrange(1), zrange(2)))};
+        end
+
+        function b = isinboundingbox(xrange, yrange, zrange, p)
+            bx = xrange(1) <= p.getx() && p.getx() <= xrange(2);
+            by = yrange(1) <= p.gety() && p.gety() <= yrange(2);
+            bz = zrange(1) <= p.getz() && p.getz() <= zrange(2);
+
+            b = bx && by && bz;
+        end
+    end
+
+    % ******************** Private Static Methods ********************
+
+    methods (Access = private, Static)
+
+        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
+        %            TOOLS             %
+        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
+
+        function a = gaarea_(px, py)
+            %gaarea_(px,py): compute the area of a polygon.
+            
+            a = 0;
+            for i = 1:length(px)-1
+                a = a + px(i)*py(i+1) - px(i+1)*py(i);
+            end
+            a = a + px(length(px))*py(1) - px(1)*py(length(py));
+            a = a/2;
+        end
+
+        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
+        %        Item Management       %
+        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
+
+        function manage_items_(in)
 
             persistent static_items;
             persistent num_items;
@@ -81,46 +196,7 @@ classdef GAScene
             end
         end
 
-        function displayitems()
-            GAScene.manage_items(false);
-            GAScene.manage_dynamic_items(false, false);
-        end
-
-        function clearitems()
-            GAScene.manage_items(true);
-            GAScene.manage_dynamic_items(false, true);
-        end
-
-        function additem(item)
-            arguments
-                item GASceneItem;
-            end
-            GAScene.manage_items(item);
-        end
-
-        function adddynamicitem(item)
-            arguments
-                item GASceneDynamicItem;
-            end
-            GAScene.manage_dynamic_items(false, item);
-        end
-
-        function deleteitem(itemindex)
-            arguments
-                itemindex uint32;
-            end
-            GAScene.manage_items(itemindex);
-        end
-
-        function refreshdynamicitems()
-            GAScene.manage_dynamic_items(true, true);
-        end
-
-        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
-        %    Dynamic Item Management   %
-        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
-        
-        function manage_dynamic_items(is_draw, in, extra)
+        function manage_dynamic_items_(is_draw, in, extra)
             arguments
                 is_draw;
                 in;
@@ -188,80 +264,5 @@ classdef GAScene
         end
 
 
-        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
-        %       Figure Management      %
-        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
-
-        function obj = getfigure()
-            persistent static_fig;
-            
-            if ~isempty(static_fig) && isvalid(static_fig)
-                obj = static_fig;
-            else
-                GAScene.clearitems();
-                % TODO: make figure name changable
-                static_fig = figure('Name', "GA Scene",'NumberTitle','off');
-                axis equal
-                view(3)
-
-                ax = gca;
-                addlistener(ax, {'XLim', 'YLim', 'ZLim'}, 'PostSet', @(obj, evd)GAScene.manage_dynamic_items(true, obj, evd));
-                
-                obj = static_fig;
-            end
-        end
-
-        function usefigure()
-            figure(GAScene.getfigure());
-            axis equal;
-            view(3)
-        end
-
-        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
-        %        Generic Tooling       %
-        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
-
-        function R = boundingboxclip(xrange, yrange, zrange, p)
-            arguments
-                xrange;
-                yrange;
-                zrange;
-                p;
-            end
-            p = p{1};
-
-            x = p.getx();
-            y = p.gety();
-            z = p.getz();
-            R = {point(clip(x, xrange(1), xrange(2)), clip(y, yrange(1), yrange(2)), clip(z, zrange(1), zrange(2)))};
-        end
-
-        function b = isinboundingbox(xrange, yrange, zrange, p)
-            bx = xrange(1) <= p.getx() && p.getx() <= xrange(2);
-            by = yrange(1) <= p.gety() && p.gety() <= yrange(2);
-            bz = zrange(1) <= p.getz() && p.getz() <= zrange(2);
-
-            b = bx && by && bz;
-        end
-    end
-
-    % ******************** Private Static Methods ********************
-
-    methods (Access = private, Static)
-
-        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
-        %     Private Static Tools     %
-        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
-
-        function a = gaarea_(px, py)
-            %gaarea_(px,py): compute the area of a polygon.
-            
-            a = 0;
-            for i = 1:length(px)-1
-                a = a + px(i)*py(i+1) - px(i+1)*py(i);
-            end
-            a = a + px(length(px))*py(1) - px(1)*py(length(py));
-            a = a/2;
-        end
     end
 end
