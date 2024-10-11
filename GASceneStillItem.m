@@ -1,4 +1,4 @@
-classdef GASceneItem
+classdef GASceneStillItem
     % A GA scene item.
 
     % PGABLE, Copyright (c) 2024, University of Waterloo
@@ -8,7 +8,7 @@ classdef GASceneItem
     %
     %          This software is unsupported.
     
-    % TODO: Create GASceneItem, which holds a GA object and drawings associated with it.
+    % TODO: Create GASceneStillItem, which holds a GA object and drawings associated with it.
     % TODO: Perhaps make these properties private
     properties (Access = public)
         element;  % The GA element associated with this item.
@@ -16,7 +16,7 @@ classdef GASceneItem
     end
 
     methods (Access = public)
-        function obj = GASceneItem(element, drawing_handles)
+        function obj = GASceneStillItem(element, drawing_handles)
             obj.element = element;
             obj.drawing_handles = drawing_handles;
         end

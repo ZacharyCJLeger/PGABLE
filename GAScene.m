@@ -46,10 +46,10 @@ classdef GAScene
         function addstillitem(item)
             %ADDSTILLITEM - Adds a still item to a scene.
             %
-            %   See also GASceneItem.
+            %   See also GASceneStillItem.
 
             arguments
-                item GASceneItem;
+                item GASceneStillItem;
             end
             GAScene.manage_still_items_(item);
         end
@@ -164,13 +164,13 @@ classdef GAScene
             %     2. Delete an item
             %     3. Clear the items
 
-            % If the user inserts a GASceneItem, they are trying to add it
+            % If the user inserts a GASceneStillItem, they are trying to add it
             % If the user passes in a boolean, they either
             %     pass in true to clear the items
             %     pass in false to list out the items
             % If the user passes in an integer, the want to delete the item indexed by that integer
 
-            if isa(in, "GASceneItem")
+            if isa(in, "GASceneStillItem")
                 GAScene.usefigure();
                 static_items{num_items + 1} = in;
                 num_items = num_items + 1;

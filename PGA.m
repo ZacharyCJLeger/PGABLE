@@ -1123,7 +1123,7 @@ classdef PGA < GA
                     GAScene.adddynamicitem(GASceneDynamicItem(A, h, @()PGA.drawvanishingpoint(A, c)));
                 else
                     h = PGABLEDraw.octahedron(A, PGA.pointsize(), c);
-                    GAScene.addstillitem(GASceneItem(A, h));
+                    GAScene.addstillitem(GASceneStillItem(A, h));
                 end
                 
             elseif GAisa(A, 'line')
@@ -1138,7 +1138,7 @@ classdef PGA < GA
                     GAScene.adddynamicitem(GASceneDynamicItem(A, h, @()PGA.drawvanishingline(A, c)));
                 else
                     h = PGABLEDraw.hairyline(A, c);
-                    GAScene.addstillitem(GASceneItem(A, h));
+                    GAScene.addstillitem(GASceneStillItem(A, h));
                 end
 
             elseif GAisa(A, 'plane')
@@ -1148,7 +1148,7 @@ classdef PGA < GA
                 end
 
                 h = PGABLEDraw.pointingplane(A, c);
-                GAScene.addstillitem(GASceneItem(A, h));
+                GAScene.addstillitem(GASceneStillItem(A, h));
             else
                 error('Error is not a point, line, or plane. PGA cannot draw it.');
             end
