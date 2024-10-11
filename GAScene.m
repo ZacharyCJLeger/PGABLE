@@ -31,16 +31,23 @@ classdef GAScene
         %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
 
         function displayitems()
+            %DISPLAYITEMS - Displays the items of the scene in lists.
+
             GAScene.manage_still_items_(false);
             GAScene.manage_dynamic_items_(false, false);
         end
 
         function clearitems()
+            %CLEARITEMS - Clears the items of the scene.
             GAScene.manage_still_items_(true);
             GAScene.manage_dynamic_items_(false, true);
         end
 
         function addstillitem(item)
+            %ADDSTILLITEM - Adds a still item to a scene.
+            %
+            %   See also GASceneItem.
+
             arguments
                 item GASceneItem;
             end
@@ -48,6 +55,10 @@ classdef GAScene
         end
 
         function adddynamicitem(item)
+            %ADDDYNAMICITEM - Adds a dynamic item to a scene.
+            %
+            %   See also GASceneDynamicItem.
+
             arguments
                 item GASceneDynamicItem;
             end
@@ -55,6 +66,10 @@ classdef GAScene
         end
 
         function deletestillitem(itemindex)
+            %DELETESTILLITEM - Deletes a still item from a scene by the given index number.
+            %
+            %   See also GAScene.displayitems.
+
             arguments
                 itemindex uint32;
             end
@@ -62,6 +77,10 @@ classdef GAScene
         end
 
         function deletedynamicitem(itemindex)
+            %DELETEDYNAMICITEM - Deletes a dynamic item from a scene by the given index number.
+            %
+            %   See also GAScene.displayitems.
+
             arguments
                 itemindex uint32;
             end
@@ -69,6 +88,8 @@ classdef GAScene
         end
 
         function refreshdynamicitems()
+            %REFRESHDYNAMICITEMS - A command to rerender dynamic items in the scene.
+
             GAScene.manage_dynamic_items_(true, true);
         end
 
