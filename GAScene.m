@@ -31,20 +31,20 @@ classdef GAScene
         %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
 
         function displayitems()
-            GAScene.manage_items_(false);
+            GAScene.manage_still_items_(false);
             GAScene.manage_dynamic_items_(false, false);
         end
 
         function clearitems()
-            GAScene.manage_items_(true);
+            GAScene.manage_still_items_(true);
             GAScene.manage_dynamic_items_(false, true);
         end
 
-        function additem(item)
+        function addstillitem(item)
             arguments
                 item GASceneItem;
             end
-            GAScene.manage_items_(item);
+            GAScene.manage_still_items_(item);
         end
 
         function adddynamicitem(item)
@@ -54,11 +54,18 @@ classdef GAScene
             GAScene.manage_dynamic_items_(false, item);
         end
 
-        function deleteitem(itemindex)
+        function deletestillitem(itemindex)
             arguments
                 itemindex uint32;
             end
-            GAScene.manage_items_(itemindex);
+            GAScene.manage_still_items_(itemindex);
+        end
+
+        function deletedynamicitem(itemindex)
+            arguments
+                itemindex uint32;
+            end
+            GAScene.manage_dynamic_items_(false, itemindex);
         end
 
         function refreshdynamicitems()
@@ -145,7 +152,7 @@ classdef GAScene
         %        Item Management       %
         %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
 
-        function manage_items_(in)
+        function manage_still_items_(in)
 
             persistent static_items;
             persistent num_items;
@@ -193,6 +200,13 @@ classdef GAScene
                     %fprintf("~~~~~~~~~~~%s~~~~~~~~~~~\n", repmat('~', 1, strlength(scenename)))
 
                 end
+            elseif isa(in, "uint32")
+                delete(static_items{in}.drawing_handles);
+                static_items(:, in) = [];
+                num_items = num_items - 1;
+                % Now display the new list to the user
+                fprintf("\nItem has been Deleted. The still item list is now:\n")
+                GAScene.manage_still_items_(false);
             end
         end
 
@@ -256,9 +270,14 @@ classdef GAScene
 
                         %fprintf("~~~~~~~~~~~%s~~~~~~~~~~~\n", repmat('~', 1, strlength(scenename)))
                     end
+                elseif isa(in, "uint32")
+                    delete(dynamic_items{in}.drawing_handles);
+                    dynamic_items(:, in) = [];
+                    num_items = num_items - 1;
+                    % Now display the new list to the user
+                    fprintf("\nItem has been Deleted. The dynamic item list is now:\n")
+                    GAScene.manage_dynamic_items_(false, false);
                 end
-
-                % TODO: handle scenario 4
 
             end
         end

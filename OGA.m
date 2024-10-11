@@ -688,19 +688,19 @@ classdef OGA < GA
                 end
                 % TODO: make a proper way of converting a vector to a point
                 h = PGABLEDraw.arrow(origin(PGA), ihd(PGAcast(A) + e0(PGA)), c);
-                GAScene.additem(GASceneItem(A, h));
+                GAScene.addstillitem(GASceneItem(A, h));
             elseif GAisa(A, 'bivector')
                 if isempty(c)
                     c = 'g';
                 end
                 h = PGABLEDraw.hairydisk(PGAcast(A), c, origin(PGA));
-                GAScene.additem(GASceneItem(A, h));
+                GAScene.addstillitem(GASceneItem(A, h));
             elseif GAisa(A, 'trivector')
                 if isempty(c)
                     c = 'b';
                 end
                 h = PGABLEDraw.hairyball(A, c, origin(PGA));
-                GAScene.additem(GASceneItem(A, h));
+                GAScene.addstillitem(GASceneItem(A, h));
             else
                 error('Error is not a vector, bivector or trivector. OGA cannot draw it.');
             end
