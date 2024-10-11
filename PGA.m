@@ -285,14 +285,14 @@ classdef PGA < GA
             big_tip = (star_big_tip_trans/origin(PGA))*p;
             small_tip = small_R*(star_small_tip_trans/origin(PGA))*p*inverse(small_R);
 
+            %TODO: rename this below
+
             ctest = versorbatchiterate(R, {big_tip, small_tip}, 4, true);
 
             ctest = reshape(ctest', [1, 10]);
 
             ctest = arrayfun(@(p)GAScene.boundingboxclip(xrange, yrange, zrange, p), ctest);
-            %GAScene.plot3({rot_back, p}, 'g');
-            %h = GAScene.plot3(ctest, c);
-            h = [h GAScene.patch(ctest, c)];
+            h = [h PGABLEDraw.patch(ctest, c)];
             
         end
 
@@ -371,7 +371,7 @@ classdef PGA < GA
 
             points = arrayfun(@(p)GAScene.boundingboxclip(xrange, yrange, zrange, p), points);
 
-            h = GAScene.plotline(points, c, true, true);
+            h = PGABLEDraw.plotline(points, c, true, true);
 
             
             for i=1:(length(points)-1)
@@ -393,7 +393,7 @@ classdef PGA < GA
                 arrow_points = {ap_short, ap_tip, ap_long};
                 arrow_points = arrayfun(@(p)GAScene.boundingboxclip(xrange, yrange, zrange, p), arrow_points);
                 
-                h = [h GAScene.patch(arrow_points, c)];
+                h = [h PGABLEDraw.patch(arrow_points, c)];
             end
             
         end
@@ -1107,6 +1107,8 @@ classdef PGA < GA
                 A PGA;
                 c = [];
             end
+            GAScene.usefigure();
+
             A = zeroepsilons_(A);
             
             if GAisa(A, 'point')
@@ -1120,7 +1122,7 @@ classdef PGA < GA
                     h = PGA.drawvanishingpoint(A, c);
                     GAScene.adddynamicitem(GASceneDynamicItem(A, h, @()PGA.drawvanishingpoint(A, c)));
                 else
-                    h = GAScene.drawoctahedron(A, PGA.pointsize(), c);
+                    h = PGABLEDraw.octahedron(A, PGA.pointsize(), c);
                     GAScene.additem(GASceneItem(A, h));
                 end
                 
@@ -1135,7 +1137,7 @@ classdef PGA < GA
                     h = PGA.drawvanishingline(A, c);
                     GAScene.adddynamicitem(GASceneDynamicItem(A, h, @()PGA.drawvanishingline(A, c)));
                 else
-                    h = GAScene.drawhairyline(A, c);
+                    h = PGABLEDraw.hairyline(A, c);
                     GAScene.additem(GASceneItem(A, h));
                 end
 
@@ -1145,7 +1147,7 @@ classdef PGA < GA
                     c = 'g';
                 end
 
-                h = GAScene.drawpointingplane(A, c);
+                h = PGABLEDraw.pointingplane(A, c);
                 GAScene.additem(GASceneItem(A, h));
             else
                 error('Error is not a point, line, or plane. PGA cannot draw it.');
