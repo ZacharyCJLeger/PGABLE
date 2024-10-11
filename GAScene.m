@@ -132,21 +132,6 @@ classdef GAScene
     methods (Access = private, Static)
 
         %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
-        %            TOOLS             %
-        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
-
-        function a = gaarea_(px, py)
-            %gaarea_(px,py): compute the area of a polygon.
-            
-            a = 0;
-            for i = 1:length(px)-1
-                a = a + px(i)*py(i+1) - px(i+1)*py(i);
-            end
-            a = a + px(length(px))*py(1) - px(1)*py(length(py));
-            a = a/2;
-        end
-
-        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
         %        Item Management       %
         %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
 
