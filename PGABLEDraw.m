@@ -6,8 +6,7 @@ classdef PGABLEDraw
     methods (Access = public, Static)
 
         function h = arrow(p1, p2, c)
-            %ARROWS - Draws an arrow from one point to another.
-            %   Draws
+            %ARROW - Draws an arrow from one point to another.
 
             % Drawing an arrow from point p1 to point p2 in colour c
             arguments
@@ -83,13 +82,12 @@ classdef PGABLEDraw
         end
 
         function polygon(Poly, BV, position, c)
-
+            %POLYGON - Draws a polygon on a bivector with offset.
             % The polygon struct assumes the polygon is in the (x,y)-plane. 
             % Polygon is a struct containing the information of the polygon. It contains:
             %   - X, Y, Z vectors which are list of (x, y, z) coordinates for each point in the polygon
             %   - CX and CY, which is the (x, y) position of the center of the polygon
 
-            % TODO: Consider making a public version of this method.
         
             translate = position/origin(PGA);
 
@@ -108,10 +106,9 @@ classdef PGABLEDraw
             PGABLEDraw.patch(pts, c);
         end
 
-        % TODO: Consider making this a public method. Perhaps rename to not be confused with MATLAB's patch function.
-        %       Or, potentially pass alpha and line_style in the same style as Matlab to ensure compatability.
-        % TODO: perhaps add underscore if not making public
         function handle = patch(pts, c, alpha, line_style)
+            %PATCH - Draws a patch of a coloured polygon.
+
             arguments
                 pts;
                 c = 'y';
@@ -130,7 +127,8 @@ classdef PGABLEDraw
         end
 
         function h = plotline(A, c, isdashed, isthick)
-            % plot3(A, c): plot a 3d line connecting end points of A in color c
+            %PLOTLINE - Draws a line connecting the points of the first argument.
+
             arguments
                 A;
                 c = [0, 0, 1, 1];
@@ -168,6 +166,8 @@ classdef PGABLEDraw
 
 
         function h = octahedron(center_point, radius, c)
+            %OCTAHEDRON - Draws an octahedron.
+
             arguments 
                 center_point PGA;
                 radius double;
@@ -194,6 +194,8 @@ classdef PGABLEDraw
         end
 
         function h = hairyline(line, c)
+            %HAIRYLINE - Draws a hairy line.
+
             hold on
 
             % TODO: Currently normalizing the line. We should perhaps shouldn't need to do this.
@@ -244,6 +246,8 @@ classdef PGABLEDraw
         end
 
         function h = pointingplane(plane, c)
+            %POINTINGPLANE - Draws a plane with pointing arrows.
+
             % TODO: verify input is PGA vector
             arguments
                 plane;
@@ -337,6 +341,8 @@ classdef PGABLEDraw
         end
 
         function h = hairydisk(BV, c, offset)
+            %HAIRYDISK - Draws a disk with hairs indicating spin.
+
             arguments
                 BV PGA;
                 c = 'b';
@@ -376,6 +382,8 @@ classdef PGABLEDraw
         end
 
         function h = hairyball(TV, c, offset)
+            %HAIRYBALL - Draws a ball with hairs pointing inward or outward.
+            
             hold on
             
             v = e123coeff(TV);
