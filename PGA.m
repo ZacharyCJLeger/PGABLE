@@ -291,7 +291,7 @@ classdef PGA < GA
 
             ctest = reshape(ctest', [1, 10]);
 
-            ctest = arrayfun(@(p)GAScene.boundingboxclip(xrange, yrange, zrange, p), ctest);
+            ctest = arrayfun(@(p)PGABLEDraw.boundingboxclip(xrange, yrange, zrange, p), ctest);
             h = [h PGABLEDraw.patch(ctest, c)];
             
         end
@@ -338,7 +338,7 @@ classdef PGA < GA
 
             points = [];
 
-            isin = @(p)GAScene.isinboundingbox(xrange, yrange, zrange, p);
+            isin = @(p)PGABLEDraw.isinboundingbox(xrange, yrange, zrange, p);
 
             if isin(xp^yp^vlplane)
                 % We are in the scenario where we know the line goes through:
@@ -369,7 +369,7 @@ classdef PGA < GA
                 end
             end
 
-            points = arrayfun(@(p)GAScene.boundingboxclip(xrange, yrange, zrange, p), points);
+            points = arrayfun(@(p)PGABLEDraw.boundingboxclip(xrange, yrange, zrange, p), points);
 
             h = PGABLEDraw.plotline(points, c, true, true);
 
@@ -391,7 +391,7 @@ classdef PGA < GA
                 ap_tip = R*ap/R;
 
                 arrow_points = {ap_short, ap_tip, ap_long};
-                arrow_points = arrayfun(@(p)GAScene.boundingboxclip(xrange, yrange, zrange, p), arrow_points);
+                arrow_points = arrayfun(@(p)PGABLEDraw.boundingboxclip(xrange, yrange, zrange, p), arrow_points);
                 
                 h = [h PGABLEDraw.patch(arrow_points, c)];
             end

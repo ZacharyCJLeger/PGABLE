@@ -383,7 +383,7 @@ classdef PGABLEDraw
 
         function h = hairyball(TV, c, offset)
             %HAIRYBALL - Draws a ball with hairs pointing inward or outward.
-            
+
             hold on
             
             v = e123coeff(TV);
@@ -460,8 +460,36 @@ classdef PGABLEDraw
         %     end
         % end
 
+        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
+        %        Generic Tooling       %
+        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
 
+        function R = boundingboxclip(xrange, yrange, zrange, p)
+            %BOUNDINGBOXCLIP - Returns a point clipped in a bounding box.
 
+            arguments
+                xrange;
+                yrange;
+                zrange;
+                p;
+            end
+            p = p{1};
+
+            x = p.getx();
+            y = p.gety();
+            z = p.getz();
+            R = {point(clip(x, xrange(1), xrange(2)), clip(y, yrange(1), yrange(2)), clip(z, zrange(1), zrange(2)))};
+        end
+
+        function b = isinboundingbox(xrange, yrange, zrange, p)
+            %ISINBOUNDINGBOX - Returns true if a point is in the bounding box.
+
+            bx = xrange(1) <= p.getx() && p.getx() <= xrange(2);
+            by = yrange(1) <= p.gety() && p.gety() <= yrange(2);
+            bz = zrange(1) <= p.getz() && p.getz() <= zrange(2);
+
+            b = bx && by && bz;
+        end
 
     end
 end

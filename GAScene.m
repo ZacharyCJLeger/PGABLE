@@ -98,6 +98,8 @@ classdef GAScene
         %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
 
         function obj = getfigure()
+            %GETFIGURE - Returns the figure object for GASCene.
+
             persistent static_fig;
             
             if ~isempty(static_fig) && isvalid(static_fig)
@@ -117,36 +119,11 @@ classdef GAScene
         end
 
         function usefigure()
+            %USEFIGURE - Sets the GAScene figure in use.
+
             figure(GAScene.getfigure());
             axis equal;
             view(3)
-        end
-
-        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
-        %        Generic Tooling       %
-        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
-
-        function R = boundingboxclip(xrange, yrange, zrange, p)
-            arguments
-                xrange;
-                yrange;
-                zrange;
-                p;
-            end
-            p = p{1};
-
-            x = p.getx();
-            y = p.gety();
-            z = p.getz();
-            R = {point(clip(x, xrange(1), xrange(2)), clip(y, yrange(1), yrange(2)), clip(z, zrange(1), zrange(2)))};
-        end
-
-        function b = isinboundingbox(xrange, yrange, zrange, p)
-            bx = xrange(1) <= p.getx() && p.getx() <= xrange(2);
-            by = yrange(1) <= p.gety() && p.gety() <= yrange(2);
-            bz = zrange(1) <= p.getz() && p.getz() <= zrange(2);
-
-            b = bx && by && bz;
         end
     end
 
