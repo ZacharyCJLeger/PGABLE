@@ -700,6 +700,9 @@ classdef PGA < GA
         end
 
         function R = normalize_(A)
+            if norm_(A) < GA.epsilon_tolerance()
+                error("The norm of the element is 0. Cannot normalize.")
+            end
             R = A / norm_(A);
         end
 
