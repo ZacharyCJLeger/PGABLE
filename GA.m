@@ -115,9 +115,9 @@ classdef (Abstract) GA
 
             persistent currentval;
             
-            % By default the model is PGA
+            % By default the model is OGA
             if isempty(currentval)
-                currentval = "PGA";
+                currentval = "OGA";
             end
 
             if isempty(newval)
