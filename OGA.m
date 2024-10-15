@@ -725,6 +725,9 @@ classdef OGA < GA
                 error(['Cannot implictly convert from ' class(A) ' to OGA'])
             end
         end
+        function r = getzero(~)
+            r = OGA(0);
+        end
 
         function r = e1coeff(A)
             %E1COEFF - Returns the coefficient of e1.

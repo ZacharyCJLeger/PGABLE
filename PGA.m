@@ -1196,6 +1196,10 @@ classdef PGA < GA
             end
         end
 
+        function r = getzero(~)
+            r = PGA(0);
+        end
+
         function r = e0coeff(A)
             %E0COEFF - Returns the coefficient of e0.
 

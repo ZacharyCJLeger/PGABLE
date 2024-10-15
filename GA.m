@@ -89,11 +89,10 @@ classdef (Abstract) GA
 
         function val = model(newval, surpress_output)
             %MODEL - Set/retreive the MODEL setting.
-            %   The MODEL setting is a string indicating the current model.
-            %   The argument must be either an element in the desired model or a string
-            %   of the exact name of the desired model. Thus, for example, both GA.model(PGA)
-            %   and GA.model("PGA") will set the current model to PGA.
-            %   If no argument is provided, MODEL returns a string of the name of the
+            %   The MODEL setting is an element indicating the current model.
+            %   The argument must be an element in the desired model. Thus, for example, 
+            %   GA.model(PGA) and GA.model(e1(PGA) + e2(PGA)) will set the current model to
+            %   PGA. If no argument is provided, MODEL returns the zero element of the
             %   current model.
             %
             %   The value of MODEL indicates which model of geometric algebra is in use.
@@ -117,7 +116,7 @@ classdef (Abstract) GA
             
             % By default the model is OGA
             if isempty(currentval)
-                currentval = "OGA";
+                currentval = OGA();
             end
 
             if isempty(newval)
@@ -126,14 +125,14 @@ classdef (Abstract) GA
             else
                 % User is trying to set the value
 
-                if isa(newval, 'GA')
-                    newval = modelname(newval);
+                if ~isa(newval, 'GA')
+                    error("Model must be a child of class GA.")
                 end
 
-                currentval = newval;
+                currentval = newval.getzero();
 
                 if ~surpress_output
-                    disp("   model set to " + currentval)
+                    disp("   model set to " + modelname(currentval))
                 end
                 
             end 
@@ -326,13 +325,20 @@ classdef (Abstract) GA
         end
 
         function C = getdominating_(A, B)
-            if isa(A, 'GA')
-                C = A;
-            elseif isa(B, 'GA')
-                C = B;
+            if nargin == 2
+                if isa(A, 'GA')
+                    C = A;
+                elseif isa(B, 'GA')
+                    C = B;
+                else
+                    C = GA.model();
+                end
             else
-                % TODO: return current model, perhaps. This case might not be possible.
-                error('Cannot find model to cast to.')
+                if isa(A, 'GA')
+                    C = A;
+                else 
+                    C = GA.model();
+                end
             end
         end
     end
@@ -606,7 +612,7 @@ classdef (Abstract) GA
 
         function r = vnorm(A)
             %VNORM - Computes the vanishing norm of the multivector.
-
+            
             r = vnorm_(A);
         end
 
@@ -993,6 +999,9 @@ classdef (Abstract) GA
         %CAST - Converts the input into an element of the model if an implicit conversion
         %   is possible.
         cast(A);
+
+        %GETZERO - Returns the zero (additive identity) of the model.
+        getzero();
     end
 
     % ******************** Abstract Protected Methods ********************
