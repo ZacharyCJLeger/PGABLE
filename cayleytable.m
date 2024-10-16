@@ -1,6 +1,8 @@
 function cayleytable(els, fn)
     %CAYLEYTABLE - When given an array of elements and a binary function, displays a Cayley
     %   table.
+    %   For example, running cayleytable(PGA.elements(), @(x, y) inner(x, y)) creates the
+    %   inner product cayley table for the elements of PGA.
 
     tabl = [];
     for i = 1:length(els)
