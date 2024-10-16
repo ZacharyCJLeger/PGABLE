@@ -675,14 +675,14 @@ classdef PGA < GA
 
             M = [scal   C0    C1    C2    C3  -C01  -C02  -C03  -C12  -C13  -C23  -C012 -C013 -C023 -C123  C0123;
 
-                E0    scal  E01   E02   E03   -C1   -C2   -C3    0     0     0   -E12  -E13  -E23  -E0123  C123;
+                E0    scal  E01   E02   E03   -C1   -C2   -C3  -E012  -E013 -E023  -E12  -E13  -E23  -E0123  C123;
                 E1   -C01   scal  C12   C13    C0    0     0    -C2   -C3  -C123  C02   C03    0   -C23  -C023;
                 E2   -C02  -C12   scal  C23    0     C0    0     C1   C123  -C3  -C01    0    C03   C13   C013
                 E3   -C03  -C13  -C23   scal   0     0     C0  -C123   C1    C2    0   -C01  -C02  -C12  -C012;
 
-                E01    0     0    E012  E013  scal   0     0     0     0     0     C2    C3    0     0    -C23;
-                E02    0   -E012   0    E023   0    scal   0     0     0     0    -C1    0     C3    0     C13;
-                E03    0   -E013 -E023   0     0     0    scal   0     0     0     0    -C1   -C2    0    -C12;
+                E01    0     0    E012  E013  scal   0     0     0     0  -E0123   C2    C3    0     0    -C23;
+                E02    0   -E012   0    E023   0    scal   0     0    E0123  0    -C1    0     C3    0     C13;
+                E03    0   -E013 -E023   0     0     0    scal -E0123  0     0     0    -C1   -C2    0    -C12;
                 E12   C012   0     0    C123   0     0  -C0123  scal   0     0     C0    0     0     C3   -C03;
                 E13   C013   0   -C123   0     0   C0123   0     0    scal   0     0     C0    0    -C2    C02;
                 E23   C023  C123   0     0  -C0123   0     0     0     0    scal   0     0     C0    C1   -C01;
