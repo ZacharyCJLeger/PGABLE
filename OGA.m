@@ -261,15 +261,16 @@ classdef OGA < GA
             % TODO: write code to generate this matrix.
             M = [scal   C1    C2    C3  -C12  -C13  -C23  -C123 ;
 
-                 C1    scal   0     0    -C2   -C3    0   -C23  ;
-                 C2   -C12   scal   0     C1    0    -C3   C13  ;
-                 C3   -C13  -C23   scal   0     C1    C2  -C12  ;
+                 C1    scal  C12   C13   -C2   -C3   -C123 -C23  ;
+                 C2   -C12   scal  C23    C1  C123   -C3   C13  ;
+                 C3   -C13  -C23   scal -C123  C1    C2  -C12  ;
 
                  C12    0     0    C123  scal   0     0     C3  ;
                  C13    0   -C123   0     0    scal   0    -C2  ;
                  C23   C123   0     0     0     0    scal   C1  ;
 
                  C123   0     0     0     0     0     0    scal ];
+
             R = OGA(M*B.m);
         end
 
