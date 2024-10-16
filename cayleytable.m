@@ -13,6 +13,7 @@ function cayleytable(els, fn)
     end
 
     for i = 1:length(els)
+        fprintf('     ');
         for j = 1:length(els)
             fprintf('%s  ', tabl(j, i));
         end
