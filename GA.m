@@ -132,7 +132,7 @@ classdef (Abstract) GA
                 currentval = newval.getzero();
 
                 if ~surpress_output
-                    disp("   model set to " + modelname(currentval))
+                    disp("   model set to " + currentval.modelname())
                 end
                 
             end 
@@ -345,7 +345,18 @@ classdef (Abstract) GA
 
     % ******************** Public Static Abstract Methods ********************
     methods (Access = public, Static, Abstract)
+        %ELEMENTS - Returns the elements of the model as an array.
         elements();
+
+        %MODELNAME - Returns the name of the model of the element.
+        modelname();
+
+        %CAST - Converts the input into an element of the model if an implicit conversion
+        %   is possible.
+        cast(A);
+
+        %GETZERO - Returns the zero (additive identity) of the model.
+        getzero();
     end
 
     % ******************** Public Methods ********************
@@ -378,7 +389,7 @@ classdef (Abstract) GA
             end
 
             if GA.indicate_model() || indicate_model
-                s = ['(' convertStringsToChars(modelname(p)) ') ' s];
+                s = ['(' convertStringsToChars(p.modelname()) ') ' s];
             end
         end
 
@@ -997,18 +1008,6 @@ classdef (Abstract) GA
         %   Thus, draw(e1(OGA)) may draw something different than draw(e1(PGA)).
         %   Not all elements can be drawn. You will receive an error if it cannot be drawn.
         draw(A, c);
-        
-        %TODO: these methods below are effectively static. Convert to make it actually static.
-
-        %MODELNAME - Returns the name of the model of the element.
-        modelname();
-
-        %CAST - Converts the input into an element of the model if an implicit conversion
-        %   is possible.
-        cast(A);
-
-        %GETZERO - Returns the zero (additive identity) of the model.
-        getzero();
     end
 
     % ******************** Abstract Protected Methods ********************

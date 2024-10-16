@@ -45,7 +45,7 @@ function e = point(x, y, z, model)
     end
 
     if isa(model, "GA")
-        model = modelname(model);
+        model = model.modelname();
     end
   
     switch model

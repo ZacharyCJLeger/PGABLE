@@ -1013,6 +1013,28 @@ classdef PGA < GA
                      e23(PGA), e31(PGA), e12(PGA), e032(PGA), e013(PGA), e021(PGA), e123(PGA), e0123(PGA)];
             end
         end
+
+        function s = modelname()
+            s = "PGA";
+        end
+
+        function R = cast(A)
+            if isa(A, 'PGA')
+                R = A;
+            elseif isa(A, 'double')
+                if GA.autoscalar
+                    R = PGA(A);
+                else 
+                    error('Implicit conversion between a double and PGA is disabled. Run "help GA.autoscalar" for more information.')
+                end
+            else
+                error(['Cannot implictly convert from ' class(A) ' to PGA'])
+            end
+        end
+
+        function r = getzero()
+            r = PGA(0);
+        end
     end
 
 
@@ -1171,10 +1193,6 @@ classdef PGA < GA
             GAScene.refreshdynamicitems();
         end
 
-        function s = modelname(~)
-            s = "PGA";
-        end
-
         function R = euclidean(A)
             %EUCLIDEAN - Returns the euclidean portion of the multivector.
 
@@ -1187,24 +1205,6 @@ classdef PGA < GA
 
             [scal, E0, E1, E2, E3, E01, E02, E03, E12, E13, E23, E012, E013, E023, E123, E0123] = decompose_(A);
             R = PGA(E0, [0, E01, E02, E03], [0, 0, 0, E012, E013, E023], [0, 0, 0, E0123], 0);
-        end
-
-        function R = cast(~, A)
-            if isa(A, 'PGA')
-                R = A;
-            elseif isa(A, 'double')
-                if GA.autoscalar
-                    R = PGA(A);
-                else 
-                    error('Implicit conversion between a double and PGA is disabled. Run "help GA.autoscalar" for more information.')
-                end
-            else
-                error(['Cannot implictly convert from ' class(A) ' to PGA'])
-            end
-        end
-
-        function r = getzero(~)
-            r = PGA(0);
         end
 
         function r = e0coeff(A)

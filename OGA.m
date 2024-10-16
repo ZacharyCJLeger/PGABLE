@@ -583,6 +583,28 @@ classdef OGA < GA
                 e = [OGA(1), e1(OGA), e2(OGA), e3(OGA), e23(OGA), e31(OGA), e12(OGA), e123(OGA)];
             end
         end
+
+        function s = modelname()
+            s = "OGA";
+        end
+
+        function R = cast(A)
+            if isa(A, 'OGA')
+                R = A;
+            elseif isa(A, 'double')
+                if GA.autoscalar
+                    R = OGA(A);
+                else 
+                    error('Implicit conversion between a double and OGA is disabled. Run "help GA.autoscalar" for more information.')
+                end
+            else
+                error(['Cannot implictly convert from ' class(A) ' to OGA'])
+            end
+        end
+        
+        function r = getzero()
+            r = OGA(0);
+        end
     end
 
 
@@ -720,28 +742,6 @@ classdef OGA < GA
             end
 
             GAScene.refreshdynamicitems();
-        end
-
-        function s = modelname(~)
-            s = "OGA";
-        end
-
-        function R = cast(~, A)
-            if isa(A, 'OGA')
-                R = A;
-            elseif isa(A, 'double')
-                if GA.autoscalar
-                    R = OGA(A);
-                else 
-                    error('Implicit conversion between a double and OGA is disabled. Run "help GA.autoscalar" for more information.')
-                end
-            else
-                error(['Cannot implictly convert from ' class(A) ' to OGA'])
-            end
-        end
-        
-        function r = getzero(~)
-            r = OGA(0);
         end
 
         function r = e1coeff(A)

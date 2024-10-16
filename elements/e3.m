@@ -11,7 +11,7 @@ function e = e3(model)
         model = GA.model;
     end
     if isa(model, "GA")
-        model = modelname(model);
+        model = model.modelname();
     end
     
     switch model
