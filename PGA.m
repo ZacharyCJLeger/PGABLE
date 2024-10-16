@@ -273,10 +273,7 @@ classdef PGA < GA
                         [p.gety(), aphi*p.gety() + phi*yaverage], ...
                         [p.getz(), aphi*p.getz() + phi*zaverage], 'k');
             
-            % TODO: Preallocate space so this is more efficient
-            
-
-            
+ 
             rot_back = (star_tip_rot_back/origin(PGA))*p;
             l = join(rot_back, p);
             R = gexp((-2*pi/5)*normalize(l)/2);
@@ -285,14 +282,12 @@ classdef PGA < GA
             big_tip = (star_big_tip_trans/origin(PGA))*p;
             small_tip = small_R*(star_small_tip_trans/origin(PGA))*p*inverse(small_R);
 
-            %TODO: rename this below
+            starpoints = versorbatchiterate(R, {big_tip, small_tip}, 4, true);
 
-            ctest = versorbatchiterate(R, {big_tip, small_tip}, 4, true);
+            starpoints = reshape(starpoints', [1, 10]);
 
-            ctest = reshape(ctest', [1, 10]);
-
-            ctest = arrayfun(@(p)PGABLEDraw.boundingboxclip(xrange, yrange, zrange, p), ctest);
-            h = [h PGABLEDraw.patch(ctest, c)];
+            starpoints = arrayfun(@(p)PGABLEDraw.boundingboxclip(xrange, yrange, zrange, p), starpoints);
+            h = [h PGABLEDraw.patch(starpoints, c)];
             
         end
 
