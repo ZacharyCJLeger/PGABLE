@@ -343,6 +343,11 @@ classdef (Abstract) GA
         end
     end
 
+    % ******************** Public Static Abstract Methods ********************
+    methods (Access = public, Static, Abstract)
+        elements();
+    end
+
     % ******************** Public Methods ********************
     methods (Access = public)
 
@@ -993,6 +998,8 @@ classdef (Abstract) GA
         %   Not all elements can be drawn. You will receive an error if it cannot be drawn.
         draw(A, c);
         
+        %TODO: these methods below are effectively static. Convert to make it actually static.
+
         %MODELNAME - Returns the name of the model of the element.
         modelname();
 

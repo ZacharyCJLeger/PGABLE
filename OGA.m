@@ -535,13 +535,13 @@ classdef OGA < GA
                         
             if GA.compact_notation()
                 if OGA.increasing_order()
-                    [s, pl] = GA.charifyval_(p.m(7), 'e23', s, pl);
-                    [s, pl] = GA.charifyval_(-p.m(6), 'e31', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(5), 'e12', s, pl);
-                else
                     [s, pl] = GA.charifyval_(p.m(5), 'e12', s, pl);
                     [s, pl] = GA.charifyval_(p.m(6), 'e13', s, pl);
                     [s, pl] = GA.charifyval_(p.m(7), 'e23', s, pl);
+                else
+                    [s, pl] = GA.charifyval_(p.m(7), 'e23', s, pl);
+                    [s, pl] = GA.charifyval_(-p.m(6), 'e31', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(5), 'e12', s, pl);
                 end
 
                 if GA.compact_pseudoscalar()
@@ -572,7 +572,20 @@ classdef OGA < GA
             end
         end
     end
-    
+
+    % ******************** Public Static Methods ********************
+    methods (Access = public, Static)
+        function e = elements()
+            if OGA.increasing_order()
+                e = [OGA(1), e1(OGA), e2(OGA), e3(OGA), e12(OGA), e13(OGA), e23(OGA), e123(OGA)];
+            else 
+                e = [OGA(1), e1(OGA), e2(OGA), e3(OGA), e23(OGA), e31(OGA), e12(OGA), e123(OGA)];
+            end
+        end
+    end
+
+
+    % ******************** Public Methods ********************
     methods (Access = public)
         function obj = OGA(m0, m1, m2, m3)
             %OGA - The constructor for OGA elements.
@@ -725,6 +738,7 @@ classdef OGA < GA
                 error(['Cannot implictly convert from ' class(A) ' to OGA'])
             end
         end
+        
         function r = getzero(~)
             r = OGA(0);
         end

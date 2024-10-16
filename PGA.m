@@ -1001,6 +1001,19 @@ classdef PGA < GA
         end
     end
 
+    % ******************** Public Static Methods ********************
+    methods (Access = public, Static)
+        function e = elements()
+            if PGA.increasing_order()
+                e = [PGA(1), e0(PGA), e1(PGA), e2(PGA), e3(PGA), e01(PGA), e02(PGA), e03(PGA),...
+                     e12(PGA), e13(PGA), e23(PGA), e012(PGA), e013(PGA), e023(PGA), e123(PGA), e0123(PGA)];
+            else 
+                e = [PGA(1), e0(PGA), e1(PGA), e2(PGA), e3(PGA), e01(PGA), e02(PGA), e03(PGA),...
+                     e23(PGA), e31(PGA), e12(PGA), e032(PGA), e013(PGA), e021(PGA), e123(PGA), e0123(PGA)];
+            end
+        end
+    end
+
 
     % ******************** Public Methods ********************
 
@@ -1074,8 +1087,6 @@ classdef PGA < GA
                 error('Bad PGA argument: Invalid number of arguments.')
             end
         end
-
-        % TODO: add to change notes: method m in GA is now called matrix in PGA.
 
         function rm = matrix(A)
             rm = A.m;
@@ -1158,11 +1169,6 @@ classdef PGA < GA
 
             GAScene.refreshdynamicitems();
         end
-        
-        % TODO: decide what to do with this section below
-        % **********************************
-        % ** Methods in the testing phase **
-        % **********************************
 
         function s = modelname(~)
             s = "PGA";
