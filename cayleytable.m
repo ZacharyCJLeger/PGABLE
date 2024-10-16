@@ -6,7 +6,7 @@ function cayleytable(els, fn)
     for i = 1:length(els)
         col = [];
         for j = 1:length(els)
-            res = fn(els(i), els(j));
+            res = fn(els(j), els(i));
             col = [col convertCharsToStrings(char(res))];
         end
         tabl = [tabl; pad(col)];
