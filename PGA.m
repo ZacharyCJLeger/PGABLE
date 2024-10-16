@@ -1,5 +1,5 @@
 classdef PGA < GA
-    %PGA  is a child class of GA for elements of Projective/Plane-based Geometric Algebra.
+    %PGA - A child class of GA for elements of Projective/Plane-based Geometric Algebra.
     %   Elements
     %      Basic elements include 1, e0, e1, e2, e3, e01, e02, e03, e12, e31, e23, e021,
     %      e013, e032, e123, e0123.
@@ -58,8 +58,6 @@ classdef PGA < GA
         m
     end
 
-    % TODO: Add description for each method.
-
     %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
     %           Settings           %
     %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
@@ -68,7 +66,7 @@ classdef PGA < GA
 
         function settings()
             %SETTINGS - Displays the current configuration settings for PGA in PGABLE.
-            %   To retrieve a particular settings, run PGA.[setting].
+            %   To retrieve a particular setting, run PGA.[setting].
             %   For example, to retrieve the value of increasing_order, run
             %   PGA.increasing_order.
             %   To change the value of a particular setting, run PGA.[setting]([value]).
@@ -88,8 +86,8 @@ classdef PGA < GA
         end
         
         function [S0, S1, S2, S3] = signature(sign0, sign1, sign2, sign3)
-            %SIGNATURE - Sets/retrieve the current signature of the model.
-            %   This settings is NOT recommended for beginners.
+            %SIGNATURE - Set/retrieve the current signature of the model.
+            %   This setting is NOT recommended for beginners.
             %   If no arguments are provided, the signatures for e0, e1, e2, e3 are returned
             %   as a vector [S0, S1, S2, S3].
             %   If 4 arguments are provided, the inputs sign0, sign1, sign2, sign3 correspond
@@ -197,6 +195,10 @@ classdef PGA < GA
         %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
 
         function h = drawvanishingpoint(vp, c)
+            %DRAWVANISHINGPOINT - Draws a single instance of a vanishing point.
+            %   This function is NOT intended for a user to draw a vanishing point to the
+            %   scene. To draw a vanishing point, run "draw(vanishing_point)".
+
             ax = gca;
 
             xrange = ax.XLim;
@@ -283,18 +285,22 @@ classdef PGA < GA
             big_tip = (star_big_tip_trans/origin(PGA))*p;
             small_tip = small_R*(star_small_tip_trans/origin(PGA))*p*inverse(small_R);
 
+            %TODO: rename this below
+
             ctest = versorbatchiterate(R, {big_tip, small_tip}, 4, true);
 
             ctest = reshape(ctest', [1, 10]);
 
-            ctest = arrayfun(@(p)GAScene.boundingboxclip(xrange, yrange, zrange, p), ctest);
-            %GAScene.plot3({rot_back, p}, 'g');
-            %h = GAScene.plot3(ctest, c);
-            h = [h GAScene.patch(ctest, c)];
+            ctest = arrayfun(@(p)PGABLEDraw.boundingboxclip(xrange, yrange, zrange, p), ctest);
+            h = [h PGABLEDraw.patch(ctest, c)];
             
         end
 
         function h = drawvanishingline(vl, c)
+            %DRAWVANISHINGLINE - Draws a single instance of a vanishing line.
+            %   This function is NOT intended for a user to draw a vanishing line to the
+            %   scene. To draw a vanishing line, run "draw(vanishing_line)".
+
             h = [];
 
             ax = gca;
@@ -332,7 +338,7 @@ classdef PGA < GA
 
             points = [];
 
-            isin = @(p)GAScene.isinboundingbox(xrange, yrange, zrange, p);
+            isin = @(p)PGABLEDraw.isinboundingbox(xrange, yrange, zrange, p);
 
             if isin(xp^yp^vlplane)
                 % We are in the scenario where we know the line goes through:
@@ -363,9 +369,9 @@ classdef PGA < GA
                 end
             end
 
-            points = arrayfun(@(p)GAScene.boundingboxclip(xrange, yrange, zrange, p), points);
+            points = arrayfun(@(p)PGABLEDraw.boundingboxclip(xrange, yrange, zrange, p), points);
 
-            h = GAScene.plotline(points, c, true, true);
+            h = PGABLEDraw.plotline(points, c, true, true);
 
             
             for i=1:(length(points)-1)
@@ -385,9 +391,9 @@ classdef PGA < GA
                 ap_tip = R*ap/R;
 
                 arrow_points = {ap_short, ap_tip, ap_long};
-                arrow_points = arrayfun(@(p)GAScene.boundingboxclip(xrange, yrange, zrange, p), arrow_points);
+                arrow_points = arrayfun(@(p)PGABLEDraw.boundingboxclip(xrange, yrange, zrange, p), arrow_points);
                 
-                h = [h GAScene.patch(arrow_points, c)];
+                h = [h PGABLEDraw.patch(arrow_points, c)];
             end
             
         end
@@ -694,6 +700,9 @@ classdef PGA < GA
         end
 
         function R = normalize_(A)
+            if norm_(A) < GA.epsilon_tolerance()
+                error("The norm of the element is 0. Cannot normalize.")
+            end
             R = A / norm_(A);
         end
 
@@ -831,25 +840,6 @@ classdef PGA < GA
             end
         end
             
-
-        % TODO: This isn't used anywhere. Perhaps depricate.
-        % TODO: Upgrade to PGA if not depricating.
-        % function r = unit(A)
-        %     if isGrade(A,0)
-        %         r = unit(A.m(1));
-        %     elseif isGrade(A,1)
-        %         s = sqrt(A.m(2)*A.m(2)+A.m(3)*A.m(3)+A.m(4)*A.m(4));
-        %         r = A/s;
-        %     elseif isGrade(A,2)
-        %         s = sqrt(A.m(5)*A.m(5)+A.m(6)*A.m(6)+A.m(7)*A.m(7));
-        %         r = A/s;
-        %     elseif isGrade(A,3)
-        %         r = A/abs(A.m(8));
-        %     else
-        %         error('Unit can only be applied to blades.');
-        %     end
-        % end
-
         % TODO: Needs to be upgraded to PGA
         % TODO: make private and wrap for public
         % function r = blade(A)
@@ -895,64 +885,30 @@ classdef PGA < GA
             %R = ((1+A)/sqrt(denom))*(1 - grade_(A, 4)/denom);
         end
 
+        % TODO: Decide behaviour for non-points for get functions.
 
-        % TODO: Needs to be updated to PGA
-        % function r = wexp_(A)
-        %     %GAwexp(A): Gives the wedge product exponential of a GA objects.
-        
-        %     M =[A.m(1)    0       0       0       0       0       0       0;
-        %     A.m(2)  A.m(1)    0       0       0       0       0       0;
-        %     A.m(3)    0     A.m(1)    0       0       0       0       0;
-        %     A.m(4)    0       0     A.m(1)    0       0       0       0;
-        %     A.m(5) -A.m(3)  A.m(2)    0     A.m(1)    0       0       0;
-        %     A.m(6)    0    -A.m(4)  A.m(3)    0     A.m(1)    0       0;
-        %     A.m(7)  A.m(4)    0    -A.m(2)    0       0     A.m(1)    0;
-        %     A.m(8)  A.m(6)  A.m(7)  A.m(5)  A.m(4)  A.m(2)  A.m(3)  A.m(1)];
-        %     E = expm(M);
-        %     r = PGA(E(1:8,1));
-        % end
-
-        % TODO: Needs to be upgraded to PGA (maybe depricate?)
-        % function r = bilinear_(A, B)
-        %     %bilinear(A, B): Computes the bilinear form of two GA objects.
-
-        %     S = GAsignature;
-        %     N = [B.m(1);S(1)*B.m(2);S(2)*B.m(3);S(3)*B.m(4);S(1)*S(2)*B.m(5);S(2)*S(3)*B.m(6);S(3)*S(1)*B.m(7);S(1)*S(2)*S(3)*B.m(8)];
-        %     r = PGA((A.m')*N);
-        % end
-
-        % TODO: maybe depricate?
-        % function r = connection(e,A,B)
-        %     %connection(e,A,B): Compute the translational moment from A to B.
-        %     %  Both A and B must be in homogeneous form.
-        %     %  This is what you need to add to A to make its meet with B non-trivial.
-        %     e = PGA(e);
-        %     A = PGA(A);
-        %     B = PGA(B);
-
-        %     tA = inner(e,A);
-        %     tB = inner(e,B);
-        %     ejAB = e^(join(tA,tB)*meet(tA,tB));
-        %     Ato0 = PGAZ((A-contraction(A,ejAB)/ejAB)/inner(e,A));
-        %     Bto0 = PGAZ((B-contraction(B,ejAB)/ejAB)/inner(e,B));
-
-        %     r = PGA.returnGA_(PGAZ(PGA(Bto0-Ato0))^tA);
-        % end
-
-        % TODO: Decide behaviour for non-points.
         function r = getx_(A)
+            %GETX_ - A private function for computing the x coordinate of a PGA element.
+            %   Returns the x coordinate of a point. Non-points return an error.
+
             r = -A.m(14)/A.m(15);
             % 14 is the position of e023
             % 15 is the position of e123
         end
         
         function r = gety_(A)
+            %GETY_ - A private function for computing the y coordinate of a PGA element.
+            %   Returns the y coordinate of a point. Non-points return an error.
+
             r = A.m(13)/A.m(15);
             % 13 is the position of e013
             % 15 is the position of e123
         end
         
-        function r = getz_(A)            
+        function r = getz_(A)
+            %GETZ_ - A private function for computing the z coordinate of a PGA element.
+            %   Returns the z coordinate of a point. Non-points return an error.
+
             r = -A.m(12)/A.m(15);
             % 12 is the position of e012
             % 15 is the position of e123
@@ -972,70 +928,70 @@ classdef PGA < GA
                 pl = ' + ';
             end
 
-            [s, pl] = GA.charify_val_(p.m(2), 'e0', s, pl);
-            [s, pl] = GA.charify_val_(p.m(3), 'e1', s, pl);
-            [s, pl] = GA.charify_val_(p.m(4), 'e2', s, pl);
-            [s, pl] = GA.charify_val_(p.m(5), 'e3', s, pl);
+            [s, pl] = GA.charifyval_(p.m(2), 'e0', s, pl);
+            [s, pl] = GA.charifyval_(p.m(3), 'e1', s, pl);
+            [s, pl] = GA.charifyval_(p.m(4), 'e2', s, pl);
+            [s, pl] = GA.charifyval_(p.m(5), 'e3', s, pl);
 
             if GA.compact_notation()
-                [s, pl] = GA.charify_val_(p.m(6), 'e01', s, pl);
-                [s, pl] = GA.charify_val_(p.m(7), 'e02', s, pl);
-                [s, pl] = GA.charify_val_(p.m(8), 'e03', s, pl);
+                [s, pl] = GA.charifyval_(p.m(6), 'e01', s, pl);
+                [s, pl] = GA.charifyval_(p.m(7), 'e02', s, pl);
+                [s, pl] = GA.charifyval_(p.m(8), 'e03', s, pl);
 
                 if ~PGA.increasing_order()
-                    [s, pl] = GA.charify_val_(p.m(11), 'e23', s, pl);
-                    [s, pl] = GA.charify_val_(-p.m(10), 'e31', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(9), 'e12', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(11), 'e23', s, pl);
+                    [s, pl] = GA.charifyval_(-p.m(10), 'e31', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(9), 'e12', s, pl);
 
-                    [s, pl] = GA.charify_val_(-p.m(14), 'e032', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(13), 'e013', s, pl);
-                    [s, pl] = GA.charify_val_(-p.m(12), 'e021', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(15), 'e123', s, pl);
+                    [s, pl] = GA.charifyval_(-p.m(14), 'e032', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(13), 'e013', s, pl);
+                    [s, pl] = GA.charifyval_(-p.m(12), 'e021', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(15), 'e123', s, pl);
                 else 
-                    [s, pl] = GA.charify_val_(p.m(9), 'e12', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(10), 'e13', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(11), 'e23', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(9), 'e12', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(10), 'e13', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(11), 'e23', s, pl);
 
-                    [s, pl] = GA.charify_val_(p.m(12), 'e012', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(13), 'e013', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(14), 'e023', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(15), 'e123', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(12), 'e012', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(13), 'e013', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(14), 'e023', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(15), 'e123', s, pl);
                 end
 
                 if GA.compact_pseudoscalar()
-                    [s, pl] = GA.charify_val_(p.m(16), 'I4', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(16), 'I4', s, pl);
                 else
-                    [s, pl] = GA.charify_val_(p.m(16), 'e0123', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(16), 'e0123', s, pl);
                 end
             else
-                [s, pl] = GA.charify_val_(p.m(6), 'e0^e1', s, pl);
-                [s, pl] = GA.charify_val_(p.m(7), 'e0^e2', s, pl);
-                [s, pl] = GA.charify_val_(p.m(8), 'e0^e3', s, pl);
+                [s, pl] = GA.charifyval_(p.m(6), 'e0^e1', s, pl);
+                [s, pl] = GA.charifyval_(p.m(7), 'e0^e2', s, pl);
+                [s, pl] = GA.charifyval_(p.m(8), 'e0^e3', s, pl);
 
                 if ~PGA.increasing_order()
-                    [s, pl] = GA.charify_val_(p.m(11), 'e2^e3', s, pl);
-                    [s, pl] = GA.charify_val_(-p.m(10), 'e3^e1', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(9), 'e1^e2', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(11), 'e2^e3', s, pl);
+                    [s, pl] = GA.charifyval_(-p.m(10), 'e3^e1', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(9), 'e1^e2', s, pl);
 
-                    [s, pl] = GA.charify_val_(-p.m(14), 'e0^e3^e2', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(13), 'e0^e1^e3', s, pl);
-                    [s, pl] = GA.charify_val_(-p.m(12), 'e0^e2^e1', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(15), 'e1^e2^e3', s, pl);
+                    [s, pl] = GA.charifyval_(-p.m(14), 'e0^e3^e2', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(13), 'e0^e1^e3', s, pl);
+                    [s, pl] = GA.charifyval_(-p.m(12), 'e0^e2^e1', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(15), 'e1^e2^e3', s, pl);
                 else
-                    [s, pl] = GA.charify_val_(p.m(9), 'e1^e2', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(10), 'e1^e3', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(11), 'e2^e3', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(9), 'e1^e2', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(10), 'e1^e3', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(11), 'e2^e3', s, pl);
 
-                    [s, pl] = GA.charify_val_(p.m(12), 'e0^e1^e2', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(13), 'e0^e1^e3', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(14), 'e0^e2^e3', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(15), 'e1^e2^e3', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(12), 'e0^e1^e2', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(13), 'e0^e1^e3', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(14), 'e0^e2^e3', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(15), 'e1^e2^e3', s, pl);
                 end
 
                 if GA.compact_pseudoscalar()
-                    [s, pl] = GA.charify_val_(p.m(16), 'I4', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(16), 'I4', s, pl);
                 else
-                    [s, pl] = GA.charify_val_(p.m(16), 'e0^e1^e2^e3', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(16), 'e0^e1^e2^e3', s, pl);
                 end
             end
             
@@ -1054,7 +1010,7 @@ classdef PGA < GA
             %   If no arugment is provided, the 0 element in PGA is returned.
             %   If 1 arugment is provided and it is a PGA element, the element itself will
             %   be returned. If the argument is a double, a PGA element of that scalar will
-            %   be return.
+            %   be returned.
             %   If 5 arguments are provided, it is assumed they have the following format:
             %   The first argument is a double for the scalar portion of the multivector
             %   The second argument is [c0, c1, c2, c3], where ci is a double corresponding
@@ -1131,6 +1087,7 @@ classdef PGA < GA
             %   In PGA, valid types are:
             %   scalar, vector, plane, bivector, line, trivector, point, quadvector,
             %   pseudoscalar, multivector
+
             arguments
                 A PGA;
                 t (1, 1) string;
@@ -1153,6 +1110,8 @@ classdef PGA < GA
                 A PGA;
                 c = [];
             end
+            GAScene.usefigure();
+
             A = zeroepsilons_(A);
             
             if GAisa(A, 'point')
@@ -1166,8 +1125,8 @@ classdef PGA < GA
                     h = PGA.drawvanishingpoint(A, c);
                     GAScene.adddynamicitem(GASceneDynamicItem(A, h, @()PGA.drawvanishingpoint(A, c)));
                 else
-                    h = GAScene.drawoctahedron(A, PGA.pointsize(), c);
-                    GAScene.additem(GASceneItem(A, h));
+                    h = PGABLEDraw.octahedron(A, PGA.pointsize(), c);
+                    GAScene.addstillitem(GASceneStillItem(A, h));
                 end
                 
             elseif GAisa(A, 'line')
@@ -1181,8 +1140,8 @@ classdef PGA < GA
                     h = PGA.drawvanishingline(A, c);
                     GAScene.adddynamicitem(GASceneDynamicItem(A, h, @()PGA.drawvanishingline(A, c)));
                 else
-                    h = GAScene.drawhairyline(A, c);
-                    GAScene.additem(GASceneItem(A, h));
+                    h = PGABLEDraw.hairyline(A, c);
+                    GAScene.addstillitem(GASceneStillItem(A, h));
                 end
 
             elseif GAisa(A, 'plane')
@@ -1191,8 +1150,8 @@ classdef PGA < GA
                     c = 'g';
                 end
 
-                h = GAScene.drawpointingplane(A, c);
-                GAScene.additem(GASceneItem(A, h));
+                h = PGABLEDraw.pointingplane(A, c);
+                GAScene.addstillitem(GASceneStillItem(A, h));
             else
                 error('Error is not a point, line, or plane. PGA cannot draw it.');
             end
@@ -1210,11 +1169,15 @@ classdef PGA < GA
         end
 
         function R = euclidean(A)
+            %EUCLIDEAN - Returns the euclidean portion of the multivector.
+
             [scal, E0, E1, E2, E3, E01, E02, E03, E12, E13, E23, E012, E013, E023, E123, E0123] = decompose_(A);
             R = PGA(scal, [0, E1, E2, E3], [0, 0, 0, E12, E13, E23], [0, 0, 0, E123], 0);
         end
 
         function R = noneuclidean(A)
+            %NONEUCLIDEAN - Returns the non-euclidean portion of the multivector.
+
             [scal, E0, E1, E2, E3, E01, E02, E03, E12, E13, E23, E012, E013, E023, E123, E0123] = decompose_(A);
             R = PGA(E0, [0, E01, E02, E03], [0, 0, 0, E012, E013, E023], [0, 0, 0, E0123], 0);
         end
@@ -1233,77 +1196,111 @@ classdef PGA < GA
             end
         end
 
+        function r = getzero(~)
+            r = PGA(0);
+        end
+
         function r = e0coeff(A)
+            %E0COEFF - Returns the coefficient of e0.
+
             M = matrix(A);
             r = M(2);
         end
 
         function r = e1coeff(A)
+            %E1COEFF - Returns the coefficient of e1.
+
             M = matrix(A);
             r = M(3);
         end
 
         function r = e2coeff(A)
+            %E2COEFF - Returns the coefficient of e2.
+
             M = matrix(A);
             r = M(4);
         end
 
         function r = e3coeff(A)
+            %E3COEFF - Returns the coefficient of e3.
+
             M = matrix(A);
             r = M(5);
         end
 
         function r = e01coeff(A)
+            %E01COEFF - Returns the coefficient of e01.
+
             M = matrix(A);
             r = M(6);
         end
 
         function r = e02coeff(A)
+            %E02COEFF - Returns the coefficient of e02.
+
             M = matrix(A);
             r = M(7);
         end
 
         function r = e03coeff(A)
+            %E03COEFF - Returns the coefficient of e03.
+
             M = matrix(A);
             r = M(8);
         end
 
         function r = e12coeff(A)
+            %E12COEFF - Returns the coefficient of e12.
+
             M = matrix(A);
             r = M(9);
         end
 
         function r = e13coeff(A)
+            %E13COEFF - Returns the coefficient of e13.
+
             M = matrix(A);
             r = M(10);
         end
 
         function r = e23coeff(A)
+            %E23COEFF - Returns the coefficient of e23.
+
             M = matrix(A);
             r = M(11);
         end
 
         function r = e012coeff(A)
+            %E012COEFF - Returns the coefficient of e012.
+
             M = matrix(A);
             r = M(12);
         end
 
         function r = e013coeff(A)
+            %E013COEFF - Returns the coefficient of e013.
+
             M = matrix(A);
             r = M(13);
         end
 
         function r = e023coeff(A)
+            %E023COEFF - Returns the coefficient of e023.
+
             M = matrix(A);
             r = M(14);
         end
 
         function r = e123coeff(A)
+            %E123COEFF - Returns the coefficient of e123.
+
             M = matrix(A);
             r = M(15);
         end
 
         function r = e0123coeff(A)
+            %E0123COEFF - Returns the coefficient of e0123.
+
             M = matrix(A);
             r = M(16);
         end

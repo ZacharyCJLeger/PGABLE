@@ -1,5 +1,5 @@
 classdef (Abstract) GA
-    %GA  is an abstract class that encompasses all geometric algebra objects.
+    %GA - An abstract class that encompasses all geometric algebra objects.
     %   Specific models of geometric algebra are child classes of this abstract class,
     %   namely OGA and PGA. To see more specific information on elements and methods
     %   of those particular models, run "help OGA" or "help PGA".
@@ -27,7 +27,7 @@ classdef (Abstract) GA
         %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
 
         function settings()
-            %SETTINGS  Displays the current configuration settings for PGABLE.
+            %SETTINGS - Displays the current configuration settings for PGABLE.
             %   To retrieve a particular setting, run "GA.[setting]".
             %   For example, to retrieve the value of autoscalar, run "GA.autoscalar".
             %   To change the value of a particular setting, run "GA.[setting]([value])".
@@ -51,11 +51,11 @@ classdef (Abstract) GA
 
         % TODO: Mention in documentation that this function will now no longer convert GA elements to scalars, only scalars to GA elements
         function val = autoscalar(newval, surpress_output)
-            %AUTOSCALAR  Set/retreive the AUTOSCALAR setting.
+            %AUTOSCALAR - Set/retreive the AUTOSCALAR setting.
             %   The AUTOSCALAR setting is either true or false.
             %   When set to true, doubles in equations will automatically be converted to GA
             %   scalar elements.
-            %   When set to false, doubles will return an error.
+            %   When set to false, doubles in equations will return an error.
             %   If no argument is provided, AUTOSCALAR returns the current value of the
             %   AUTOSCALAR setting.
             
@@ -88,12 +88,11 @@ classdef (Abstract) GA
         end
 
         function val = model(newval, surpress_output)
-            %MODEL  Set/retreive the MODEL setting.
-            %   The MODEL setting is a string indicating the current model.
-            %   The argument must be either an element in the desired model or a string
-            %   of the exact name of the desired model. Thus, for example, both GA.model(PGA)
-            %   and GA.model("PGA") will set the current model to PGA.
-            %   If no argument is provided, MODEL returns a string of the name of the
+            %MODEL - Set/retreive the MODEL setting.
+            %   The MODEL setting is an element indicating the current model.
+            %   The argument must be an element in the desired model. Thus, for example, 
+            %   GA.model(PGA) and GA.model(e1(PGA) + e2(PGA)) will set the current model to
+            %   PGA. If no argument is provided, MODEL returns the zero element of the
             %   current model.
             %
             %   The value of MODEL indicates which model of geometric algebra is in use.
@@ -115,9 +114,9 @@ classdef (Abstract) GA
 
             persistent currentval;
             
-            % By default the model is PGA
+            % By default the model is OGA
             if isempty(currentval)
-                currentval = "PGA";
+                currentval = OGA();
             end
 
             if isempty(newval)
@@ -126,21 +125,21 @@ classdef (Abstract) GA
             else
                 % User is trying to set the value
 
-                if isa(newval, 'GA')
-                    newval = modelname(newval);
+                if ~isa(newval, 'GA')
+                    error("Model must be a child of class GA.")
                 end
 
-                currentval = newval;
+                currentval = newval.getzero();
 
                 if ~surpress_output
-                    disp("   model set to " + currentval)
+                    disp("   model set to " + modelname(currentval))
                 end
                 
             end 
         end
 
         function val = indicate_model(newval, surpress_output)
-            %INDICATE_MODEL  Set/retreive the INDICATE_MODEL setting.
+            %INDICATE_MODEL - Set/retreive the INDICATE_MODEL setting.
             %   The INDICATE_MODEL setting is either true or false.
             %   When set to true, the current model will be displayed with the value of each
             %   GA element.
@@ -176,7 +175,7 @@ classdef (Abstract) GA
         end
 
         function val = epsilon_tolerance(newval, surpress_output)
-            %EPSILON_TOLERANCE  Set/retreive the tolerance for epsilon.
+            %EPSILON_TOLERANCE - Set/retreive the tolerance for epsilon.
             %   The EPSILON_TOLERANCE is a non-negative real number which indicates the value
             %   for which all values whose magnitude is smaller than it will be considered
             %   epsilon. Thus, for any value x, x will be considered an epsilon if
@@ -217,7 +216,7 @@ classdef (Abstract) GA
         end
 
         function val = compact_notation(newval, surpress_output)
-            %COMPACT_NOTATION  Set/retrieve the COMPACT_NOTATION setting.
+            %COMPACT_NOTATION - Set/retrieve the COMPACT_NOTATION setting.
             %   The COMPACT_NOTATION setting is either true or false.
             %   When set to true, GA elements will be displayed in compact notation.
             %   For example, the element e1^e2^e3 will be written as e123.
@@ -255,9 +254,8 @@ classdef (Abstract) GA
             end
         end
 
-        % TODO: add comment about CGA if/when implemented
         function val = compact_pseudoscalar(newval, surpress_output)
-            %COMPACT_PSEUDOSCALAR  Set/retrieve the COMPACT_PSEUDOSCALAR setting.
+            %COMPACT_PSEUDOSCALAR - Set/retrieve the COMPACT_PSEUDOSCALAR setting.
             %   The COMPACT_PSEUDOSCALAR setting is either true or false.
             %   When set to true, The pseudoscalar of the GA model will be represented via I[dim]
             %   where [dim] is the dimensionality of the space. Thus the following notation is used:
@@ -301,7 +299,7 @@ classdef (Abstract) GA
     % ******************** Protected Static Methods ********************
 
     methods (Access = protected, Static)
-        function [s_new, pl_new] = charify_val_(val, str, s, pl)
+        function [s_new, pl_new] = charifyval_(val, str, s, pl)
             s_new = s;
             pl_new = pl;
             
@@ -327,13 +325,20 @@ classdef (Abstract) GA
         end
 
         function C = getdominating_(A, B)
-            if isa(A, 'GA')
-                C = A;
-            elseif isa(B, 'GA')
-                C = B;
+            if nargin == 2
+                if isa(A, 'GA')
+                    C = A;
+                elseif isa(B, 'GA')
+                    C = B;
+                else
+                    C = GA.model();
+                end
             else
-                % TODO: return current model, perhaps. This case might not be possible.
-                error('Cannot find model to cast to.')
+                if isa(A, 'GA')
+                    C = A;
+                else 
+                    C = GA.model();
+                end
             end
         end
     end
@@ -346,7 +351,10 @@ classdef (Abstract) GA
         %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
 
         function s = char(p, indicate_model)
-            %CHAR  Returns the string representation of a GA element.
+            %CHAR - Returns the string representation of a GA element.
+            %   The (optional) second argument, indicate_model, determines if the model is
+            %   included in the string representation of the element.
+            %   The default value of indicate_model is false.
             
             arguments
                 p;
@@ -370,6 +378,7 @@ classdef (Abstract) GA
         end
 
         function display(p)
+            %DISPLAY - Displays the element in the console.
             disp(' ');
             disp([inputname(1),' = '])
             disp(' ');
@@ -384,31 +393,44 @@ classdef (Abstract) GA
         % Addition, subtraction, negation
         
         function R = plus(A, B)
+            %PLUS - Computes the addition of GA multivectors.
+
             C = GA.getdominating_(A, B);
             R = plus_(C.cast(A), C.cast(B));
         end
 
         function R = uplus(A)
+            %UPLUS - Handles +A notation for multivector A.
+
             R = A;
         end
 
         function R = minus(A, B)
+            %MINUS - Computes the subtraction of GA multivectors.
+
             C = GA.getdominating_(A, B);
             R = minus_(C.cast(A), C.cast(B));
         end
 
         function R = uminus(A)
+            %UMINUS - Handles -A notation for multivector A.
+
             R = uminus_(A);
         end
 
         % Outer product
 
         function R = outer(A, B)
+             %OUTER - Computes the outer product of GA multivectors.
+
             C = GA.getdominating_(A, B);
             R = outer_(C.cast(A), C.cast(B));
         end
 
         function R = mpower(A, B)
+            %MPOWER - Handles A^B notation of GA multivectors and computes the outer product
+            %   between the multivectors.
+
             C = GA.getdominating_(A, B);
             R = outer_(C.cast(A), C.cast(B));
         end
@@ -416,15 +438,16 @@ classdef (Abstract) GA
         % Inner product
 
         function R = inner(A, B)
-            % INNER  Compute the inner product of A and B.
-            %
-            % See also lcont, rcont, outer, product
+            %INNER - Computes the inner product of multivectors.
 
             C = GA.getdominating_(A, B);
             R = inner_(C.cast(A), C.cast(B));
         end
 
         function R = times(A, B)
+            %TIMES - Handles A.*B notation of GA multivectors and computes the inner product
+            %   between the multivectors.
+
             C = GA.getdominating_(A, B);
             R = inner_(C.cast(A), C.cast(B));
         end
@@ -432,21 +455,37 @@ classdef (Abstract) GA
         % Contractions
 
         function R = leftcontraction(A, B)
+            %LEFTCONTRACTION - Computes the left contraction of A onto B.
+            %
+            %   See also lcont.
+
             C = GA.getdominating_(A, B);
             R = leftcontraction_(C.cast(A), C.cast(B));
         end
 
         function R = lcont(A, B)
+            %LCONT - Shorthand for leftcontraction.
+            %
+            %   See also leftcontraction.
+
             C = GA.getdominating_(A, B);
             R = leftcontraction_(C.cast(A), C.cast(B));
         end
 
         function R = rightcontraction(A, B)
+            %RIGHTCONTRACTION - Computes the right contraction of A contracted by B.
+            %
+            %   See also rcont.
+
             C = GA.getdominating_(A, B);
             R = rightcontraction_(C.cast(A), C.cast(B));
         end
 
         function R = rcont(A, B)
+            %RCONT - Shorthand for rightcontraction.
+            %
+            %   See also rightcontraction.
+
             C = GA.getdominating_(A, B);
             R = rightcontraction_(C.cast(A), C.cast(B));
         end
@@ -454,16 +493,27 @@ classdef (Abstract) GA
         % Equalities and inequalities
 
         function b = eq(A, B)
+            %EQ - Tests equality between GA mutlivectors (within a tolerance of epsilon).
+            %
+            %   See also ne, eeq.
+
             C = GA.getdominating_(A, B);
             b = eq_(C.cast(A), C.cast(B));
         end
 
         function b = eeq(A, B)
+            %EEQ - Tests equality between GA mutlivectors (exact equality of all coefficients).
+            %
+            %   See also eq, ne.
+
             C = GA.getdominating_(A, B);
             b = eeq_(C.cast(A), C.cast(B));
         end
 
         function b = ne(A, B)
+            %NE - Tests inequality between GA multivectors (within a tolerance of epsilon).
+            %
+            %   See also eq, eeq.
             C = GA.getdominating_(A, B);
             b = ne_(C.cast(A), C.cast(B));
         end
@@ -471,16 +521,27 @@ classdef (Abstract) GA
         % Geometric product
 
         function R = product(A, B)
+            %PRODUCT - Computes the geometric product between multivectors.
+            %
+            %   See also prod, mtimes.
             C = GA.getdominating_(A, B);
             R = product_(C.cast(A), C.cast(B));
         end
 
         function R = prod(A, B)
+            %PROD - Shorthand for product.
+            %
+            %   See also product, mtimes.
             C = GA.getdominating_(A, B);
             R = product_(C.cast(A), C.cast(B));
         end
 
         function R = mtimes(A, B)
+            %MTIMES - Handles A*B notation of GA multivectors and computes the geometric
+            %   product between the multivectors.
+            %
+            %   See also product, prod.
+
             C = GA.getdominating_(A, B);
             R = product_(C.cast(A), C.cast(B));
         end
@@ -488,17 +549,28 @@ classdef (Abstract) GA
         % Inverse
 
         function R = inverse(A)
+            %INVERSE - Computes the inverse of a GA multivector.
+
             R = inverse_(A);
         end
 
         % Divide
 
         function R = divide(A, B)
+            %DIVIDE - Computes the division of A over B.
+            %
+            %   See also mrdivide.
+
             C = GA.getdominating_(A, B);
             R = divide_(C.cast(A), C.cast(B));
         end
 
         function R = mrdivide(A, B)
+            %MTIMES - Handles A/B notation of GA multivectors and computes the division
+            %    of multivector A over multivector B.
+            %
+            %   See also divide.
+
             C = GA.getdominating_(A, B);
             R = divide_(C.cast(A), C.cast(B));
         end
@@ -506,37 +578,46 @@ classdef (Abstract) GA
         % Logs, exponentials, roots
 
         function R = wexp(A)
+            %WEXP - Computes the exponential of the outer product.
+
             R = wexp_(A);
         end
 
         function R = gexp(A)
+            %GEXP - Computes the exponential of the geometric product.
+
             R = gexp_(A);
         end
 
         function R = glog(A)
+            %GLOG - Computes the logarithm of the geometric product.
+
             R = glog_(A);
         end
 
         function R = sqrt(A)
+            %SQRT - Computes the square root of a multivector (such that the geometric product
+            %   of the resulting element with itself results in the input).
+
             R = sqrt_(A);
         end
 
         % Norms and normalization
 
         function r = norm(A)
-            %NORM  returns the norm of the multivector.
+            %NORM - Computes the norm of the multivector.
 
             r = norm_(A);
         end
 
         function r = vnorm(A)
-            %VNORM  Returns the vanishing norm of the multivector.
-
+            %VNORM - Computes the vanishing norm of the multivector.
+            
             r = vnorm_(A);
         end
 
         function R = normalize(A)
-            %NORMALIZE  Returns the normalized multivector.
+            %NORMALIZE - Computes the normalized multivector.
 
             R = normalize_(A);
         end
@@ -544,7 +625,7 @@ classdef (Abstract) GA
         % Dual
 
         function R = dual(A)
-            %DUAL  Computes the dual.
+            %DUAL - Computes the dual.
             %
             %   See also d.
 
@@ -552,7 +633,7 @@ classdef (Abstract) GA
         end
 
         function R = d(A)
-            %D  Shorthand for computing the dual.
+            %D - Shorthand for dual.
             %
             %   See also dual.
 
@@ -562,14 +643,14 @@ classdef (Abstract) GA
         % Inverse dual
 
         function R = inversedual(A)
-            %INVERSEDUAL  Computes the inverse dual.
+            %INVERSEDUAL - Computes the inverse dual.
             %
             %   See also invdual, id.
             R = inversedual_(A);
         end
 
         function R = invdual(A)
-            %INVDUAL  Shorthand for computing the inverse dual.
+            %INVDUAL - Shorthand for inversedual.
             %
             %   See also inversedual, id.
 
@@ -577,7 +658,7 @@ classdef (Abstract) GA
         end
 
         function R = id(A)
-            %ID  Shorthand for computing the inverse dual.
+            %ID - Shorthand for inversedual.
             %
             %   See also inversedual, id.
 
@@ -587,21 +668,21 @@ classdef (Abstract) GA
         % Hodge dual
 
         function R = hodgedual(A)
-            %HODGEDUAL  Computes the hodge dual.
+            %HODGEDUAL - Computes the hodge dual.
             %
             %   See also hdual, hd.
             R = hodgedual_(A);
         end
 
         function R = hdual(A)
-            %HDUAL  Shorthand for computing the hodge dual.
+            %HDUAL - Shorthand for hodgedual.
             %
             %   See also hodgedual, hd.
             R = hodgedual_(A);
         end
 
         function R = hd(A)
-            %HD  Shorthand for computing the hodge dual.
+            %HD - Shorthand for hodgedual.
             %
             %   See also hodgedual, hdual.
             R = hodgedual_(A);
@@ -610,7 +691,7 @@ classdef (Abstract) GA
         % Inverse Hodge dual
 
         function R = inversehodgedual(A)
-            %INVERSEHODGEDUAL  Computes the inverse hodge dual.
+            %INVERSEHODGEDUAL - Computes the inverse hodge dual.
             %
             %   See also invhodgedual, invhdual, ihd.
 
@@ -618,7 +699,7 @@ classdef (Abstract) GA
         end
 
         function R = invhodgedual(A)
-            %INVHODGEDUAL  Shorthand for computing the inverse hodge dual.
+            %INVHODGEDUAL - Shorthand for inversehodgedual.
             %
             %   See also inversehodgedual, invhdual, ihd.
 
@@ -626,14 +707,14 @@ classdef (Abstract) GA
         end
 
         function R = invhdual(A)
-            %INVHDUAL  Shorthand for computing the inverse hodge dual.
+            %INVHDUAL - Shorthand for inversehodgedual.
             %
             %   See also inversehodgedual, invhodgedual, ihd.
             R = inversehodgedual_(A);
         end
 
         function R = ihd(A)
-            %IHD  Shorthand for computing the inverse hodge dual.
+            %IHD - Shorthand for inversehodgedual.
             %
             %   See also inversehodgedual, invhodgedual, invhdual.
             R = inversehodgedual_(A);
@@ -642,7 +723,7 @@ classdef (Abstract) GA
         % JMap
 
         function R = jmap(A)
-            %JMAP  Computes the jmap, also called the poincare dual.
+            %JMAP - Computes the jmap, also called the poincare dual.
             %
             %   See also poincaredual, pdual, pd.
 
@@ -650,7 +731,7 @@ classdef (Abstract) GA
         end
 
         function R = poincaredual(A)
-            %POINCAREDUAL  Computes the poincare dual, also called the jmap.
+            %POINCAREDUAL - Computes the poincare dual, also called the jmap.
             %
             %   See also jmap, pdual, pd.
 
@@ -658,7 +739,7 @@ classdef (Abstract) GA
         end
 
         function R = pdual(A)
-            %PDUAL  Shorthand for computing the poincare dual.
+            %PDUAL - Shorthand for poincaredual.
             %
             %   See also jmap, poincaredual, pd
 
@@ -666,7 +747,7 @@ classdef (Abstract) GA
         end
 
         function R = pd(A)
-            %PD  Shorthand for computing the poincare dual.
+            %PD - Shorthand for poincaredual.
             %
             %   See also jmap, poincaredual, pdual.
             R = jmap_(A);
@@ -675,7 +756,7 @@ classdef (Abstract) GA
         % Reverse
 
         function R = reverse(A)
-            %REVERSE  Computes the reverse.
+            %REVERSE - Computes the reverse.
             %
             %   See also rev.
 
@@ -683,7 +764,7 @@ classdef (Abstract) GA
         end
 
         function R = rev(A)
-            %REV  Shorthand for computing the reverse.
+            %REV - Shorthand for reverse.
             %
             %   See also reverse.
 
@@ -693,14 +774,14 @@ classdef (Abstract) GA
         % Meet and join
 
         function R = meet(A, B)
-            %MEET  Computes the meet of two multivectors.
+            %MEET - Computes the meet of two multivectors.
 
             C = GA.getdominating_(A, B);
             R = meet_(C.cast(A), C.cast(B));
         end
 
         function R = join(A, B)
-            %JOIN  Computes the join of two multivectors.
+            %JOIN - Computes the join of two multivectors.
 
             C = GA.getdominating_(A, B);
             R = join_(C.cast(A), C.cast(B));
@@ -709,7 +790,7 @@ classdef (Abstract) GA
         % Conjugate and involution
 
         function R = conjugate(A)
-            %CONJUGATE  Computes the conjugate.
+            %CONJUGATE - Computes the conjugate.
             %
             %   See also conj.
 
@@ -717,7 +798,7 @@ classdef (Abstract) GA
         end
 
         function R = conj(A)
-            %CONJ  Shorthand for computing the conjugate
+            %CONJ - Shorthand for conjugate.
             %
             %   See also conjugate.
 
@@ -725,7 +806,7 @@ classdef (Abstract) GA
         end
 
         function R = gradeinvolution(A)
-            %GRADEINVOLUTION  Computing the grade involution.
+            %GRADEINVOLUTION - Computing the grade involution.
             %
             %   See also gi.
 
@@ -733,7 +814,7 @@ classdef (Abstract) GA
         end
 
         function R = gi(A)
-            %GI  Shorthand for computing the grade involution.
+            %GI - Shorthand for gradeinvolution.
             %
             %   See also gradeinvolution.
 
@@ -743,6 +824,12 @@ classdef (Abstract) GA
         % Grades
 
         function R = grade(A, n)
+            %GRADE - If only a multivector is provided, returns the a non-negative integer
+            %   representing the grade of the element (or -1 if the element contains
+            %   multiple grades).
+            %   If a multivector and an integer n is provided, returns true if the mutlivector
+            %   is of grade n and returns false otherwise.
+
             arguments
                 A GA;
                 n (1, 1) int32 = -1;
@@ -752,9 +839,10 @@ classdef (Abstract) GA
         end
 
         function b = isgrade(A, g)
-            % ISGRADE  Returns true if the multivector A is a blade of grade g, and false otherwise.
+            %ISGRADE - Returns true if the multivector A is a blade of grade g, and false otherwise.
             %
-            %   See also PGA.GAisa, OGA.GAisa.
+            %   See also GAisa, PGA.GAisa, OGA.GAisa.
+
             arguments
                 A GA;
                 g (1, 1) uint32;
@@ -765,31 +853,43 @@ classdef (Abstract) GA
         % Coordinates
 
         function r = getx(A)
+            %GETX - Computes the x coordinate of an element.
+            %   The enterpretation of this computation (and which elements are valid input)
+            %   highly depends on the model. Thus, for more help, run "help [model].getx_".
+
             r = getx_(A);
         end
 
         function r = gety(A)
+            %GETY - Computes the y coordinate of an element.
+            %   The enterpretation of this computation (and which elements are valid input)
+            %   highly depends on the model. Thus, for more help, run "help [model].gety".
+
             r = gety_(A);
         end
 
         function r = getz(A)
+            %GETZ - Computes the z coordinate of an element.
+            %   The enterpretation of this computation (and which elements are valid input)
+            %   highly depends on the model. Thus, for more help, run "help [model].getz".
+
             r = getz_(A);
         end
 
         % Cleaning
 
         function R = zeroepsilons(A)
-            %ZEROEPSILONS  Sets any episilons to zero.
+            %ZEROEPSILONS - Sets any epsilons to zero.
             %   I.e. it takes any basis blade within the multivector with coefficient size
             %   less than GA.epsilon_tolerance and sets it to zero.
             %
-            %   See also GAZ.
+            %   See also GAZ, GA.epsilon_tolerance.
 
             R = zeroepsilons_(A);
         end
 
         function R = GAZ(A)
-            %GAZ  is shorthand for zeroepsilons.
+            %GAZ - Shorthand for zeroepsilons.
             %
             %   See also zeroepsilons.
 
@@ -799,6 +899,9 @@ classdef (Abstract) GA
         % Conversion
 
         function r = double(A)
+            %DOUBLE - Converts a scalar GA element into a double.
+            %   Returns an error if the GA element is not a scalar.
+
             r = double_(A);
         end
 
@@ -859,12 +962,12 @@ classdef (Abstract) GA
     % ******************** Abstract Public Methods ********************
     
     methods (Abstract, Access = public)
-        %MATRIX  Returns the internal matrix representation of a multivector.
+        %MATRIX - Returns the internal matrix representation of a multivector.
         %   This is for debugging purposes.
         matrix(A);
 
-        %GAISA  Determines in a multivector and a string representing a type of multivector
-        %   and returns true if the multivector is of that type.
+        %GAISA - Takes a multivector and a string representing a type of a multivector
+        %   as input and returns true if the multivector is of that type.
         %   Which types are valid depends on the GA model. Thus, to see which types are
         %   permissable, run help [model].GAisa to see the list of options.
         %   For example, to see the options for PGA, run "help PGA.GAisa".
@@ -872,79 +975,78 @@ classdef (Abstract) GA
         %   See also PGA.GAisa, OGA.GAisa.
         GAisa(A, t);
 
-        %PGACAST  Casts a GA element directly into PGA without geometric considerations.
+        %PGACAST - Casts a GA element directly into PGA without geometric considerations.
         %   It converts elements directly, removing any incompatible elements.
         %   For example, PGAcast(e1(OGA) + e2(OGA)) will result in the PGA element e1+e2.
         %   (despite the fact that e1+e2 is a vector in OGA but a plane in PGA).
         PGAcast(A);
 
-        %OGACAST  Casts a GA element directly into OGA without geometric considerations.
+        %OGACAST - Casts a GA element directly into OGA without geometric considerations.
         %    It converts elements directly, removing any incompatible elements.
         %    For example, OGAcast(e0(PGA)+e1(PGA)) will result in the OGA element e1.
         %    (since the element e0 does not exist in OGA).
         OGAcast(A);
 
-        %DRAW  Draws the GA element to the GA Scene figure.
+        %DRAW - Draws the GA element to the GA Scene figure.
         %   Note that the geometric interpretation of elements depends on the model.
         %   Thus, draw(e1(OGA)) may draw something different than draw(e1(PGA)).
         %   Not all elements can be drawn. You will receive an error if it cannot be drawn.
         draw(A, c);
         
-        %MODELNAME  Returns the name of the model of the element.
+        %MODELNAME - Returns the name of the model of the element.
         modelname();
 
-        %CAST  Converts the input into an element of the model if an implicit conversion
+        %CAST - Converts the input into an element of the model if an implicit conversion
         %   is possible.
         cast(A);
+
+        %GETZERO - Returns the zero (additive identity) of the model.
+        getzero();
     end
 
     % ******************** Abstract Protected Methods ********************
 
     methods (Abstract, Access = protected)
-        % TODO: Organize/order these methods
-
-        plus_(A, B);
-        minus_(A, B);
-        uminus_(A);
-        outer_(A, B);
-        inner_(A, B);
-        leftcontraction_(A, B);
-        rightcontraction_(A, B);
-        eq_(A, B);
-        eeq_(A, B);
-        ne_(A, B);
-        product_(A, B);
-        inverse_(A);
-        divide_(A, B);
-        gexp_(A);
-        glog_(A);
-        norm_(A);
-        vnorm_(A);
-        normalize_(A);
-        dual_(A);
-        inversedual_(A);
-        hodgedual_(A);
-        inversehodgedual_(A);
-        jmap_(A);
-        reverse_(A);
-        meet_(A, B);
-        join_(A, B);
+        char_(A);
         conjugate_(A);
-        gradeinvolution_(A);
-        grade_(A, n);
-        isgrade_(A, g);
+        divide_(A, B);
+        double_(A);
+        dual_(A);
+        eeq_(A, B);
+        eq_(A, B);
         getx_(A);
         gety_(A);
         getz_(A);
-        zeroepsilons_(A);
-        char_(A);
-        double_(A);
+        gexp_(A);
+        glog_(A);
+        grade_(A, n);
+        gradeinvolution_(A);
+        hodgedual_(A);
+        inner_(A, B);
+        inverse_(A);
+        inversedual_(A);
+        inversehodgedual_(A);
+        isgrade_(A, g);
+        jmap_(A);
+        join_(A, B);
+        leftcontraction_(A, B);
+        meet_(A, B);
+        minus_(A, B);
+        ne_(A, B);
+        norm_(A);
+        normalize_(A);
+        outer_(A, B);
+        plus_(A, B);
+        product_(A, B);
+        reverse_(A);
+        rightcontraction_(A, B);
         sqrt_(A);
-
-
+        uminus_(A);
+        vnorm_(A);
+        zeroepsilons_(A);
+        
         % TODO: Perhaps implement the methods below
         % wexp_(A);
-        % GASignature
     end
 
 end

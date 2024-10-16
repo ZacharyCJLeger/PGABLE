@@ -1,5 +1,5 @@
 classdef OGA < GA
-    %OGA  is a child class of GA for elements of Ordinary Geometric Algebra.
+    %OGA - A child class of GA for elements of Ordinary Geometric Algebra.
     %   Elements
     %      Basic elements include e1, e2, e3, e12, e31, e23, e123.
     %
@@ -77,6 +77,13 @@ classdef OGA < GA
         end
 
         function [S1, S2, S3] = signature(sign1, sign2, sign3)
+            %SIGNATURE - Set/retrieve the current signature of the model.
+            %   This setting is NOT recommended for beginners.
+            %   If no arguments are provided, the signatures for e1, e2, e3 are returned
+            %   as a vector [S1, S2, S3].
+            %   If 3 arguments are provided, the inputs sign1, sign2, sign3 correspond to the
+            %   signatures of e1, e2, e3 respectively.
+
             persistent signature1;
             persistent signature2;
             persistent signature3;
@@ -151,7 +158,7 @@ classdef OGA < GA
                 b = sum(nzm(5:8)) == 0 & nzm(1) == 0;
             elseif strcmp(t,'bivector') 
                 b = sum(nzm(1:4)) == 0 & nzm(8) == 0;
-            elseif strcmp(t,'trivector') 
+            elseif strcmp(t,'trivector') || strcmp(t, 'pseudoscalar') 
                 b = sum(nzm(1:7)) == 0;
             elseif strcmp(t,'multivector')
                 b = sum( [sum(nzm(1)) sum(nzm(2:4)) sum(nzm(5:7)) nzm(8)] ~= 0) > 1;
@@ -278,15 +285,13 @@ classdef OGA < GA
         end
 
         function R = leftcontraction_(A, B)
-            % TODO: Implement.
-            
             error('Not yet implemented.')
+            % TODO: Implement.
         end
 
         function R = rightcontraction_(A, B)
-            % TODO: Implement.
-
             error('Not yet implemented.')
+            % TODO: Implement.
         end
 
         function R = inverse_(A)
@@ -348,7 +353,7 @@ classdef OGA < GA
         end
 
         function R = jmap_(A)
-            error('Jmap cannot be performed on OGA elements.');
+            error('Poincare dual cannot be performed on OGA elements.');
         end
 
         function R = reverse_(A)
@@ -385,10 +390,6 @@ classdef OGA < GA
         end
 
         function R = grade_(A, n)
-            % grade(A, n) return the part of an object of a particular grade.
-            %  Return the part of A of grade n.
-            %  If n is omitted, return the grade of A (-1 if A is of mixed grade) 
-            
             if nargin == 1
                 if A.m(1) ~= 0
                     if sum(abs(A.m(2:8))) == 0
@@ -463,62 +464,11 @@ classdef OGA < GA
             end
         end
 
-        % function r = unit(A)
-        %     if isGrade(A,0)
-        %         r = unit(A.m(1));
-        %     elseif isGrade(A,1)
-        %         s = sqrt(A.m(2)*A.m(2)+A.m(3)*A.m(3)+A.m(4)*A.m(4));
-        %         r = A/s;
-        %     elseif isGrade(A,2)
-        %         s = sqrt(A.m(5)*A.m(5)+A.m(6)*A.m(6)+A.m(7)*A.m(7));
-        %         r = A/s;
-        %     elseif isGrade(A,3)
-        %         r = A/abs(A.m(8));
-        %     else
-        %         error('Unit can only be applied to blades.');
-        %     end
-        % end
-
-        % function r = blade(A)
-        %     % blade(A) : return a blade made from the largest portion of a multivector.
-        %     A = OGA(A);
-
-        %     s(1) = abs(A.m(1));
-        %     s(2) = sqrt(sum(abs(A.m(2:4))));
-        %     s(3) = sqrt(sum(abs(A.m(5:7))));
-        %     s(4) = abs(A.m(8));
-        %     if s(1)>s(2) && s(1)>s(3) && s(1)>s(4)
-        %       r = OGA.returnOGA(A.m(1));
-        %     elseif s(2)>s(3) && s(2)>s(4)
-        %       r = OGA.returnOGA([0; A.m(2); A.m(3); A.m(4); 0; 0; 0; 0]);
-        %     elseif s(3)>s(4)
-        %       r = OGA.returnOGA([0; 0; 0; 0; A.m(5); A.m(6); A.m(7); 0]);
-        %     else
-        %       r = OGA.returnOGA([0; 0; 0; 0; 0; 0; 0; A.m(8)]);
-        %     end
-        % end
-
         function R = gexp_(A)
-            %gexp(A): Computes the geometric product exponential of a multivector.
             rm = productleftexpand_(A);
             E = expm(rm);
             R = OGA(E(1:8,1));
         end
-
-        % function r = wexp_(A)
-        %     %GAwexp(A): Gives the wedge product exponential of a GA objects.
-        
-        %     M =[A.m(1)    0       0       0       0       0       0       0;
-        %     A.m(2)  A.m(1)    0       0       0       0       0       0;
-        %     A.m(3)    0     A.m(1)    0       0       0       0       0;
-        %     A.m(4)    0       0     A.m(1)    0       0       0       0;
-        %     A.m(5) -A.m(3)  A.m(2)    0     A.m(1)    0       0       0;
-        %     A.m(6)    0    -A.m(4)  A.m(3)    0     A.m(1)    0       0;
-        %     A.m(7)  A.m(4)    0    -A.m(2)    0       0     A.m(1)    0;
-        %     A.m(8)  A.m(6)  A.m(7)  A.m(5)  A.m(4)  A.m(2)  A.m(3)  A.m(1)];
-        %     E = expm(M);
-        %     r = OGA(E(1:8,1));
-        % end
 
         function R = glog_(A)
             rm = productleftexpand_(A);
@@ -534,18 +484,36 @@ classdef OGA < GA
         end
 
         function r = getx_(A)
-            % Position of e1
-            r = A.m(2);
+            %GETX_ - A private function for computing the x coordinate of an OGA element.
+            %   Will return the e1 component of a vector. Non-vectors return an error.
+
+            if GAisa_(A, "vector")
+                r = A.m(2);
+            else
+                error("X coordinate of non-vectors is not defined for OGA.")
+            end
         end
         
         function r = gety_(A)
-            % Position of e2
-            r = A.m(3);
+            %GETY_ - A private function for computing the y coordinate of an OGA element.
+            %   Will return the e2 component of a vector. Non-vectors return an error.
+            
+            if GAisa_(A, "vector")
+                r = A.m(3);
+            else
+                error("Y coordinate of non-vectors is not defined for OGA.")
+            end
         end
         
         function r = getz_(A)
-            % Position of e3
-            r = A.m(4);
+            %GETZ_ - A private function for computing the z coordinate of an OGA element.
+            %   Will return the e3 component of a vector. Non-vectors return an error.
+            
+            if GAisa_(A, "vector")
+                r = A.m(4);
+            else
+                error("Z coordinate of non-vectors is not defined for OGA.")
+            end
         end
 
         function s = char_(p)
@@ -561,41 +529,41 @@ classdef OGA < GA
                 pl = ' + ';
             end
 
-            [s, pl] = GA.charify_val_(p.m(2), 'e1', s, pl);
-            [s, pl] = GA.charify_val_(p.m(3), 'e2', s, pl);
-            [s, pl] = GA.charify_val_(p.m(4), 'e3', s, pl);
+            [s, pl] = GA.charifyval_(p.m(2), 'e1', s, pl);
+            [s, pl] = GA.charifyval_(p.m(3), 'e2', s, pl);
+            [s, pl] = GA.charifyval_(p.m(4), 'e3', s, pl);
                         
             if GA.compact_notation()
                 if OGA.increasing_order()
-                    [s, pl] = GA.charify_val_(p.m(7), 'e23', s, pl);
-                    [s, pl] = GA.charify_val_(-p.m(6), 'e31', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(5), 'e12', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(7), 'e23', s, pl);
+                    [s, pl] = GA.charifyval_(-p.m(6), 'e31', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(5), 'e12', s, pl);
                 else
-                    [s, pl] = GA.charify_val_(p.m(5), 'e12', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(6), 'e13', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(7), 'e23', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(5), 'e12', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(6), 'e13', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(7), 'e23', s, pl);
                 end
 
                 if GA.compact_pseudoscalar()
-                    [s, pl] = GA.charify_val_(p.m(8), 'I3', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(8), 'I3', s, pl);
                 else
-                    [s, pl] = GA.charify_val_(p.m(8), 'e123', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(8), 'e123', s, pl);
                 end
             else
                 if OGA.increasing_order()
-                    [s, pl] = GA.charify_val_(p.m(5), 'e1^e2', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(6), 'e1^e3', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(7), 'e2^e3', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(5), 'e1^e2', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(6), 'e1^e3', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(7), 'e2^e3', s, pl);
                 else 
-                    [s, pl] = GA.charify_val_(p.m(7), 'e2^e3', s, pl);
-                    [s, pl] = GA.charify_val_(-p.m(6), 'e3^e1', s, pl);
-                    [s, pl] = GA.charify_val_(p.m(5), 'e1^e2', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(7), 'e2^e3', s, pl);
+                    [s, pl] = GA.charifyval_(-p.m(6), 'e3^e1', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(5), 'e1^e2', s, pl);
                 end
 
                 if GA.compact_pseudoscalar()
-                    [s, pl] = GA.charify_val_(p.m(8), 'I3', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(8), 'I3', s, pl);
                 else
-                    [s, pl] = GA.charify_val_(p.m(8), 'e1^e2^e3', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(8), 'e1^e2^e3', s, pl);
                 end
             end
             
@@ -607,9 +575,27 @@ classdef OGA < GA
     
     methods (Access = public)
         function obj = OGA(m0, m1, m2, m3)
-            % Constructor.
-        
-            % TODO: Leaved detailed description.
+            %OGA - The constructor for OGA elements.
+            %   If no arugment is provided, the 0 element in OGA is returned.
+            %   If 1 arugment is provided and it is a OGA element, the element itself will
+            %   be returned. If the argument is a double, an OGA element of that scalar will
+            %   be returned.
+            %   If 4 arguments are provided, it is assumed they have the following format:
+            %   The first argument is a double for the scalar portion of the multivector
+            %   The second argument is [c1, c2, c3], where ci is a double corresponding
+            %   to the coefficient for ei.
+            %   The third argument is [c12, c13, c23], where cij is a double
+            %   corresponding to the coefficient for eij.
+            %   The fourth argument is a double corresponding to the coefficient for e123.
+            %   For any of the arguments, one can optionally simply put 0 to have zero
+            %   for all the corresponding coefficients.
+            %
+            %   It is not generally recommended to construct OGA elements this way.
+            %   Instead, consider writing equations of the form
+            %                              e1 + e2^e3
+            %   while in the OGA model (see help GA.settings and help GA.model)
+            %   or while not in the OGA model as
+            %                              e1(OGA) + e2(OGA)^e3(OGA)
 
             if nargin == 0
                 obj = OGA(0);
@@ -658,6 +644,11 @@ classdef OGA < GA
         end
 
         function b = GAisa(A, t)
+            %GAISA - Determines in a multivector and a string representing a type of
+            %   multivector and returns true if the multivector is of that type.
+            %   In OGA, valid types are:
+            %   scalar, vector, bivector, trivector, pseudoscalar, multivector
+
             arguments
                 A OGA;
                 t (1, 1) string;
@@ -687,6 +678,7 @@ classdef OGA < GA
                 A OGA;
                 c = [];
             end
+            GAScene.usefigure();
 
             A = zeroepsilons_(A);
             
@@ -695,20 +687,20 @@ classdef OGA < GA
                     c = 'b';
                 end
                 % TODO: make a proper way of converting a vector to a point
-                h = GAScene.drawarrow(origin(PGA), ihd(PGAcast(A) + e0(PGA)), c);
-                GAScene.additem(GASceneItem(A, h));
+                h = PGABLEDraw.arrow(origin(PGA), ihd(PGAcast(A) + e0(PGA)), c);
+                GAScene.addstillitem(GASceneStillItem(A, h));
             elseif GAisa(A, 'bivector')
                 if isempty(c)
                     c = 'g';
                 end
-                h = GAScene.drawhairydisk(PGAcast(A), c, origin(PGA));
-                GAScene.additem(GASceneItem(A, h));
+                h = PGABLEDraw.hairydisk(PGAcast(A), c, origin(PGA));
+                GAScene.addstillitem(GASceneStillItem(A, h));
             elseif GAisa(A, 'trivector')
                 if isempty(c)
                     c = 'b';
                 end
-                h = GAScene.drawhairyball(A, c, origin(PGA));
-                GAScene.additem(GASceneItem(A, h));
+                h = PGABLEDraw.hairyball(A, c, origin(PGA));
+                GAScene.addstillitem(GASceneStillItem(A, h));
             else
                 error('Error is not a vector, bivector or trivector. OGA cannot draw it.');
             end
@@ -733,38 +725,55 @@ classdef OGA < GA
                 error(['Cannot implictly convert from ' class(A) ' to OGA'])
             end
         end
+        function r = getzero(~)
+            r = OGA(0);
+        end
 
         function r = e1coeff(A)
+            %E1COEFF - Returns the coefficient of e1.
+
             M = matrix(A);
             r = M(2);
         end
 
         function r = e2coeff(A)
+            %E2COEFF - Returns the coefficient of e2.
+
             M = matrix(A);
             r = M(3);
         end
 
         function r = e3coeff(A)
+            %E3COEFF - Returns the coefficient of e3.
+
             M = matrix(A);
             r = M(4);
         end
 
         function r = e12coeff(A)
+            %E12COEFF - Returns the coefficient of e12.
+
             M = matrix(A);
             r = M(5);
         end
 
         function r = e13coeff(A)
+            %E13COEFF - Returns the coefficient of e13.
+
             M = matrix(A);
             r = M(6);
         end
 
         function r = e23coeff(A)
+            %E23COEFF - Returns the coefficient of e23.
+
             M = matrix(A);
             r = M(7);
         end
 
         function r = e123coeff(A)
+            %E123COEFF - Returns the coefficient of e123.
+
             M = matrix(A);
             r = M(8);
         end

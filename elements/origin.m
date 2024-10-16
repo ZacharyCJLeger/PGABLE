@@ -16,7 +16,7 @@ function e = origin(model)
   
     switch model
         case "PGA"
-            e = ihd(e0(PGA));
+            e = hd(e0(PGA));
         case "OGA"
             e = OGA(0);
         otherwise

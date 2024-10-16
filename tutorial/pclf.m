@@ -1,2 +1,0 @@
-function pclf
-	GAScene.clearitems()
