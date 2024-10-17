@@ -44,7 +44,6 @@ classdef (Abstract) GA
             disp("   compact_pseudoscalar: " + GA.compact_pseudoscalar())
             disp("   epsilon_tolerance:    " + GA.epsilon_tolerance())
             disp("   indicate_model:       " + GA.indicate_model())
-            disp("   increasing_order:     " + GA.increasing_order())
             disp("   model:                " + GA.model())
             
         end
@@ -90,10 +89,11 @@ classdef (Abstract) GA
         function val = model(newval, surpress_output)
             %MODEL - Set/retreive the MODEL setting.
             %   The MODEL setting is an element indicating the current model.
-            %   The argument must be an element in the desired model. Thus, for example, 
-            %   GA.model(PGA) and GA.model(e1(PGA) + e2(PGA)) will set the current model to
-            %   PGA. If no argument is provided, MODEL returns the zero element of the
-            %   current model.
+            %   To retrieve the name of the current model in use, run GA.model().
+            %   To retrieve the zero element of the current model in use, run GA.model(true).
+            %   To set the current model, input an element of the desired model.
+            %   Thus, for example, GA.model(PGA) and GA.model(e1(PGA) + e2(PGA)) will set the
+            %   current model to PGA.
             %
             %   The value of MODEL indicates which model of geometric algebra is in use.
             %   This determines, for example:
@@ -120,19 +120,25 @@ classdef (Abstract) GA
             end
 
             if isempty(newval)
-                % User is trying to retrieve the current value
-                val = currentval;
+                % User is trying to retrieve the name of the current value
+                val = currentval.modelname();
             else
-                % User is trying to set the value
 
-                if ~isa(newval, 'GA')
-                    error("Model must be a child of class GA.")
-                end
+                if islogical(newval) && newval
+                    % User is trying to retrieve the zero element
+                    val = currentval;
+                else
+                    % User is trying to set the value
 
-                currentval = newval.getzero();
+                    if ~isa(newval, 'GA')
+                        error("Model must be a child of class GA.")
+                    end
 
-                if ~surpress_output
-                    disp("   model set to " + currentval.modelname())
+                    currentval = newval.getzero();
+
+                    if ~surpress_output
+                        disp("   model set to " + currentval.modelname())
+                    end
                 end
                 
             end 
@@ -331,13 +337,13 @@ classdef (Abstract) GA
                 elseif isa(B, 'GA')
                     C = B;
                 else
-                    C = GA.model();
+                    C = GA.model(true);
                 end
             else
                 if isa(A, 'GA')
                     C = A;
                 else 
-                    C = GA.model();
+                    C = GA.model(true);
                 end
             end
         end
