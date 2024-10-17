@@ -210,6 +210,16 @@ classdef PGABLEDraw
 
             point_a = trans * p * inverse(trans);
             point_b = inverse(trans) * p * trans;
+
+            % TODO: This is to suppress the warnings about imaginary values. We should not need to do this.
+            mat_a = matrix(point_a);
+            mat_a = real(mat_a);
+            point_a = PGA(mat_a);
+
+            mat_b = matrix(point_b);
+            mat_b = real(mat_b);
+            point_b = PGA(mat_b);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
             
             h = PGABLEDraw.plotline({point_a, point_b}, c, false, true);
@@ -240,7 +250,19 @@ classdef PGABLEDraw
 
             for i = 1:num_hairs
                 hair_base = hair_trans_rot * hair_base * inverse(hair_trans_rot);
-                h = [h PGABLEDraw.plotline({hair_base, hair_tip}, c, false, true)];
+
+
+                % TODO: This is to suppress the warnings about imaginary values. We should not need to do this.
+                mat_h_b = matrix(hair_base);
+                mat_h_b = real(mat_h_b);
+                h_b = PGA(mat_h_b);
+
+                mat_h_t = matrix(hair_tip);
+                mat_h_t = real(mat_h_t);
+                h_t = PGA(mat_h_t);
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+                h = [h PGABLEDraw.plotline({h_b, h_t}, c, false, true)];
                 hair_tip = hair_trans_rot * hair_tip * inverse(hair_trans_rot);
             end
         end
