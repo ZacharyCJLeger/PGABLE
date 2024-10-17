@@ -14,10 +14,9 @@ classdef OGA < GA
     %         • == for equality               also: eq(A, B)
     %         • ~= for inequality             also: neq(A, B)
     %      Additonally, there are basic operations:
+    %         • lcont(A, B)                   to compute the left contraction of two multivectors
     %         • meet(A, B)                    to compute the meet of two multivectors
-    %           (Note: not yet implemented)
     %         • join(A, B)                    to compute the join of two multivectors
-    %           (Note: not yet implemented)
     %         • dual(A)                       to compute the dual
     %         • inverse(A)                    to compute the inverse
     %         • gradeinvolution(A)            to compute the grade involution
