@@ -134,7 +134,7 @@ elseif ( GAn == 3 )
      GAorbiter(190);
   GAprompt;
   disp(' ');    disp('End of GAblock sequence.  Returning to Matlab.');
-  disp('Try also running bivectorSlider for an interactive version of this demo.');
+%  disp('Try also running bivectorSlider for an interactive version of this demo.');
 elseif ( GAn == 4 ) 
   GAps = 'GAblock >> ';
      disp('>>      % LINE INTERSECTS LINE');
@@ -210,8 +210,8 @@ elseif ( GAn == 5 )
      tanglexB = xB.rej/xB.proj
      disp('>>      anglexB = atan(norm(tanglexB))*180/pi');
      anglexB = atan(norm(tanglexB))*180/pi
-     disp('>>      side = sign((x^B)/I3)');
-     side = sign((x^B)/I3)
+     disp('>>      side = sign(double((x^B)/I3))');
+     side = sign(double((x^B)/I3))
   disp(' ');    disp('End of GAblock sequence.  Returning to Matlab.');
 elseif ( GAn == 6 ) 
   GAps = 'GAblock >> ';

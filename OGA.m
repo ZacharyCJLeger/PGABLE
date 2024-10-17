@@ -15,6 +15,7 @@ classdef OGA < GA
     %         • ~= for inequality             also: neq(A, B)
     %      Additonally, there are basic operations:
     %         • lcont(A, B)                   to compute the left contraction of two multivectors
+    %         • rcont(A, B)                   to compute the right contraction of two multivectors
     %         • meet(A, B)                    to compute the meet of two multivectors
     %         • join(A, B)                    to compute the join of two multivectors
     %         • dual(A)                       to compute the dual
@@ -317,8 +318,36 @@ classdef OGA < GA
         end
 
         function R = rightcontraction_(A, B)
-            error('Not yet implemented.')
-            % TODO: Implement.
+           [S1, S2, S3] = OGA.signature();
+            S12 = S1*S2;
+            S13 = S1*S3;
+            S23 = S2*S3;
+            S123 = S12*S3;
+
+            [scal, E1, E2, E3, E12, E13, E23, E123] = decompose_(A);
+
+            C1 = S1*E1;
+            C2 = S2*E2;
+            C3 = S3*E3;
+            C12 = S12*E12;
+            C13 = S13*E13;
+            C23 = S23*E23;
+            C123 = S123*E123;
+
+            % TODO: write code to generate this matrix.
+            M = [scal   0     0     0     0     0     0     0 ;
+
+                 C1    scal   0     0     0     0     0     0  ;
+                 C2   -C12   scal   0     0     0     0     0  ;
+                 C3   -C13  -C23   scal   0     0     0     0  ;
+
+                 C12    0     0    C123  scal   0     0     0  ;
+                 C13    0   -C123   0     0    scal   0     0  ;
+                 C23   C123   0     0     0     0    scal   0  ;
+
+                 C123   0     0     0     0     0     0    scal ];
+
+            R = OGA(M*B.m);
         end
 
         function R = inverse_(A)
@@ -770,7 +799,9 @@ classdef OGA < GA
 
             A = zeroepsilons_(A);
             
-            if GAisa(A, 'vector')
+	    if GAisa(A, 'scalar')
+		title(double(A));
+	    elseif GAisa(A, 'vector')
                 if isempty(c)
                     c = 'b';
                 end
