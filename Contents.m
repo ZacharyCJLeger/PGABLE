@@ -1,5 +1,8 @@
 %   PGABLE is a Matlab toolkit for geometric algebra.
 %
+%   Most of the core code was written by Zachary Leger (zcjleger@uwaterloo.ca).
+%   The tutorial was largely written by Stephen Mann (smann@uwaterloo.ca).
+%
 %   GA is a parent class of all geometric algebra models.
 %   The models OGA and PGA are currently implemented as child classes of GA.
 %   Type help(OGA) and help(PGA) for information about each model.
