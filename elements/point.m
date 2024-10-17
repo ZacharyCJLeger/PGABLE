@@ -30,6 +30,10 @@ function e = point(x, y, z, model)
             z = x.getz();
             y = x.gety();
             x = x.getx();
+        elseif isa(x, "PGA")
+            z = e3coeff(x);
+            y = e2coeff(x);
+            x = e1coeff(x);
         end
     elseif nargin == 2
         if isa(y, "GA") || isa(y, "string")
@@ -39,6 +43,10 @@ function e = point(x, y, z, model)
             z = x.getz();
             y = x.gety();
             x = x.getx();
+        elseif isa(x, "PGA")
+            z = e3coeff(x);
+            y = e2coeff(x);
+            x = e1coeff(x);
         end
     else
        error("Incorrect number of arguments provided") 
