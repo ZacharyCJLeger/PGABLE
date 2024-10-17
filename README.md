@@ -1,4 +1,4 @@
-# PGABLE V0.2.1
+# PGABLE V1.0.0
 
 PGABLE, Copyright (c) 2024, University of Waterloo  
 Copying, use and development for non-commercial purposes permitted. All rights for commercial use reserved; for more information contact Stephen Mann (smann@uwaterloo.ca).  
@@ -6,7 +6,7 @@ This software is unsupported.
 
 ## Introduction
 
-PGABLE is a Matlab toolkit for teaching and learning about geometric algebra. It is the successor of GABLE.
+PGABLE is a Matlab toolkit for teaching and learning about geometric algebra. It is the successor of GABLE. Most of the core code was written by Zachary Leger (zcjleger@uwaterloo.ca). The tutorial was largely written by Stephen Mann (smann@uwaterloo.ca).
 
 ## Installation
 
