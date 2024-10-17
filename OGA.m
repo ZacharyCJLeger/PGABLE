@@ -411,15 +411,16 @@ classdef OGA < GA
                 R = p;
             else
                 m = zeroepsilons(leftcontraction(dual(b), a));
-            end
             
-            if m ~= 0
-                R = norm(m)*(a/m)^b;
-            else
-                if GAisa(a, 'bivector')
-                    R = norm(b)*a;	
+            
+                if m ~= 0
+                    R = norm(m)*(a/m)^b;
                 else
-                    R = norm(a)*b;	
+                    if GAisa(a, 'bivector')
+                        R = norm(b)*a;	
+                    else
+                        R = norm(a)*b;	
+                    end
                 end
             end
         end
