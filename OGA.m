@@ -286,8 +286,35 @@ classdef OGA < GA
         end
 
         function R = leftcontraction_(A, B)
-            error('Not yet implemented.')
-            % TODO: Implement.
+            [S1, S2, S3] = OGA.signature();
+            S12 = S1*S2;
+            S13 = S1*S3;
+            S23 = S2*S3;
+            S123 = S12*S3;
+
+            [scal, E1, E2, E3, E12, E13, E23, E123] = decompose_(A);
+
+            C1 = S1*E1;
+            C2 = S2*E2;
+            C3 = S3*E3;
+            C12 = S12*E12;
+            C13 = S13*E13;
+            C23 = S23*E23;
+            C123 = S123*E123;
+
+            M = [scal   C1    C2    C3  -C12  -C13  -C23  -C123 ;
+
+                  0    scal   0     0    -C2   -C3    0   -C23  ;
+                  0     0   scal    0     C1    0    -C3   C13  ;
+                  0     0     0    scal   0     C1    C2  -C12  ;
+
+                  0     0     0     0    scal   0     0     C3  ;
+                  0     0     0     0     0    scal   0    -C2  ;
+                  0     0     0     0     0     0    scal   C1  ;
+
+                  0     0     0     0     0     0     0    scal ];
+
+            R = OGA(M*B.m);
         end
 
         function R = rightcontraction_(A, B)
@@ -371,8 +398,6 @@ classdef OGA < GA
         end
 
         function R = join_(A, B)
-            error('Not yet implemented.');
-            % TODO: join is not implemented until leftcontraction is implemented.
             a = zeroepsilons(A);
             b = zeroepsilons(B);
             
@@ -400,9 +425,6 @@ classdef OGA < GA
         end
 
         function R = meet_(A, B)
-            error('Not yet implemented.');
-            % TODO: meet is not implemented until leftcontraction and join are implemented.
-
             a = zeroepsilons(A);
             b = zeroepsilons(B);
             
