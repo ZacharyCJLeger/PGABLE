@@ -371,15 +371,45 @@ classdef OGA < GA
         end
 
         function R = join_(A, B)
-            % TODO: Implement.
-
             error('Not yet implemented.');
+            % TODO: join is not implemented until leftcontraction is implemented.
+            a = zeroepsilons(A);
+            b = zeroepsilons(B);
+            
+            if GAisa(a,'multivector') || GAisa(b,'multivector')
+                error('The arguments of join must both be blades.');
+            end
+
+            p = zeroepsilons(a^b);
+            
+            if p ~= 0
+                R = p;
+            else
+                m = zeroepsilons(leftcontraction(dual(b), a));
+            end
+            
+            if m ~= 0
+                R = norm(m)*(a/m)^b;
+            else
+                if GAisa(a, 'bivector')
+                    R = norm(b)*a;	
+                else
+                    R = norm(a)*b;	
+                end
+            end
         end
 
         function R = meet_(A, B)
-            % TODO: Implement.
-
             error('Not yet implemented.');
+            % TODO: meet is not implemented until leftcontraction and join are implemented.
+
+            a = zeroepsilons(A);
+            b = zeroepsilons(B);
+            
+            if GAisa(a,'multivector') || GAisa(b,'multivector')
+                error('The arguments of meet must both be blades.');
+            end
+            R = leftcontraction(b/join(a, b), a);
         end
 
         function R = conjugate_(A)
