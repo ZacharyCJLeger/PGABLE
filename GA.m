@@ -606,13 +606,13 @@ classdef (Abstract) GA
         end
 
         function R = gexp(A)
-            %GEXP - Computes the exponential of the geometric product.
+            %GEXP - Computes the geometric exponential of a multivector.
 
             R = gexp_(A);
         end
 
         function R = glog(A)
-            %GLOG - Computes the logarithm of the geometric product.
+            %GLOG - Computes the geometric logarithm of a multivector.
 
             R = glog_(A);
         end

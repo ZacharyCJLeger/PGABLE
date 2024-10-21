@@ -3,7 +3,7 @@ classdef PGA < GA
     %   Elements
     %      Basic elements include 1, e0, e1, e2, e3, e01, e02, e03, e12, e31, e23, e021,
     %      e013, e032, e123, e0123.
-    %      Additionally, we have e13 = -e31, e012 = -e21, e023 = -e032.
+    %      Additionally, we have e13 = -e31, e012 = -e021, e023 = -e032.
     %      We also have method for creating PGA points, point(x, y, z), which creates a
     %      PGA point with coordinates (x, y, z). We also have origin() = point(0, 0, 0).
     %
