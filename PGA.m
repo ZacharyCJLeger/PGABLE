@@ -40,10 +40,10 @@ classdef PGA < GA
     %         • pclf                          clear all objects including vanishing objects
     %         • grade(A, g)                   select the grade-g component of a multivector
     %         • isgrade(A, g)                 determine if a multivector is of grade g
-    %      There are also functions for constructing some objects directly:
+    %      There are functions for constructing some objects directly:
     %         • point(x,y,z)                  construct a PGA point
     %         • plucker(l,m)                  construct a line with Plucker coordinates
-    %         • plucker(l1,l2,l3, m1,m2,m3)   
+    %         • plucker(l1,l2,l3, m1,m2,m3)     with direction l and moment m
     %      There are also more advanced operations:
     %         • sqrt(A)                       compute the square root
     %         • glog(A)                       compute the geometric log
