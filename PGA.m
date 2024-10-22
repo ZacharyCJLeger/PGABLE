@@ -18,31 +18,36 @@ classdef PGA < GA
     %         • == for equality               also: eq(A, B)
     %         • ~= for inequality             also: neq(A, B)
     %      Additonally, there are basic operations:
-    %         • meet(A, B)                    to compute the meet of two multivectors
-    %         • join(A, B)                    to compute the join of two multivectors
-    %         • inverse(A)                    to compute the inverse
+    %         • meet(A, B)                    compute the meet of two multivectors
+    %         • join(A, B)                    compute the join of two multivectors
+    %         • inverse(A)                    compute the inverse
     %           (Note: the inverse may not always exist in PGA)
-    %         • gradeinvolution(A)            to compute the grade involution
-    %         • conjugate(A)                  to compute the conjugate
-    %         • reverse(A)                    to compute the reverse
-    %         • norm(A)                       to compute the norm
-    %         • vnorm(A)                      to compute the vanishing norm
-    %         • normalize(A)                  to normalize the multivector
-    %         • poincaredual(A)               to compute the poincare dual
-    %         • hodgedual(A)                  to compute the hodge dual
-    %         • inversehodgedual(A)           to compute the inverse hodge dual
-    %         • getx(A)                       to get the x coordinate of a PGA point
-    %         • gety(A)                       to get the y coordinate of a PGA point
-    %         • getz(A)                       to get the z coordinate of a PGA point
-    %         • zeroepsilons(A)               to zero-out epsilons (small errors)
-    %         • draw(A)                       to draw the multivector
+    %         • gradeinvolution(A)            compute the grade involution
+    %         • conjugate(A)                  compute the conjugate
+    %         • reverse(A)                    compute the reverse
+    %         • norm(A)                       compute the norm
+    %         • vnorm(A)                      compute the vanishing norm
+    %         • normalize(A)                  normalize the multivector
+    %         • poincaredual(A)               compute the poincare dual
+    %         • hodgedual(A)                  compute the hodge dual
+    %         • inversehodgedual(A)           compute the inverse hodge dual
+    %         • getx(A)                       get the x coordinate of a PGA point
+    %         • gety(A)                       get the y coordinate of a PGA point
+    %         • getz(A)                       get the z coordinate of a PGA point
+    %         • zeroepsilons(A)               zero-out epsilons (small errors)
+    %         • draw(A)                       draw the multivector
     %         (See also GAScene for more information on draw calls)
-    %         • grade(A, g)                   to select the grade-g component of a multivector
-    %         • isgrade(A, g)                 to determine if a multivector is of grade g
+    %         • pclf                          clear all objects including vanishing objects
+    %         • grade(A, g)                   select the grade-g component of a multivector
+    %         • isgrade(A, g)                 determine if a multivector is of grade g
+    %      There are also functions for constructing some objects directly:
+    %         • point(x,y,z)                  construct a PGA point
+    %         • plucker(l,m)                  construct a line with Plucker coordinates
+    %         • plucker(l1,l2,l3, m1,m2,m3)   
     %      There are also more advanced operations:
-    %         • sqrt(A)                       to compute the square root
-    %         • glog(A)                       to compute the geometric log
-    %         • gexp(A)                       to compute the geometric exponent
+    %         • sqrt(A)                       compute the square root
+    %         • glog(A)                       compute the geometric log
+    %         • gexp(A)                       compute the geometric exponent
     %
     %   See also GA, OGA, GAScene.
 

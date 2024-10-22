@@ -1,3 +1,3 @@
 function pclf
-	%PCLF - A quick comment to clear all the scene items.
+	%PCLF - Clear all the scene items including vanishing objects.
 	GAScene.clearitems()
