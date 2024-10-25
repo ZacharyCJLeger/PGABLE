@@ -29,7 +29,7 @@ disp('and geometric products.)');
 
 disp(' ');GAprompt;disp(' ');
 
-disp('PGABLE has an implementation of PGA, the Geometric Algebra (R3,0,1) with');
+disp('PGABLE has an implementation of PGA, the Geometric Algebra R(3,0,1) with');
 disp('graphical representations of the geometrical objects.  PGA differs from');
 disp('OGA in two important ways.  First, while the basis for PGA contains ');
 disp('the basis elements of OGA, e1,e2,e3, in addition, in PGA there is');
@@ -87,7 +87,7 @@ disp(' ');GAprompt;disp(' ');
 disp('In PGA, we use the outer product to compute the intersection of two or');
 disp('more planes.  Thus, if we take the outer product of two planes, we');
 disp('get their line of intersection.');
-pause(2);
+pause(3);
 disp(' ');
 disp('Intersecting n1 and n2 give us L12=n1^n2:');
 pause(2);
@@ -135,7 +135,7 @@ disp('Again, note two things.  First, in the graphics window, we have drawn the'
 disp('point P as a yellow octahedron.  You''ll see that P lies at the ');
 disp('intersection of n1, n2, and n3.');
 
-pause(3);disp(' ');
+pause(4);disp(' ');
 
 disp('Second, in the text window, we see that P is a trivevector with a ');
 disp('Euclidean part e1^e2^e3, and an e0 part.  The Euclidean trivector');
