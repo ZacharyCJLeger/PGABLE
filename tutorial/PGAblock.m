@@ -171,5 +171,106 @@ elseif ( GAn == 6 )
      GAprompt;
 
   disp(' ');    disp('End of GAblock sequence.  Returning to Matlab.');
+elseif ( GAn == 7 ) 
+  GAps = 'GAblock >> ';
+     disp("     % SCREWS");
+     clf
+     % SCREWS
+     disp("     tv = (e1+e2+0.5*e3)/10;");
+     tv = (e1+e2+0.5*e3)/10;
+     disp("     P = point(1,0,1);");
+     P = point(1,0,1);
+     disp("     L = P.*tv/norm(tv);");
+     L = P.*tv/norm(tv);
+     disp("     draw(P); draw(e123); draw(L);");
+     draw(P); draw(e123); draw(L);
+
+     disp(" ");
+     disp("     Q = point(0,1,0);");
+     Q = point(0,1,0);
+     disp("     draw(Q,'b');");
+     draw(Q,'b');
+
+     disp(" ");
+     disp("     T = gexp(-e0*tv/2);");
+     T = gexp(-e0*tv/2);
+     disp("     Ti = gexp(e0*tv/2);");
+     Ti = gexp(e0*tv/2);
+     GAprompt;
+
+     disp("for i=1:5");
+     for i=1:5
+         fprintf(1,"           i=%d\n",i);
+         disp("    	Q = T*Q*T");
+         Q = T*Q*Ti;
+         disp("    	draw(Q,'r');");
+         draw(Q,'r');
+	 pause(0.2);
+     end;
+     disp("end");
+     GAprompt;
+
+     disp(" ");
+     disp("    Q = point(0,1,0);");
+     Q = point(0,1,0);
+     disp("    Rl = gexp(-pi/12*L/2);");
+     Rl = gexp(-pi/12*L/2);
+     disp("    Rli = gexp(pi/12*L/2);");
+     Rli = gexp(pi/12*L/2);
+     GAprompt;
+
+     disp("for i=1:1:23");
+     for i=1:23
+         if i<3
+            fprintf(1,"           i=%d\n",i);
+            disp("	Q = Rl*Q*Rli;");
+	 end
+	 Q = Rl*Q*Rli;
+	 if i<3
+            disp("	draw(Q,'g');");
+	 end
+	 if i>=3 
+	    fprintf(1,".");
+	 end
+	 draw(Q,'g');
+	 pause(0.1);
+     end
+     disp(" ");
+     disp("end");
+     GAprompt;
+
+     disp(" ");
+     disp("R = point(0,0,0);");
+     R = point(0,0,0);
+     disp("Sc = T*Rl; Sci = Rli*Ti;");
+     Sc = T*Rl; Sci = Rli*Ti;
+     disp("draw(R,'y');");
+     draw(R,'y');
+     GAprompt;
+
+     disp("for i=1:30");
+     for i=1:30
+         if i<3
+           fprintf(1,"           i=%d\n",i);
+           disp("	R = GAZ(Sc*R*Sc);");
+         end
+	 R = GAZ(Sc*R*Sci);
+	 if i<3
+            disp("	draw(R,'m');");
+	 end
+	 if i>=3
+	    fprintf(1,".");
+	 end
+	 draw(R,'m');
+	 pause(0.05);
+     end
+     fprintf(1,"\n");
+     disp("end");
+     GAprompt;
+     disp("    GAview([-45,-19])");
+     GAview([-45,-19])
+     GAprompt;
+     disp("    GAorbiter(380,6)");
+     GAorbiter(380,6)
 end
 catch ; end
