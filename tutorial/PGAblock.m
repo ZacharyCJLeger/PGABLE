@@ -182,6 +182,7 @@ elseif ( GAn == 7 )
      P = point(1,0,1);
      disp("     L = P.*tv/norm(tv);");
      L = P.*tv/norm(tv);
+     L = P.*tv;
      disp("     draw(P); draw(e123); draw(L);");
      draw(P); draw(e123); draw(L);
 
@@ -213,19 +214,19 @@ elseif ( GAn == 7 )
      disp(" ");
      disp("    Q = point(0,1,0);");
      Q = point(0,1,0);
-     disp("    Rl = gexp(-pi/12*L/2);");
-     Rl = gexp(-pi/12*L/2);
-     disp("    Rli = gexp(pi/12*L/2);");
-     Rli = gexp(pi/12*L/2);
+     disp("    RL = gexp(-pi/12*L/2);");
+     RL = gexp(-pi/12*L/2);
+     disp("    RLi = gexp(pi/12*L/2);");
+     RLi = gexp(pi/12*L/2);
      GAprompt;
 
      disp("for i=1:1:23");
      for i=1:23
          if i<3
             fprintf(1,"           i=%d\n",i);
-            disp("	Q = Rl*Q*Rli;");
+            disp("	Q = RL*Q*RLi;");
 	 end
-	 Q = Rl*Q*Rli;
+	 Q = RL*Q*RLi;
 	 if i<3
             disp("	draw(Q,'g');");
 	 end
@@ -242,8 +243,8 @@ elseif ( GAn == 7 )
      disp(" ");
      disp("R = point(0,0,0);");
      R = point(0,0,0);
-     disp("Sc = T*Rl; Sci = Rli*Ti;");
-     Sc = T*Rl; Sci = Rli*Ti;
+     disp("Sc = T*RL; Sci = RLi*Ti;");
+     Sc = T*RL; Sci = RLi*Ti;
      disp("draw(R,'y');");
      draw(R,'y');
      GAprompt;
