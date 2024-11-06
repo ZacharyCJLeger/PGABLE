@@ -176,12 +176,12 @@ classdef PGABLEDraw
 
             hold on
 
-            p_e1m = (point(-radius, 0, 0, PGA)/origin(PGA))*center_point;
-            p_e1p = (point(radius, 0, 0, PGA)/origin(PGA))*center_point;
-            p_e2m = (point(0, -radius, 0, PGA)/origin(PGA))*center_point;
-            p_e2p = (point(0, radius, 0, PGA)/origin(PGA))*center_point;
-            p_e3m = (point(0, 0, -radius, PGA)/origin(PGA))*center_point;
-            p_e3p = (point(0, 0, radius, PGA)/origin(PGA))*center_point;
+            p_e1m = (gapoint(-radius, 0, 0, PGA)/origin(PGA))*center_point;
+            p_e1p = (gapoint(radius, 0, 0, PGA)/origin(PGA))*center_point;
+            p_e2m = (gapoint(0, -radius, 0, PGA)/origin(PGA))*center_point;
+            p_e2p = (gapoint(0, radius, 0, PGA)/origin(PGA))*center_point;
+            p_e3m = (gapoint(0, 0, -radius, PGA)/origin(PGA))*center_point;
+            p_e3p = (gapoint(0, 0, radius, PGA)/origin(PGA))*center_point;
 
             h = [PGABLEDraw.patch({p_e1m, p_e2m, p_e3m}, c), ...
                  PGABLEDraw.patch({p_e1m, p_e2m, p_e3p}, c), ...
@@ -238,7 +238,7 @@ classdef PGABLEDraw
 
             % Creating hair base and tip.
             hair_base = point_b;
-            hair_tip = point(0.05, 0, 0, PGA);
+            hair_tip =gapoint(0.05, 0, 0, PGA);
             
             % Rotate
             hair_tip_rot = sqrt(euclidean(line)/(e1(PGA)^e2(PGA)));
@@ -319,10 +319,10 @@ classdef PGABLEDraw
             dir2y = dir2.gety();
             dir2z = dir2.getz();
 
-            p1t = point(cx + dir1x + dir2x, cy + dir1y + dir2y, cz + dir1z + dir2z, PGA);
-            p2t = point(cx - dir1x + dir2x, cy - dir1y + dir2y, cz - dir1z + dir2z, PGA);
-            p3t = point(cx - dir1x - dir2x, cy - dir1y - dir2y, cz - dir1z - dir2z, PGA);
-            p4t = point(cx + dir1x - dir2x, cy + dir1y - dir2y, cz + dir1z - dir2z, PGA);
+            p1t =gapoint(cx + dir1x + dir2x, cy + dir1y + dir2y, cz + dir1z + dir2z, PGA);
+            p2t =gapoint(cx - dir1x + dir2x, cy - dir1y + dir2y, cz - dir1z + dir2z, PGA);
+            p3t =gapoint(cx - dir1x - dir2x, cy - dir1y - dir2y, cz - dir1z - dir2z, PGA);
+            p4t =gapoint(cx + dir1x - dir2x, cy + dir1y - dir2y, cz + dir1z - dir2z, PGA);
             
             h = PGABLEDraw.patch({p1t, p2t, p3t, p4t}, c, 0.5);
 
@@ -351,11 +351,11 @@ classdef PGABLEDraw
                     % Arrow base
                     ab = (1-yper)*((1-xper)*p1t + xper*p2t) + yper*((1-xper)*p4t + xper*p3t);
                     % Arrow tip
-                    at = point(ab.getx() + nsv.getx(), ab.gety() + nsv.gety(), ab.getz() + nsv.getz());
+                    at =gapoint(ab.getx() + nsv.getx(), ab.gety() + nsv.gety(), ab.getz() + nsv.getz());
                     h = [h PGABLEDraw.plotline({ab, at}, 'k')];
                     am = r*ab + (1-r)*at;
-                    af1 = point(am.getx() + nad.getx(), am.gety() + nad.gety(), am.getz() + nad.getz());
-                    af2 = point(am.getx() - nad.getx(), am.gety() - nad.gety(), am.getz() - nad.getz());
+                    af1 =gapoint(am.getx() + nad.getx(), am.gety() + nad.gety(), am.getz() + nad.getz());
+                    af2 =gapoint(am.getx() - nad.getx(), am.gety() - nad.gety(), am.getz() - nad.getz());
                     h = [h PGABLEDraw.plotline({af1, at, af2}, 'k')];
                 end
             end
@@ -391,7 +391,7 @@ classdef PGABLEDraw
             % Creating points in a circle
             t = (0:pi/12:2*pi);
             for i=1:length(t)
-                pts{i} = point(f*rad*sin(t(i)), rad*cos(t(i)), 0, PGA);
+                pts{i} =gapoint(f*rad*sin(t(i)), rad*cos(t(i)), 0, PGA);
                 pts{i} = inverse(total_transform) * pts{i} * total_transform;
             end
     
@@ -500,7 +500,7 @@ classdef PGABLEDraw
             x = p.getx();
             y = p.gety();
             z = p.getz();
-            R = {point(clip(x, xrange(1), xrange(2)), clip(y, yrange(1), yrange(2)), clip(z, zrange(1), zrange(2)))};
+            R = {gapoint(clip(x, xrange(1), xrange(2)), clip(y, yrange(1), yrange(2)), clip(z, zrange(1), zrange(2)))};
         end
 
         function b = isinboundingbox(xrange, yrange, zrange, p)

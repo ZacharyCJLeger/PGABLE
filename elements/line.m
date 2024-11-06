@@ -1,8 +1,8 @@
-function L = line(l1, l2, l3, p1, p2, p3)
+function L =galine(l1, l2, l3, p1, p2, p3)
 	%LINE -  Construct a line.
     %   Can be called by passing in 2 3D vectors or 6 scalars, as such:
-	%   L = line(l1,l2,l3, p1,p2,p3);
-	%   L = line(l,p);
+	%   L =galine(l1,l2,l3, p1,p2,p3);
+	%   L =galine(l,p);
     %      where l = [l1, l2, l3] and p = [p1, p2, p3].
     %   The vector [l1, l2, l3] is the direction of the line.
     %   The vector [p1, p2, p3] is a point on the line
@@ -16,4 +16,4 @@ function L = line(l1, l2, l3, p1, p2, p3)
 		l2 = l1(2);
 		l1 = l1(1);
 	end
-	L = point(p1, p2, p3).*(l1*e1 + l2*e2 + l3*e3);
+	L =gapoint(p1, p2, p3).*(l1*e1 + l2*e2 + l3*e3);

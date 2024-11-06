@@ -4,8 +4,8 @@ classdef PGA < GA
     %      Basic elements include 1, e0, e1, e2, e3, e01, e02, e03, e12, e31, e23, e021,
     %      e013, e032, e123, e0123.
     %      Additionally, we have e13 = -e31, e012 = -e021, e023 = -e032.
-    %      We also have method for creating PGA points, point(x, y, z), which creates a
-    %      PGA point with coordinates (x, y, z). We also have origin() = point(0, 0, 0).
+    %      We also have method for creating PGA points,gapoint(x, y, z), which creates a
+    %      PGA point with coordinates (x, y, z). We also have origin() =gapoint(0, 0, 0).
     %
     %   Operations
     %      You can use these special characters for these basic operations:
@@ -41,9 +41,9 @@ classdef PGA < GA
     %         • grade(A, g)                   select the grade-g component of a multivector
     %         • isgrade(A, g)                 determine if a multivector is of grade g
     %      There are functions for constructing some objects directly:
-    %         • point(x,y,z)                  construct a PGA point
-    %         • line(l,p)                     construct a line with direction
-    %         • line(l1,l2,l3, p1,p2,p3)      with direction l through point p
+    %         •gapoint(x,y,z)                  construct a PGA point
+    %         •galine(l,p)                     construct a line with direction
+    %         •galine(l1,l2,l3, p1,p2,p3)      with direction l through point p
     %      There are also more advanced operations:
     %         • sqrt(A)                       compute the square root
     %         • glog(A)                       compute the geometric log
@@ -230,14 +230,14 @@ classdef PGA < GA
             [~, argmax] = max([propx, propy, propz]);
             
             
-            center = point(xaverage, yaverage, zaverage, PGA);
+            center =gapoint(xaverage, yaverage, zaverage, PGA);
             % TODO: perhaps create plane and line creation functions
             plane = 0;
             switch argmax
                 case 1
-                    star_big_tip_trans = point(0, 0.1, 0, PGA);
-                    star_small_tip_trans = point(0, 0.05, 0, PGA);
-                    star_tip_rot_back = point(0.1, 0, 0, PGA);
+                    star_big_tip_trans =gapoint(0, 0.1, 0, PGA);
+                    star_small_tip_trans =gapoint(0, 0.05, 0, PGA);
+                    star_tip_rot_back =gapoint(0.1, 0, 0, PGA);
 
                     if vp.getx() > 0
                         plane = -xrange(2)*e0(PGA) + e1(PGA);
@@ -245,18 +245,18 @@ classdef PGA < GA
                         plane = -xrange(1)*e0(PGA) + e1(PGA);
                     end
                 case 2
-                    star_big_tip_trans = point(0, 0, 0.1, PGA);
-                    star_small_tip_trans = point(0, 0, 0.05, PGA);
-                    star_tip_rot_back = point(0, 0.1, 0, PGA);
+                    star_big_tip_trans =gapoint(0, 0, 0.1, PGA);
+                    star_small_tip_trans =gapoint(0, 0, 0.05, PGA);
+                    star_tip_rot_back =gapoint(0, 0.1, 0, PGA);
                     if vp.gety() > 0
                         plane = -yrange(2)*e0(PGA) + e2(PGA);
                     else
                         plane = -yrange(1)*e0(PGA) + e2(PGA);
                     end
                 case 3
-                    star_big_tip_trans = point(0.1, 0, 0, PGA);
-                    star_small_tip_trans = point(0.05, 0, 0, PGA);
-                    star_tip_rot_back = point(0, 0, 0.1, PGA);
+                    star_big_tip_trans =gapoint(0.1, 0, 0, PGA);
+                    star_small_tip_trans =gapoint(0.05, 0, 0, PGA);
+                    star_tip_rot_back =gapoint(0, 0, 0.1, PGA);
                     if vp.getz() > 0
                         plane = -zrange(2)*e0(PGA) + e3(PGA);
                     else

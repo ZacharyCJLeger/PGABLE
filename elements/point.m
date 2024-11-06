@@ -1,4 +1,4 @@
-function e = point(x, y, z, model)
+function e =gapoint(x, y, z, model)
     %POINT - Create a point.
     %   Either supply a (x, y, z) coordinates and the model to create a point in said
     %   model (if points are a valid geometric element in the model).

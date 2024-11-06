@@ -178,16 +178,16 @@ elseif ( GAn == 7 )
      % SCREWS
      disp("     tv = (e1+e2+0.5*e3)/10;");
      tv = (e1+e2+0.5*e3)/10;
-     disp("     P = point(1,0,1);");
-     P = point(1,0,1);
+     disp("     P =gapoint(1,0,1);");
+     P =gapoint(1,0,1);
      disp("     L = P.*tv/norm(tv);");
      L = P.*tv/norm(tv);
      disp("     draw(P); draw(e123); draw(L);");
      draw(P); draw(e123); draw(L);
 
      disp(" ");
-     disp("     Q = point(0,1,0);");
-     Q = point(0,1,0);
+     disp("     Q =gapoint(0,1,0);");
+     Q =gapoint(0,1,0);
      disp("     draw(Q,'b');");
      draw(Q,'b');
 
@@ -211,8 +211,8 @@ elseif ( GAn == 7 )
      GAprompt;
 
      disp(" ");
-     disp("    Q = point(0,1,0);");
-     Q = point(0,1,0);
+     disp("    Q =gapoint(0,1,0);");
+     Q =gapoint(0,1,0);
      disp("    RL = gexp(-pi/12*L/2);");
      RL = gexp(-pi/12*L/2);
      disp("    RLi = gexp(pi/12*L/2);");
@@ -240,8 +240,8 @@ elseif ( GAn == 7 )
      GAprompt;
 
      disp(" ");
-     disp("R = point(0,0,0);");
-     R = point(0,0,0);
+     disp("R =gapoint(0,0,0);");
+     R =gapoint(0,0,0);
      disp("Sc = T*RL; Sci = RLi*Ti;");
      Sc = T*RL; Sci = RLi*Ti;
      disp("draw(R,'y');");
