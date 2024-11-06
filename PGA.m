@@ -42,8 +42,8 @@ classdef PGA < GA
     %         • isgrade(A, g)                 determine if a multivector is of grade g
     %      There are functions for constructing some objects directly:
     %         • point(x,y,z)                  construct a PGA point
-    %         • plucker(l,m)                  construct a line with Plucker coordinates
-    %         • plucker(l1,l2,l3, m1,m2,m3)     with direction l and moment m
+    %         • line(l,p)                     construct a line with direction
+    %         • line(l1,l2,l3, p1,p2,p3)      with direction l through point p
     %      There are also more advanced operations:
     %         • sqrt(A)                       compute the square root
     %         • glog(A)                       compute the geometric log
