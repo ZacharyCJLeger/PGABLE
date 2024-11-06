@@ -182,7 +182,6 @@ elseif ( GAn == 7 )
      P = point(1,0,1);
      disp("     L = P.*tv/norm(tv);");
      L = P.*tv/norm(tv);
-     L = P.*tv;
      disp("     draw(P); draw(e123); draw(L);");
      draw(P); draw(e123); draw(L);
 
