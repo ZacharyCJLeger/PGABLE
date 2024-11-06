@@ -849,8 +849,8 @@ classdef (Abstract) GA
             %GRADE - If only a multivector is provided, returns the a non-negative integer
             %   representing the grade of the element (or -1 if the element contains
             %   multiple grades).
-            %   If a multivector and an integer n is provided, returns true if the mutlivector
-            %   is of grade n and returns false otherwise.
+            %   If a multivector and an integer n is provided, returns the grade n component
+            %   of the multivector.
 
             arguments
                 A GA;
