@@ -10,7 +10,7 @@ PGABLE is a Matlab toolkit for teaching and learning about geometric algebra. It
 
 ## Installation
 
-To install PGABLE, run `addpath(genpath('.../PGABLE'))` where `.../PGABLE` is the path to the PGABLE folder.
+To manually install PGABLE manually (i.e. not through the MATLAB Files Exchange), run `addpath(genpath('.../PGABLE'))` where `.../PGABLE` is the path to the PGABLE folder.
 
 ## Basics
 
