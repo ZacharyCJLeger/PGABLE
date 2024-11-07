@@ -1,4 +1,4 @@
-function L =galine(l1, l2, l3, p1, p2, p3)
+function L = galine(l1, l2, l3, p1, p2, p3)
 	%LINE -  Construct a line.
     %   Can be called by passing in 2 3D vectors or 6 scalars, as such:
 	%   L =galine(l1,l2,l3, p1,p2,p3);
@@ -16,4 +16,4 @@ function L =galine(l1, l2, l3, p1, p2, p3)
 		l2 = l1(2);
 		l1 = l1(1);
 	end
-	L =gapoint(p1, p2, p3).*(l1*e1 + l2*e2 + l3*e3);
+	L = gapoint(p1, p2, p3).*(l1*e1 + l2*e2 + l3*e3);

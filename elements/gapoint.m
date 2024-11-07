@@ -1,5 +1,5 @@
-function e =gapoint(x, y, z, model)
-    %POINT - Create a point.
+function e = gapoint(x, y, z, model)
+    %GAPOINT - Create a point.
     %   Either supply a (x, y, z) coordinates and the model to create a point in said
     %   model (if points are a valid geometric element in the model).
     %   Alternatively, supply an OGA vector as the first argument and the model as the
