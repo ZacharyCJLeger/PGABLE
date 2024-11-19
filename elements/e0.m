@@ -18,7 +18,7 @@ function e = e0(model)
         case "PGA"
             e = PGA(0, [1, 0, 0, 0], 0, 0, 0);
         case "OGA"
-            error('Cannot create e0 element as it does not exist in the OGA model.')
+            error('Cannot create e0 element as it does not exist in the OGA model. Type  GA.model(PGA)  to switch to the PGA model.')
         otherwise
         error('Cannot create element due to being in an implemented GA model.')
     end
