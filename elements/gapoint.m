@@ -60,7 +60,7 @@ function e = gapoint(x, y, z, model)
         case "PGA"
             e = PGA(0, 0, 0, [-z, y, -x, 1], 0);
         case "OGA"
-            error('Points do not exist in the OGA model.')
+            error('Points do not exist in the OGA model. Type  GA.model(PGA)  to switch to the PGA model.')
         otherwise
             error('Cannot create element due to being in an implemented GA model.')
     end
