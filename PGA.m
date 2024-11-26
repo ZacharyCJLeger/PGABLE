@@ -1139,6 +1139,27 @@ classdef PGA < GA
             R = OGA(scal, [E1, E2, E3], [E12, E13, E23], E123);
         end
 
+        function drawTP(A, center, c)
+            arguments
+                A PGA;
+		center PGA;
+                c = [];
+            end
+            if GAisa(A, 'plane')
+                if isempty(c)
+                    % TODO: make default colour of plane changable.
+                    c = 'g';
+                end
+
+                h = PGABLEDraw.pointingplaneC(A, center, c);
+                GAScene.addstillitem(GASceneStillItem(A, h));
+            else
+                error('Error is not a point, line, or plane. PGA cannot draw it.');
+            end
+
+            GAScene.refreshdynamicitems();
+	end
+
         function draw(A, c)
             arguments
                 A PGA;

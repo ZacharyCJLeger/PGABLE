@@ -267,12 +267,110 @@ classdef PGABLEDraw
             end
         end
 
-        function h = pointingplane(plane, c)
+        function h = pointingplaneC(plane, center, c)
             %POINTINGPLANE - Draws a plane with pointing arrows.
 
             % TODO: verify input is PGA vector
             arguments
                 plane;
+                center;
+                c = 'g';
+            end
+
+            hold on
+
+            % TODO: Can currently only draw normalized planes. Perhaps should visualize non-unitness somehow.
+            beta = sqrt(norm(plane));
+            plane = normalize(plane);
+
+            if euclidean(plane) == 0
+                error("This is a plane at infinity. Cannot currently display this object.");
+            end
+
+
+            delta = -e0coeff(plane);
+
+            support_vec = euclidean(plane); 
+
+            %center = ihd(delta*support_vec + e0(PGA));
+
+            sv = OGAcast(support_vec);
+            
+            biv = e1(OGA)^sv;
+            if biv == 0
+                dir1 = normalize(dual(e2(OGA)^sv));
+            else
+                dir1 = normalize(dual(biv));
+            end
+
+            dir2 = normalize(dual(dir1^sv));
+
+            dir1 = beta*dir1;
+            dir2 = beta*dir2;
+
+            cx = center.getx();
+            cy = center.gety();
+            cz = center.getz();
+
+            dir1x = dir1.getx();
+            dir1y = dir1.gety();
+            dir1z = dir1.getz();
+
+            dir2x = dir2.getx();
+            dir2y = dir2.gety();
+            dir2z = dir2.getz();
+
+            p1t =gapoint(cx + dir1x + dir2x, cy + dir1y + dir2y, cz + dir1z + dir2z, PGA);
+            p2t =gapoint(cx - dir1x + dir2x, cy - dir1y + dir2y, cz - dir1z + dir2z, PGA);
+            p3t =gapoint(cx - dir1x - dir2x, cy - dir1y - dir2y, cz - dir1z - dir2z, PGA);
+            p4t =gapoint(cx + dir1x - dir2x, cy + dir1y - dir2y, cz + dir1z - dir2z, PGA);
+            
+            h = PGABLEDraw.patch({p1t, p2t, p3t, p4t}, c, 0.5);
+
+            
+            
+
+            % gs is the grid size. 1 -> one arrow on each corner
+            %                      2 -> arrows in 3x3 grid
+            %                      etc, etc. 
+            gs = 2;
+
+            k = 0.3; % length of arrows, as percentage of area of square
+            nsv = beta*k*sv;
+
+            l = 0.2;
+            nad = l*k*dir2; % Note: dir2 is already scaled up by beta
+
+            % Length of arrow head, as percentage of length of arrow staffs
+            r = 0.2;
+
+            for x = 0:gs
+                for y  = 0:gs
+                    xper = x/gs;
+                    yper = y/gs;
+
+                    % Arrow base
+                    ab = (1-yper)*((1-xper)*p1t + xper*p2t) + yper*((1-xper)*p4t + xper*p3t);
+                    % Arrow tip
+                    at =gapoint(ab.getx() + nsv.getx(), ab.gety() + nsv.gety(), ab.getz() + nsv.getz());
+                    h = [h PGABLEDraw.plotline({ab, at}, 'k')];
+                    am = r*ab + (1-r)*at;
+                    af1 =gapoint(am.getx() + nad.getx(), am.gety() + nad.gety(), am.getz() + nad.getz());
+                    af2 =gapoint(am.getx() - nad.getx(), am.gety() - nad.gety(), am.getz() - nad.getz());
+                    h = [h PGABLEDraw.plotline({af1, at, af2}, 'k')];
+                end
+            end
+
+        end
+
+	% TODO: reduct this to just computing the center and calling pointingplaneC
+        function h = pointingplane(plane, center, c)
+            %POINTINGPLANE - Draws a plane with pointing arrows.
+
+            % TODO: verify input is PGA vector
+            arguments
+                plane;
+                center;
                 c = 'g';
             end
 
