@@ -1151,6 +1151,15 @@ classdef PGA < GA
                     c = 'g';
                 end
 
+		dist = double(outer(A,center).noneuclidean.*I3)
+		% Check if center on plane A; if not, then project onto A
+		if abs(dist) > eps
+		   nrm = norm(A.euclidean)
+		   t = A.euclidean*dist/(nrm*nrm);
+		   trans = 1-e0*(t)/2;
+		   transi = 1+e0*(t)/2;
+		   center = trans*center*transi;
+		end
                 h = PGABLEDraw.pointingplaneC(A, center, c);
                 GAScene.addstillitem(GASceneStillItem(A, h));
             else
