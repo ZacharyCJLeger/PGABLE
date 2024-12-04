@@ -204,6 +204,9 @@ classdef PGABLEDraw
             dir = euclidean(line)/I3(PGA);
             % Closest point to the origin
             p = line/dir;
+	    p.getx()
+	    p.gety()
+	    p.getz()
 	    %draw(p,'g')
             % Translation in direction from origin
             translation = ihd(dir + e0(PGA))/origin(PGA);
@@ -211,6 +214,7 @@ classdef PGABLEDraw
 
             point_a = trans * p * inverse(trans);
             point_b = inverse(trans) * p * trans;
+
 
             % TODO: This is to suppress the warnings about imaginary values. We should not need to do this.
             mat_a = matrix(point_a);
@@ -223,12 +227,18 @@ classdef PGABLEDraw
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
             
+	    dir = dir/norm(dir);
+	    point_a = gapoint(double(p.getx()+dir.*e1), double(p.gety()+dir.*e2),double(p.getz()+dir.*e3));
+	    point_b = gapoint(double(p.getx()-dir.*e1), double(p.gety()-dir.*e2),double(p.getz()-dir.*e3));
+	    point_a
+	    point_b
             h = PGABLEDraw.plotline({point_a, point_b}, c, false, true);
 
             % Drawing hairs
             num_hairs = 20;
 
             hair_trans = gexp(2*glog(trans)/num_hairs);
+            hair_trans = (1-e0*dir/num_hairs);
 
             phi = pi/3;
             % TODO: PGA4CS says to use -phi. It is not clear to me why this should be the case.
