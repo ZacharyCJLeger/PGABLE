@@ -198,16 +198,13 @@ classdef PGABLEDraw
 
             hold on
 
+	    llen = norm(line);
             % TODO: Currently normalizing the line. We should perhaps shouldn't need to do this.
             line = normalize(line);
             % Direction the line is pointing
             dir = euclidean(line)/I3(PGA);
             % Closest point to the origin
             p = line/dir;
-	    p.getx()
-	    p.gety()
-	    p.getz()
-	    %draw(p,'g')
             % Translation in direction from origin
             translation = ihd(dir + e0(PGA))/origin(PGA);
             trans = sqrt(translation);
@@ -227,11 +224,9 @@ classdef PGABLEDraw
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
             
-	    dir = dir/norm(dir);
+	    dir = llen*dir/norm(dir);
 	    point_a = gapoint(double(p.getx()+dir.*e1), double(p.gety()+dir.*e2),double(p.getz()+dir.*e3));
 	    point_b = gapoint(double(p.getx()-dir.*e1), double(p.gety()-dir.*e2),double(p.getz()-dir.*e3));
-	    point_a
-	    point_b
             h = PGABLEDraw.plotline({point_a, point_b}, c, false, true);
 
             % Drawing hairs
@@ -249,7 +244,7 @@ classdef PGABLEDraw
 
             % Creating hair base and tip.
             hair_base = point_b;
-            hair_tip =gapoint(0.05, 0, 0, PGA);
+            hair_tip =gapoint(0.05*llen, 0, 0, PGA);
             
             % Rotate
             hair_tip_rot = sqrt(euclidean(line)/(e1(PGA)^e2(PGA)));
