@@ -201,10 +201,10 @@ classdef PGABLEDraw
             % TODO: Currently normalizing the line. We should perhaps shouldn't need to do this.
             line = normalize(line);
             % Direction the line is pointing
-            dir = euclidean(line)/I3(PGA)
+            dir = euclidean(line)/I3(PGA);
             % Closest point to the origin
-            p = line/dir
-	    draw(p,'g')
+            p = line/dir;
+	    %draw(p,'g')
             % Translation in direction from origin
             translation = ihd(dir + e0(PGA))/origin(PGA);
             trans = sqrt(translation);
