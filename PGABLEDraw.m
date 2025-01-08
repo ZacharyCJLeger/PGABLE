@@ -198,8 +198,7 @@ classdef PGABLEDraw
 
             hold on
 
-	    llen = norm(line);
-            % TODO: Currently normalizing the line. We should perhaps shouldn't need to do this.
+	        llen = norm(line);
             line = normalize(line);
             % Direction the line is pointing
             dir = euclidean(line)/I3(PGA);
@@ -224,9 +223,9 @@ classdef PGABLEDraw
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
             
-	    dir = llen*dir/norm(dir);
-	    point_a = gapoint(double(p.getx()+dir.*e1), double(p.gety()+dir.*e2),double(p.getz()+dir.*e3));
-	    point_b = gapoint(double(p.getx()-dir.*e1), double(p.gety()-dir.*e2),double(p.getz()-dir.*e3));
+            dir = llen*normalize(dir);
+            point_a = gapoint(double(p.getx()+dir.*e1), double(p.gety()+dir.*e2),double(p.getz()+dir.*e3));
+            point_b = gapoint(double(p.getx()-dir.*e1), double(p.gety()-dir.*e2),double(p.getz()-dir.*e3));
             h = PGABLEDraw.plotline({point_a, point_b}, c, false, true);
 
             % Drawing hairs
@@ -256,7 +255,6 @@ classdef PGABLEDraw
 
             for i = 1:num_hairs
                 hair_base = hair_trans_rot * hair_base * inverse(hair_trans_rot);
-
 
                 % TODO: This is to suppress the warnings about imaginary values. We should not need to do this.
                 mat_h_b = matrix(hair_base);
