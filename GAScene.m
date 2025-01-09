@@ -52,6 +52,7 @@ classdef GAScene
                 item GASceneStillItem;
             end
             GAScene.manage_still_items_(item);
+            GAScene.refreshdynamicitems();
         end
 
         function adddynamicitem(item)

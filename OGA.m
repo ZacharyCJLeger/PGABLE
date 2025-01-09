@@ -823,8 +823,6 @@ classdef OGA < GA
             else
                 error('Error is not a vector, bivector or trivector. OGA cannot draw it.');
             end
-
-            GAScene.refreshdynamicitems();
         end
 
         function r = e1coeff(A)

@@ -1151,7 +1151,7 @@ classdef PGA < GA
                     c = 'g';
                 end
 
-		dist = double(outer(A,center).noneuclidean.*I3)
+		dist = double(outer(A,center).noneuclidean.*I3);
 		% Check if center on plane A; if not, then project onto A
 		if abs(dist) > eps
 		   nrm = norm(A.euclidean)
@@ -1160,13 +1160,11 @@ classdef PGA < GA
 		   transi = 1+e0*(t)/2;
 		   center = trans*center*transi;
 		end
-                h = PGABLEDraw.pointingplaneC(A, center, c);
-                GAScene.addstillitem(GASceneStillItem(A, h));
-            else
-                error('Error is not a point, line, or plane. PGA cannot draw it.');
-            end
-
-            GAScene.refreshdynamicitems();
+            h = PGABLEDraw.pointingplaneC(A, center, c);
+            GAScene.addstillitem(GASceneStillItem(A, h));
+        else
+            error('Error is not a point, line, or plane. PGA cannot draw it.');
+        end
 	end
 
         function draw(A, c)
@@ -1219,8 +1217,6 @@ classdef PGA < GA
             else
                 error('Error is not a point, line, or plane. PGA cannot draw it.');
             end
-
-            GAScene.refreshdynamicitems();
         end
 
         function R = euclidean(A)
