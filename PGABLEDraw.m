@@ -550,8 +550,78 @@ classdef PGABLEDraw
             end
         end
 
-        function h = drawstaronplane(vp, plane)
-            %TODO write.
+        function h = drawstaronplane(vp, c, planearg)
+            h = [];
+            %planearg = 1 -> x axis
+            %planearg = 2 -> y axis
+            %planearg = 3 -> z axis
+
+            ax = gca;
+
+            xrange = ax.XLim;
+            yrange = ax.YLim;
+            zrange = ax.ZLim;
+
+            xaverage = (xrange(1) + xrange(2))/2;
+            yaverage = (yrange(1) + yrange(2))/2;
+            zaverage = (zrange(1) + zrange(2))/2;
+            center = gapoint(xaverage, yaverage, zaverage, PGA);
+            
+            % TODO: perhaps create plane and line creation functions
+            plane = 0;
+            switch planearg
+                case 1
+                    star_big_tip_trans = gapoint(0, 0.1, 0, PGA);
+                    star_small_tip_trans = gapoint(0, 0.05, 0, PGA);
+                    star_tip_rot_back = gapoint(0.1, 0, 0, PGA);
+
+                    if vp.getx() > 0
+                        plane = -xrange(2)*e0(PGA) + e1(PGA);
+                    else
+                        plane = -xrange(1)*e0(PGA) + e1(PGA);
+                    end
+                case 2
+                    star_big_tip_trans = gapoint(0, 0, 0.1, PGA);
+                    star_small_tip_trans = gapoint(0, 0, 0.05, PGA);
+                    star_tip_rot_back = gapoint(0, 0.1, 0, PGA);
+                    if vp.gety() > 0
+                        plane = -yrange(2)*e0(PGA) + e2(PGA);
+                    else
+                        plane = -yrange(1)*e0(PGA) + e2(PGA);
+                    end
+                case 3
+                    star_big_tip_trans = gapoint(0.1, 0, 0, PGA);
+                    star_small_tip_trans = gapoint(0.05, 0, 0, PGA);
+                    star_tip_rot_back = gapoint(0, 0, 0.1, PGA);
+                    if vp.getz() > 0
+                        plane = -zrange(2)*e0(PGA) + e3(PGA);
+                    else
+                        plane = -zrange(1)*e0(PGA) + e3(PGA);
+                    end
+            end
+
+            line = join(vp, center);
+            line = normalize(line);
+            p = line^plane;
+            
+            if norm(p) ~= 0
+                p = normalize(p);                
+    
+                rot_back = (star_tip_rot_back/origin(PGA))*p;
+                l = join(rot_back, p);
+                R = gexp((-2*pi/5)*normalize(l)/2);
+                small_R = gexp((-1*pi/5)*normalize(l)/2);
+
+                big_tip = (star_big_tip_trans/origin(PGA))*p;
+                small_tip = small_R*(star_small_tip_trans/origin(PGA))*p*inverse(small_R);
+
+                starpoints = versorbatchiterate(R, {big_tip, small_tip}, 4, true);
+
+                starpoints = reshape(starpoints', [1, 10]);
+
+                starpoints = arrayfun(@(p)PGABLEDraw.boundingboxclip(xrange, yrange, zrange, p), starpoints);
+                h = [h PGABLEDraw.patch(starpoints, c)];
+            end
         end
 
 
