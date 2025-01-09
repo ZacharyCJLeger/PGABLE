@@ -41,9 +41,9 @@ classdef PGA < GA
     %         • grade(A, g)                   select the grade-g component of a multivector
     %         • isgrade(A, g)                 determine if a multivector is of grade g
     %      There are functions for constructing some objects directly:
-    %         •gapoint(x,y,z)                  construct a PGA point
-    %         •galine(l,p)                     construct a line with direction
-    %         •galine(l1,l2,l3, p1,p2,p3)      with direction l through point p
+    %         •gapoint(x,y,z)                 construct a PGA point
+    %         •galine(l,p)                    construct a line with direction
+    %         •galine(l1,l2,l3, p1,p2,p3)     with direction l through point p
     %      There are also more advanced operations:
     %         • sqrt(A)                       compute the square root
     %         • glog(A)                       compute the geometric log
@@ -295,6 +295,179 @@ classdef PGA < GA
             h = [h PGABLEDraw.patch(starpoints, c)];
             
         end
+
+        function h = drawvanishingpointstyle2(vp, c)
+            hold on
+
+
+            vpx = vp.getx();
+            vpy = vp.gety();
+            vpz = vp.getz();
+            
+            ax = gca;
+
+            xrange = ax.XLim;
+            yrange = ax.YLim;
+            zrange = ax.ZLim;
+
+            xwidth = xrange(2) - xrange(1);
+            ywidth = yrange(2) - yrange(1);
+            zwidth = zrange(2) - zrange(1);
+
+            propx = abs(vpx/xwidth);
+            propy = abs(vpy/ywidth);
+            propz = abs(vpz/zwidth);
+
+            xaverage = (xrange(1) + xrange(2))/2;
+            yaverage = (yrange(1) + yrange(2))/2;
+            zaverage = (zrange(1) + zrange(2))/2;
+
+            center = gapoint(xaverage, yaverage, zaverage, PGA);
+
+            
+            [~, argmax] = max([propx, propy, propz]);
+
+            switch argmax
+                case 1
+                    if vp.getx() > 0
+                        plane = -xrange(2)*e0(PGA) + e1(PGA);
+                    else
+                        plane = -xrange(1)*e0(PGA) + e1(PGA);
+                    end
+                case 2
+                    if vp.gety() > 0
+                        plane = -yrange(2)*e0(PGA) + e2(PGA);
+                    else
+                        plane = -yrange(1)*e0(PGA) + e2(PGA);
+                    end
+                case 3
+                    if vp.getz() > 0
+                        plane = -zrange(2)*e0(PGA) + e3(PGA);
+                    else
+                        plane = -zrange(1)*e0(PGA) + e3(PGA);
+                    end
+            end
+
+            line = join(vp, center);
+            line = normalize(line);
+            p = line^plane;
+
+            % Phi is percent away the arrows are from the edge of the bounding box
+            phi = 0.3;
+            aphi = 1 - phi;
+            h = plot3([p.getx(), aphi*p.getx() + phi*xaverage], ...
+                      [p.gety(), aphi*p.gety() + phi*yaverage], ...
+                      [p.getz(), aphi*p.getz() + phi*zaverage], 'k');
+
+
+
+
+
+
+            
+            h = [h, PGA.drawvanishingpointstyle2helper(vp, c, 1)];
+            h = [h, PGA.drawvanishingpointstyle2helper(vp, c, 2)];
+            h = [h, PGA.drawvanishingpointstyle2helper(vp, c, 3)];
+        end
+
+        function h = drawvanishingpointstyle2helper(vp, c, argmax)
+            %DRAWVANISHINGPOINT - Draws a single instance of a vanishing point.
+            %   This function is NOT intended for a user to draw a vanishing point to the
+            %   scene. To draw a vanishing point, run "draw(vanishing_point)".
+
+            h = [];
+
+            ax = gca;
+
+            xrange = ax.XLim;
+            yrange = ax.YLim;
+            zrange = ax.ZLim;
+
+            xaverage = (xrange(1) + xrange(2))/2;
+            yaverage = (yrange(1) + yrange(2))/2;
+            zaverage = (zrange(1) + zrange(2))/2;
+
+            xwidth = xrange(2) - xrange(1);
+            ywidth = yrange(2) - yrange(1);
+            zwidth = zrange(2) - zrange(1);
+            
+
+            vpx = vp.getx();
+            vpy = vp.gety();
+            vpz = vp.getz();
+            % TODO: delete these variables
+            propx = abs(vpx/xwidth);
+            propy = abs(vpy/ywidth);
+            propz = abs(vpz/zwidth);
+            
+            
+            center = gapoint(xaverage, yaverage, zaverage, PGA);
+            % TODO: perhaps create plane and line creation functions
+            plane = 0;
+            switch argmax
+                case 1
+                    star_big_tip_trans = gapoint(0, 0.1, 0, PGA);
+                    star_small_tip_trans = gapoint(0, 0.05, 0, PGA);
+                    star_tip_rot_back = gapoint(0.1, 0, 0, PGA);
+
+                    if vp.getx() > 0
+                        plane = -xrange(2)*e0(PGA) + e1(PGA);
+                    else
+                        plane = -xrange(1)*e0(PGA) + e1(PGA);
+                    end
+                case 2
+                    star_big_tip_trans = gapoint(0, 0, 0.1, PGA);
+                    star_small_tip_trans = gapoint(0, 0, 0.05, PGA);
+                    star_tip_rot_back = gapoint(0, 0.1, 0, PGA);
+                    if vp.gety() > 0
+                        plane = -yrange(2)*e0(PGA) + e2(PGA);
+                    else
+                        plane = -yrange(1)*e0(PGA) + e2(PGA);
+                    end
+                case 3
+                    star_big_tip_trans = gapoint(0.1, 0, 0, PGA);
+                    star_small_tip_trans = gapoint(0.05, 0, 0, PGA);
+                    star_tip_rot_back = gapoint(0, 0, 0.1, PGA);
+                    if vp.getz() > 0
+                        plane = -zrange(2)*e0(PGA) + e3(PGA);
+                    else
+                        plane = -zrange(1)*e0(PGA) + e3(PGA);
+                    end
+            end
+
+            line = join(vp, center);
+            line = normalize(line);
+            p = line^plane;
+            % TODO: Test vanishing points still work without the line below.
+            if norm(p) ~= 0
+                p = normalize(p);
+
+                
+                h = [];
+                
+    
+                rot_back = (star_tip_rot_back/origin(PGA))*p;
+                l = join(rot_back, p);
+                R = gexp((-2*pi/5)*normalize(l)/2);
+                small_R = gexp((-1*pi/5)*normalize(l)/2);
+
+                big_tip = (star_big_tip_trans/origin(PGA))*p;
+                small_tip = small_R*(star_small_tip_trans/origin(PGA))*p*inverse(small_R);
+
+                starpoints = versorbatchiterate(R, {big_tip, small_tip}, 4, true);
+
+                starpoints = reshape(starpoints', [1, 10]);
+
+                starpoints = arrayfun(@(p)PGABLEDraw.boundingboxclip(xrange, yrange, zrange, p), starpoints);
+                h = [h PGABLEDraw.patch(starpoints, c)];
+            end
+            
+        end
+
+
+
+
+        
 
         function h = drawvanishingline(vl, c)
             %DRAWVANISHINGLINE - Draws a single instance of a vanishing line.
@@ -1184,8 +1357,8 @@ classdef PGA < GA
 
                 if euclidean(A) == 0
                     % TODO perhaps make drawing as part of the constructor of the dynamic item
-                    h = PGA.drawvanishingpoint(A, c);
-                    GAScene.adddynamicitem(GASceneDynamicItem(A, h, @()PGA.drawvanishingpoint(A, c)));
+                    h = PGA.drawvanishingpointstyle2(A, c);
+                    GAScene.adddynamicitem(GASceneDynamicItem(A, h, @()PGA.drawvanishingpointstyle2(A, c)));
                 else
                     h = PGABLEDraw.octahedron(A, PGA.pointsize(), c);
                     GAScene.addstillitem(GASceneStillItem(A, h));

@@ -550,6 +550,10 @@ classdef PGABLEDraw
             end
         end
 
+        function h = drawstaronplane(vp, plane)
+            %TODO write.
+        end
+
 
         %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
         %         TODO Section         %
