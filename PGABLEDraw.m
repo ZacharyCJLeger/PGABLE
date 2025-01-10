@@ -505,7 +505,10 @@ classdef PGABLEDraw
             % Creating points in a circle
             t = (0:pi/12:2*pi);
             for i=1:length(t)
-                pts{i} = gapoint(f*rad*sin(t(i)), rad*cos(t(i)), 0, PGA);
+                pts{i} = gapoint(f*rad*sin(t(i)) + offset.getx(), ...
+                                 rad*cos(t(i)) + offset.gety(), ...
+                                 offset.getz(), ...
+                                 PGA);
                 pts{i} = inverse(total_transform) * pts{i} * total_transform;
             end
     
