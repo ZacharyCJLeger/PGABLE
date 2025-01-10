@@ -5,7 +5,7 @@ classdef PGA < GA
     %      e013, e032, e123, e0123.
     %      Additionally, we have e13 = -e31, e012 = -e021, e023 = -e032.
     %      We also have method for creating PGA points,gapoint(x, y, z), which creates a
-    %      PGA point with coordinates (x, y, z). We also have origin() =gapoint(0, 0, 0).
+    %      PGA point with coordinates (x, y, z). We also have origin() = gapoint(0, 0, 0).
     %
     %   Operations
     %      You can use these special characters for these basic operations:
@@ -199,7 +199,7 @@ classdef PGA < GA
         %  Dynamic Drawing Functions   %
         %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
 
-        function h = drawvanishingpoint(vp, c)
+        function h = drawvanishingpoint(vp, varargin)
             hold on
 
 
@@ -263,12 +263,12 @@ classdef PGA < GA
                       [p.getz(), aphi*p.getz() + phi*zaverage], 'k');
 
 
-            h = [h, PGABLEDraw.drawstaronplane(vp, c, 1)];
-            h = [h, PGABLEDraw.drawstaronplane(vp, c, 2)];
-            h = [h, PGABLEDraw.drawstaronplane(vp, c, 3)];
+            h = [h, PGABLEDraw.drawstaronplane(vp, 1, varargin{:})];
+            h = [h, PGABLEDraw.drawstaronplane(vp, 2, varargin{:})];
+            h = [h, PGABLEDraw.drawstaronplane(vp, 3, varargin{:})];
         end
 
-        function h = drawvanishingline(vl, c)
+        function h = drawvanishingline(vl, varargin)
             %DRAWVANISHINGLINE - Draws a single instance of a vanishing line.
             %   This function is NOT intended for a user to draw a vanishing line to the
             %   scene. To draw a vanishing line, run "draw(vanishing_line)".
@@ -343,7 +343,7 @@ classdef PGA < GA
 
             points = arrayfun(@(p)PGABLEDraw.boundingboxclip(xrange, yrange, zrange, p), points);
 
-            h = PGABLEDraw.plotline(points, c, true, true);
+            h = PGABLEDraw.plotline(points, varargin{:});
 
             
             for i=1:(length(points)-1)
@@ -365,7 +365,8 @@ classdef PGA < GA
                 arrow_points = {ap_short, ap_tip, ap_long};
                 arrow_points = arrayfun(@(p)PGABLEDraw.boundingboxclip(xrange, yrange, zrange, p), arrow_points);
                 
-                h = [h PGABLEDraw.patch(arrow_points, c)];
+                c = PGABLEDraw.extractcolor(varargin{:});
+                h = [h PGABLEDraw.patch(arrow_points, 'EdgeColor', c, 'FaceColor', c)];
             end
             
         end
@@ -1139,52 +1140,47 @@ classdef PGA < GA
         end
 	end
 
-        function draw(A, c)
+        function draw(A, varargin)
             arguments
                 A PGA;
-                c = [];
+            end
+            arguments (Repeating)
+                varargin
             end
             GAScene.usefigure();
 
             A = zeroepsilons_(A);
             
             if GAisa(A, 'point')
-                if isempty(c)
-                    % TODO: make default colour of point changable.
-                    c = 'y';
-                end
-
+                updated_varargin = PGABLEDraw.defaultvarargin('FaceColor', 'y', varargin{:});
                 if euclidean(A) == 0
                     % TODO perhaps make drawing as part of the constructor of the dynamic item
-                    h = PGA.drawvanishingpoint(A, c);
-                    GAScene.adddynamicitem(GASceneDynamicItem(A, h, @()PGA.drawvanishingpoint(A, c)));
+                    h = PGA.drawvanishingpoint(A, updated_varargin{:});
+                    GAScene.adddynamicitem(GASceneDynamicItem(A, h, @()PGA.drawvanishingpoint(A, updated_varargin{:})));
                 else
-                    h = PGABLEDraw.octahedron(A, PGA.pointsize(), c);
+                    h = PGABLEDraw.octahedron(A, PGA.pointsize(), updated_varargin{:});
                     GAScene.addstillitem(GASceneStillItem(A, h));
                 end
                 
             elseif GAisa(A, 'line')
-                if isempty(c)
-                    % TODO: make default colour of line changable.
-                    c = 'b';
-                end
-
+                updated_varargin = PGABLEDraw.defaultvarargin('Color', 'b', varargin{:});
+                % TODO: get this to work
+                %updated_varargin = PGABLEDraw.defaultvarargin('LineWidth', [1.5], updated_varargin{:});
                 if euclidean(A) == 0
                     % TODO perhaps make drawing as part of the constructor of the dynamic item
-                    h = PGA.drawvanishingline(A, c);
-                    GAScene.adddynamicitem(GASceneDynamicItem(A, h, @()PGA.drawvanishingline(A, c)));
+                    %TODO: make dashedness work
+                    updated_varargin = [{'--'}, updated_varargin];
+                    h = PGA.drawvanishingline(A, updated_varargin{:});
+                    GAScene.adddynamicitem(GASceneDynamicItem(A, h, @()PGA.drawvanishingline(A, updated_varargin{:})));
                 else
-                    h = PGABLEDraw.hairyline(A, c);
+                    h = PGABLEDraw.hairyline(A, updated_varargin{:});
                     GAScene.addstillitem(GASceneStillItem(A, h));
                 end
 
             elseif GAisa(A, 'plane')
-                if isempty(c)
-                    % TODO: make default colour of plane changable.
-                    c = 'g';
-                end
-
-                h = PGABLEDraw.pointingplane(A, c);
+                updated_varargin = PGABLEDraw.defaultvarargin('FaceColor', 'g', varargin{:});
+                updated_varargin = PGABLEDraw.defaultvarargin('FaceAlpha', 0.5, updated_varargin{:});
+                h = PGABLEDraw.pointingplane(A, updated_varargin{:});
                 GAScene.addstillitem(GASceneStillItem(A, h));
             else
                 error('Error is not a point, line, or plane. PGA cannot draw it.');

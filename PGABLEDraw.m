@@ -5,14 +5,16 @@ classdef PGABLEDraw
 
     methods (Access = public, Static)
 
-        function h = arrow(p1, p2, c)
+        function h = arrow(p1, p2, varargin)
             %ARROW - Draws an arrow from one point to another.
 
             % Drawing an arrow from point p1 to point p2 in colour c
             arguments
                 p1 PGA;
                 p2 PGA;
-                c = 'b';
+            end
+            arguments (Repeating)
+                varargin
             end
 
             hold on
@@ -51,7 +53,7 @@ classdef PGABLEDraw
 
             % DRAWING
             % First, plot line from point 1 to point 2
-            h = PGABLEDraw.plotline({p1 p2}, c);
+            h = PGABLEDraw.plotline({p1 p2}, varargin{:});
 
             % Then, for each angle, we want to rotate the point around dir1 and dir2
             phi = 0.75; % The base of the arrow head is 0.75 of the way
@@ -66,7 +68,7 @@ classdef PGABLEDraw
                 ht = plot3([p2x, abx + sin(angle)*dir1x + cos(angle)*dir2x], ...
                         [p2y, aby + sin(angle)*dir1y + cos(angle)*dir2y], ...
                         [p2z, abz + sin(angle)*dir1z + cos(angle)*dir2z], ...
-                        c);
+                        varargin{:});
                 h = [h ht];
             end
 
@@ -76,7 +78,7 @@ classdef PGABLEDraw
                 ht = plot3([abx + sin(angle1)*dir1x + cos(angle1)*dir2x, abx + sin(angle2)*dir1x + cos(angle2)*dir2x], ...
                         [aby + sin(angle1)*dir1y + cos(angle1)*dir2y, aby + sin(angle2)*dir1y + cos(angle2)*dir2y], ...
                         [abz + sin(angle1)*dir1z + cos(angle1)*dir2z, abz + sin(angle2)*dir1z + cos(angle2)*dir2z], ...
-                        c);
+                        varargin{:});
                 h = [h ht];
             end
         end
@@ -106,14 +108,14 @@ classdef PGABLEDraw
             PGABLEDraw.patch(pts, c);
         end
 
-        function handle = patch(pts, c, alpha, line_style)
+        function handle = patch(pts, varargin)
             %PATCH - Draws a patch of a coloured polygon.
 
             arguments
                 pts;
-                c = 'y';
-                alpha = 1;
-                line_style = '-';
+            end
+            arguments (Repeating)
+                varargin
             end
 
             for i = 1:length(pts)
@@ -123,17 +125,17 @@ classdef PGABLEDraw
                 y(i) = p.gety();
                 z(i) = p.getz();
             end
-            handle = patch(x, y, z, c, 'FaceAlpha', alpha, 'LineStyle', line_style);
+            handle = patch('XData', x, 'YData', y, 'ZData', z, varargin{:});
         end
 
-        function h = plotline(A, c, isdashed, isthick)
+        function h = plotline(A, varargin)
             %PLOTLINE - Draws a line connecting the points of the first argument.
 
             arguments
                 A;
-                c = [0, 0, 1, 1];
-                isdashed = false;
-                isthick = false;
+            end
+            arguments (Repeating)
+                varargin
             end
 
             if length(A) == 0;
@@ -148,30 +150,35 @@ classdef PGABLEDraw
                 z(i) = p.getz();
             end
 
-            if isdashed
-                if isthick
-                    h = plot3(x, y, z, '--', 'LineWidth', 1.5);
-                else
-                    h = plot3(x, y, z, '--');
-                end
-            else
-                if isthick
-                    h = plot3(x, y, z, 'LineWidth', 1.5);
-                else
-                    h = plot3(x, y, z);
-                end
-            end
-            h.Color = c;
+            h = plot3(x, y, z, varargin{:});
+
+            % TODO: remove this commented out code
+            % if isdashed
+            %     if isthick
+            %         h = plot3(x, y, z, '--', 'LineWidth', 1.5);
+            %     else
+            %         h = plot3(x, y, z, '--');
+            %     end
+            % else
+            %     if isthick
+            %         h = plot3(x, y, z, 'LineWidth', 1.5);
+            %     else
+            %         h = plot3(x, y, z);
+            %     end
+            % end
+            % h.Color = c;
         end
 
 
-        function h = octahedron(center_point, radius, c)
+        function h = octahedron(center_point, radius, varargin)
             %OCTAHEDRON - Draws an octahedron.
 
             arguments 
                 center_point PGA;
                 radius double;
-                c;
+            end
+            arguments (Repeating)
+                varargin
             end
 
             hold on
@@ -183,17 +190,17 @@ classdef PGABLEDraw
             p_e3m = (gapoint(0, 0, -radius, PGA)/origin(PGA))*center_point;
             p_e3p = (gapoint(0, 0, radius, PGA)/origin(PGA))*center_point;
 
-            h = [PGABLEDraw.patch({p_e1m, p_e2m, p_e3m}, c), ...
-                 PGABLEDraw.patch({p_e1m, p_e2m, p_e3p}, c), ...
-                 PGABLEDraw.patch({p_e1m, p_e2p, p_e3m}, c), ...
-                 PGABLEDraw.patch({p_e1m, p_e2p, p_e3p}, c), ...
-                 PGABLEDraw.patch({p_e1p, p_e2m, p_e3m}, c), ...
-                 PGABLEDraw.patch({p_e1p, p_e2m, p_e3p}, c), ...
-                 PGABLEDraw.patch({p_e1p, p_e2p, p_e3m}, c), ...
-                 PGABLEDraw.patch({p_e1p, p_e2p, p_e3p}, c)];
+            h = [PGABLEDraw.patch({p_e1m, p_e2m, p_e3m}, varargin{:}), ...
+                 PGABLEDraw.patch({p_e1m, p_e2m, p_e3p}, varargin{:}), ...
+                 PGABLEDraw.patch({p_e1m, p_e2p, p_e3m}, varargin{:}), ...
+                 PGABLEDraw.patch({p_e1m, p_e2p, p_e3p}, varargin{:}), ...
+                 PGABLEDraw.patch({p_e1p, p_e2m, p_e3m}, varargin{:}), ...
+                 PGABLEDraw.patch({p_e1p, p_e2m, p_e3p}, varargin{:}), ...
+                 PGABLEDraw.patch({p_e1p, p_e2p, p_e3m}, varargin{:}), ...
+                 PGABLEDraw.patch({p_e1p, p_e2p, p_e3p}, varargin{:})];
         end
 
-        function h = hairyline(line, c)
+        function h = hairyline(line, varargin)
             %HAIRYLINE - Draws a hairy line.
 
             hold on
@@ -224,9 +231,9 @@ classdef PGABLEDraw
             
             
             dir = llen*normalize(dir);
-            point_a = gapoint(double(p.getx()+dir.*e1), double(p.gety()+dir.*e2),double(p.getz()+dir.*e3));
-            point_b = gapoint(double(p.getx()-dir.*e1), double(p.gety()-dir.*e2),double(p.getz()-dir.*e3));
-            h = PGABLEDraw.plotline({point_a, point_b}, c, false, true);
+            point_a = gapoint(double(p.getx()+dir.*e1, PGA), double(p.gety()+dir.*e2), double(p.getz()+dir.*e3), PGA);
+            point_b = gapoint(double(p.getx()-dir.*e1, PGA), double(p.gety()-dir.*e2), double(p.getz()-dir.*e3), PGA);
+            h = PGABLEDraw.plotline({point_a, point_b}, varargin{:});
 
             % Drawing hairs
             num_hairs = 20;
@@ -243,7 +250,7 @@ classdef PGABLEDraw
 
             % Creating hair base and tip.
             hair_base = point_b;
-            hair_tip =gapoint(0.05*llen, 0, 0, PGA);
+            hair_tip = gapoint(0.05*llen, 0, 0, PGA);
             
             % Rotate
             hair_tip_rot = sqrt(euclidean(line)/(e1(PGA)^e2(PGA)));
@@ -266,19 +273,21 @@ classdef PGABLEDraw
                 h_t = PGA(mat_h_t);
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-                h = [h PGABLEDraw.plotline({h_b, h_t}, c, false, true)];
+                h = [h PGABLEDraw.plotline({h_b, h_t}, varargin{:})];
                 hair_tip = hair_trans_rot * hair_tip * inverse(hair_trans_rot);
             end
         end
 
-        function h = pointingplaneC(plane, center, c)
+        function h = pointingplaneC(plane, center, varargin)
             %POINTINGPLANE - Draws a plane with pointing arrows.
 
             % TODO: verify input is PGA vector
             arguments
                 plane;
                 center;
-                c = 'g';
+            end
+            arguments (Repeating)
+                varargin
             end
 
             hold on
@@ -324,12 +333,12 @@ classdef PGABLEDraw
             dir2y = dir2.gety();
             dir2z = dir2.getz();
 
-            p1t =gapoint(cx + dir1x + dir2x, cy + dir1y + dir2y, cz + dir1z + dir2z, PGA);
-            p2t =gapoint(cx - dir1x + dir2x, cy - dir1y + dir2y, cz - dir1z + dir2z, PGA);
-            p3t =gapoint(cx - dir1x - dir2x, cy - dir1y - dir2y, cz - dir1z - dir2z, PGA);
-            p4t =gapoint(cx + dir1x - dir2x, cy + dir1y - dir2y, cz + dir1z - dir2z, PGA);
+            p1t = gapoint(cx + dir1x + dir2x, cy + dir1y + dir2y, cz + dir1z + dir2z, PGA);
+            p2t = gapoint(cx - dir1x + dir2x, cy - dir1y + dir2y, cz - dir1z + dir2z, PGA);
+            p3t = gapoint(cx - dir1x - dir2x, cy - dir1y - dir2y, cz - dir1z - dir2z, PGA);
+            p4t = gapoint(cx + dir1x - dir2x, cy + dir1y - dir2y, cz + dir1z - dir2z, PGA);
             
-            h = PGABLEDraw.patch({p1t, p2t, p3t, p4t}, c, 0.5);
+            h = PGABLEDraw.patch({p1t, p2t, p3t, p4t}, varargin{:});
 
             
             
@@ -356,26 +365,27 @@ classdef PGABLEDraw
                     % Arrow base
                     ab = (1-yper)*((1-xper)*p1t + xper*p2t) + yper*((1-xper)*p4t + xper*p3t);
                     % Arrow tip
-                    at =gapoint(ab.getx() + nsv.getx(), ab.gety() + nsv.gety(), ab.getz() + nsv.getz());
-                    h = [h PGABLEDraw.plotline({ab, at}, 'k')];
+                    at = gapoint(ab.getx() + nsv.getx(), ab.gety() + nsv.gety(), ab.getz() + nsv.getz(), PGA);
+                    h = [h PGABLEDraw.plotline({ab, at}, 'Color', 'k')];
                     am = r*ab + (1-r)*at;
-                    af1 =gapoint(am.getx() + nad.getx(), am.gety() + nad.gety(), am.getz() + nad.getz());
-                    af2 =gapoint(am.getx() - nad.getx(), am.gety() - nad.gety(), am.getz() - nad.getz());
-                    h = [h PGABLEDraw.plotline({af1, at, af2}, 'k')];
+                    af1 = gapoint(am.getx() + nad.getx(), am.gety() + nad.gety(), am.getz() + nad.getz(), PGA);
+                    af2 = gapoint(am.getx() - nad.getx(), am.gety() - nad.gety(), am.getz() - nad.getz(), PGA);
+                    h = [h PGABLEDraw.plotline({af1, at, af2}, 'Color', 'k')];
                 end
             end
 
         end
 
 	% TODO: reduct this to just computing the center and calling pointingplaneC
-        function h = pointingplane(plane, center, c)
+        function h = pointingplane(plane, varargin)
             %POINTINGPLANE - Draws a plane with pointing arrows.
 
             % TODO: verify input is PGA vector
             arguments
                 plane;
-                center;
-                c = 'g';
+            end
+            arguments (Repeating)
+                varargin
             end
 
             hold on
@@ -426,7 +436,7 @@ classdef PGABLEDraw
             p3t =gapoint(cx - dir1x - dir2x, cy - dir1y - dir2y, cz - dir1z - dir2z, PGA);
             p4t =gapoint(cx + dir1x - dir2x, cy + dir1y - dir2y, cz + dir1z - dir2z, PGA);
             
-            h = PGABLEDraw.patch({p1t, p2t, p3t, p4t}, c, 0.5);
+            h = PGABLEDraw.patch({p1t, p2t, p3t, p4t}, varargin{:});
 
             
             
@@ -453,24 +463,26 @@ classdef PGABLEDraw
                     % Arrow base
                     ab = (1-yper)*((1-xper)*p1t + xper*p2t) + yper*((1-xper)*p4t + xper*p3t);
                     % Arrow tip
-                    at =gapoint(ab.getx() + nsv.getx(), ab.gety() + nsv.gety(), ab.getz() + nsv.getz());
-                    h = [h PGABLEDraw.plotline({ab, at}, 'k')];
+                    at = gapoint(ab.getx() + nsv.getx(), ab.gety() + nsv.gety(), ab.getz() + nsv.getz(), PGA);
+                    h = [h PGABLEDraw.plotline({ab, at}, 'Color', 'k')];
                     am = r*ab + (1-r)*at;
-                    af1 =gapoint(am.getx() + nad.getx(), am.gety() + nad.gety(), am.getz() + nad.getz());
-                    af2 =gapoint(am.getx() - nad.getx(), am.gety() - nad.gety(), am.getz() - nad.getz());
-                    h = [h PGABLEDraw.plotline({af1, at, af2}, 'k')];
+                    af1 = gapoint(am.getx() + nad.getx(), am.gety() + nad.gety(), am.getz() + nad.getz(), PGA);
+                    af2 = gapoint(am.getx() - nad.getx(), am.gety() - nad.gety(), am.getz() - nad.getz(), PGA);
+                    h = [h PGABLEDraw.plotline({af1, at, af2}, 'Color', 'k')];
                 end
             end
 
         end
 
-        function h = hairydisk(BV, c, offset)
+        function h = hairydisk(BV, offset, varargin)
             %HAIRYDISK - Draws a disk with hairs indicating spin.
 
             arguments
                 BV PGA;
-                c = 'b';
                 offset PGA = origin(PGA);
+            end
+            arguments (Repeating)
+                varargin
             end
 
             hold on
@@ -493,19 +505,19 @@ classdef PGABLEDraw
             % Creating points in a circle
             t = (0:pi/12:2*pi);
             for i=1:length(t)
-                pts{i} =gapoint(f*rad*sin(t(i)), rad*cos(t(i)), 0, PGA);
+                pts{i} = gapoint(f*rad*sin(t(i)), rad*cos(t(i)), 0, PGA);
                 pts{i} = inverse(total_transform) * pts{i} * total_transform;
             end
     
-            h = PGABLEDraw.patch(pts, c, 0.8);
+            h = PGABLEDraw.patch(pts, varargin{:});
             for i=2:4:length(t)-1
                  p{1} = pts{i};
                  p{2} = 2.5*(pts{i}-pts{i-1}) + pts{i-1};
-                 h = [h PGABLEDraw.plotline({p{2},p{1}},'k')];
+                 h = [h PGABLEDraw.plotline({p{2},p{1}}, 'Color', 'k')];
             end
         end
 
-        function h = hairyball(TV, c, offset)
+        function h = hairyball(TV, offset, varargin)
             %HAIRYBALL - Draws a ball with hairs pointing inward or outward.
 
             hold on
@@ -520,7 +532,7 @@ classdef PGABLEDraw
             Z = r*Z;
 
 
-            h = plot3(X + offset.getx(), Y + offset.gety(), Z + offset.getz(), c)';
+            h = plot3(X + offset.getx(), Y + offset.gety(), Z + offset.getz(), varargin{:})';
             
             for i=1:size(X,1)
                 for j=1:size(X,2)
@@ -528,7 +540,7 @@ classdef PGABLEDraw
                     y(j) = Y(i,j);
                     z(j) = Z(i,j);
                 end
-                h = [h plot3(x + offset.getx(), y + offset.gety(), z + offset.getz(), c)];
+                h = [h plot3(x + offset.getx(), y + offset.gety(), z + offset.getz(), varargin{:})];
             end
 
             if v > 0
@@ -546,11 +558,11 @@ classdef PGABLEDraw
                     zh(1,j) = Z(i,j);
                     zh(2,j) = d*Z(i,j);
                 end
-                h = [h plot3(xh + offset.getx(), yh + offset.gety(), zh + offset.getz(), c)'];
+                h = [h plot3(xh + offset.getx(), yh + offset.gety(), zh + offset.getz(), varargin{:})'];
             end
         end
 
-        function h = drawstaronplane(vp, c, planearg)
+        function h = drawstaronplane(vp, planearg, varargin)
             h = [];
             %planearg = 1 -> x axis
             %planearg = 2 -> y axis
@@ -620,7 +632,7 @@ classdef PGABLEDraw
                 starpoints = reshape(starpoints', [1, 10]);
 
                 starpoints = arrayfun(@(p)PGABLEDraw.boundingboxclip(xrange, yrange, zrange, p), starpoints);
-                h = [h PGABLEDraw.patch(starpoints, c)];
+                h = [h PGABLEDraw.patch(starpoints, varargin{:})];
             end
         end
 
@@ -676,7 +688,7 @@ classdef PGABLEDraw
             x = p.getx();
             y = p.gety();
             z = p.getz();
-            R = {gapoint(clip(x, xrange(1), xrange(2)), clip(y, yrange(1), yrange(2)), clip(z, zrange(1), zrange(2)))};
+            R = {gapoint(clip(x, xrange(1), xrange(2)), clip(y, yrange(1), yrange(2)), clip(z, zrange(1), zrange(2)), PGA)};
         end
 
         function b = isinboundingbox(xrange, yrange, zrange, p)
@@ -687,6 +699,28 @@ classdef PGABLEDraw
             bz = zrange(1) <= p.getz() && p.getz() <= zrange(2);
 
             b = bx && by && bz;
+        end
+
+        function v = defaultvarargin(key, val, varargin)
+            for k = 1:length(varargin)
+                arg = varargin{k};
+                if arg == key
+                    v = varargin;
+                    return
+                end
+            end
+            v = [varargin, {key}, {val}];
+        end
+
+        function c = extractcolor(varargin)
+            for k = 1:length(varargin)
+                arg = varargin{k};
+                if strcmp(arg, 'Color')
+                    c = varargin{k+1};
+                    return
+                end
+            end
+            % TODO: return error
         end
 
     end

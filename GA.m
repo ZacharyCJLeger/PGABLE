@@ -1013,7 +1013,7 @@ classdef (Abstract) GA
         %   Note that the geometric interpretation of elements depends on the model.
         %   Thus, draw(e1(OGA)) may draw something different than draw(e1(PGA)).
         %   Not all elements can be drawn. You will receive an error if it cannot be drawn.
-        draw(A, c);
+        draw(A, varargin);
     end
 
     % ******************** Abstract Protected Methods ********************

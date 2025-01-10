@@ -29,7 +29,7 @@ classdef OGA < GA
     %         • gety(A)                       to get the y coordinate of an OGA point
     %         • getz(A)                       to get the z coordinate of an OGA point
     %         • zeroepsilons(A)               to zero-out epsilons (small errors)
-    %         • draw(A)                       to draw the multivector
+    %         • draw(A, varargin)             to draw the multivector
     %         (See also GAScene for more information on draw calls)
     %         • grade(A, g)                   to select the grade-g component of a multivector
     %         • isgrade(A, g)                 to determine if a multivector is of grade g
@@ -790,35 +790,32 @@ classdef OGA < GA
             R = PGA(scal, [0, E1, E2, E3], [0, 0, 0, E12, E13, E23], [0, 0, 0, E123], 0);
         end
 
-        function draw(A, c)
+        function draw(A, varargin)
             arguments
                 A OGA;
-                c = [];
             end
+            arguments (Repeating)
+                varargin
+            end
+
             GAScene.usefigure();
 
             A = zeroepsilons_(A);
             
-	    if GAisa(A, 'scalar')
-		title(double(A));
-	    elseif GAisa(A, 'vector')
-                if isempty(c)
-                    c = 'b';
-                end
+            if GAisa(A, 'scalar')
+                title(double(A));
+            elseif GAisa(A, 'vector')
+                updated_varargin = PGABLEDraw.defaultvarargin('Color', 'b', varargin{:});
                 % TODO: make a proper way of converting a vector to a point
-                h = PGABLEDraw.arrow(origin(PGA), ihd(PGAcast(A) + e0(PGA)), c);
+                h = PGABLEDraw.arrow(origin(PGA), ihd(PGAcast(A) + e0(PGA)), updated_varargin{:});
                 GAScene.addstillitem(GASceneStillItem(A, h));
             elseif GAisa(A, 'bivector')
-                if isempty(c)
-                    c = 'g';
-                end
-                h = PGABLEDraw.hairydisk(PGAcast(A), c, origin(PGA));
+                updated_varargin = PGABLEDraw.defaultvarargin('FaceColor', 'g', varargin{:});
+                h = PGABLEDraw.hairydisk(PGAcast(A), origin(PGA), updated_varargin{:});
                 GAScene.addstillitem(GASceneStillItem(A, h));
             elseif GAisa(A, 'trivector')
-                if isempty(c)
-                    c = 'b';
-                end
-                h = PGABLEDraw.hairyball(A, c, origin(PGA));
+                updated_varargin = PGABLEDraw.defaultvarargin('Color', 'r', varargin{:});
+                h = PGABLEDraw.hairyball(A, origin(PGA), updated_varargin{:});
                 GAScene.addstillitem(GASceneStillItem(A, h));
             else
                 error('Error is not a vector, bivector or trivector. OGA cannot draw it.');
