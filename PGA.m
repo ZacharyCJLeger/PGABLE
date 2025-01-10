@@ -1149,9 +1149,21 @@ classdef PGA < GA
             end
             GAScene.usefigure();
 
+            
+
             A = zeroepsilons_(A);
             
             if GAisa(A, 'point')
+
+
+                % Custom input handling
+                argsize = size(varargin, 2);
+                if argsize == 1
+                    if isa(varargin{1}, "char")
+                        varargin = ['FaceColor', varargin];
+                    end
+                end
+
                 updated_varargin = PGABLEDraw.defaultvarargin('FaceColor', 'y', varargin{:});
                 if euclidean(A) == 0
                     % TODO perhaps make drawing as part of the constructor of the dynamic item
@@ -1163,6 +1175,16 @@ classdef PGA < GA
                 end
                 
             elseif GAisa(A, 'line')
+
+                % Custom input handling
+                argsize = size(varargin, 2);
+                if argsize == 1
+                    if isa(varargin{1}, "char")
+                        varargin = ['Color', varargin];
+                    end
+                end
+
+
                 updated_varargin = PGABLEDraw.defaultvarargin('Color', 'b', varargin{:});
                 % TODO: get this to work
                 %updated_varargin = PGABLEDraw.defaultvarargin('LineWidth', [1.5], updated_varargin{:});
@@ -1178,9 +1200,38 @@ classdef PGA < GA
                 end
 
             elseif GAisa(A, 'plane')
+
+                % Calculating center
+                plane = normalize(A);
+                if euclidean(plane) == 0
+                    error("This is a plane at infinity. Cannot currently display this object.");
+                end
+                delta = -e0coeff(plane);
+                support_vec = euclidean(plane); 
+                center = ihd(delta*support_vec + e0(PGA));
+
+                % Setting the default offset to be the desired center
+                offset = center;
+
+                % Custom input handling
+                argsize = size(varargin, 2);
+                if argsize == 1
+                    if isa(varargin{1}, "char")
+                        varargin = ['FaceColor', varargin];
+                    elseif isa(varargin{1}, "GA")
+                        offset = varargin{1};
+                    end
+                elseif argsize == 2
+                    if isa(varargin{1}, "GA") && isa(varargin{2}, "char")
+                        offset = varargin{1};
+                        varargin{1} = 'FaceColor';
+                    end
+                end
+
+
                 updated_varargin = PGABLEDraw.defaultvarargin('FaceColor', 'g', varargin{:});
                 updated_varargin = PGABLEDraw.defaultvarargin('FaceAlpha', 0.5, updated_varargin{:});
-                h = PGABLEDraw.pointingplane(A, updated_varargin{:});
+                h = PGABLEDraw.pointingplaneC(A, offset, updated_varargin{:});
                 GAScene.addstillitem(GASceneStillItem(A, h));
             else
                 error('Error is not a point, line, or plane. PGA cannot draw it.');
