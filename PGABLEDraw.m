@@ -212,10 +212,10 @@ classdef PGABLEDraw
             % Closest point to the origin
             p = line/dir;
             % Translation in direction from origin
-	    if 0
             translation = ihd(dir + e0(PGA))/origin(PGA);
             trans = sqrt(translation);
 
+	    if 0
             point_a = trans * p * inverse(trans);
             point_b = inverse(trans) * p * trans;
 
@@ -233,8 +233,8 @@ classdef PGABLEDraw
             
             
             dir = llen*normalize(dir);
-            point_a = gapoint(double(p.getx()+dir.*e1, PGA), double(p.gety()+dir.*e2), double(p.getz()+dir.*e3), PGA);
-            point_b = gapoint(double(p.getx()-dir.*e1, PGA), double(p.gety()-dir.*e2), double(p.getz()-dir.*e3), PGA);
+            point_a = gapoint(double(p.getx()+dir.*e1), double(p.gety()+dir.*e2), double(p.getz()+dir.*e3), PGA);
+            point_b = gapoint(double(p.getx()-dir.*e1), double(p.gety()-dir.*e2), double(p.getz()-dir.*e3), PGA);
             h = PGABLEDraw.plotline({point_a, point_b}, varargin{:});
 
             % Drawing hairs
