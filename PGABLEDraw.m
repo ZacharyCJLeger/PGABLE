@@ -212,6 +212,7 @@ classdef PGABLEDraw
             % Closest point to the origin
             p = line/dir;
             % Translation in direction from origin
+	    if 0
             translation = ihd(dir + e0(PGA))/origin(PGA);
             trans = sqrt(translation);
 
@@ -228,6 +229,7 @@ classdef PGABLEDraw
             mat_b = real(mat_b);
             point_b = PGA(mat_b);
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	    end
             
             
             dir = llen*normalize(dir);
