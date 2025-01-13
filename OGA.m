@@ -799,16 +799,17 @@ classdef OGA < GA
             end
 
             % Default offset is the origin
-            offset = origin(PGA)
+            offset = origin(PGA);
 
             GAScene.usefigure();
 
             A = zeroepsilons_(A);
             
             if GAisa(A, 'scalar')
+                % TODO: color for different color inputs
                 title(double(A));
+            
             elseif GAisa(A, 'vector')
-
 
                 % Custom input handling
                 argsize = size(varargin, 2);
@@ -817,6 +818,7 @@ classdef OGA < GA
                         varargin = ['Color', varargin];
                     elseif isa(varargin{1}, "GA")
                         offset = varargin{1};
+                        varargin = {};
                     end
                 elseif argsize == 2
                     if isa(varargin{1}, "GA") && isa(varargin{2}, "char")
