@@ -1220,6 +1220,7 @@ classdef PGA < GA
                         varargin = ['FaceColor', varargin];
                     elseif isa(varargin{1}, "GA")
                         offset = varargin{1};
+                        varargin = {};
                     end
                 elseif argsize == 2
                     if isa(varargin{1}, "GA") && isa(varargin{2}, "char")
