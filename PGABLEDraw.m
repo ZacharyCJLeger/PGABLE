@@ -233,15 +233,15 @@ classdef PGABLEDraw
             
             
             dir = llen*normalize(dir);
-            point_a = gapoint(double(p.getx()+dir.*e1), double(p.gety()+dir.*e2), double(p.getz()+dir.*e3), PGA);
-            point_b = gapoint(double(p.getx()-dir.*e1), double(p.gety()-dir.*e2), double(p.getz()-dir.*e3), PGA);
+            point_a = gapoint(double(p.getx()+dir.*e1(PGA)), double(p.gety()+dir.*e2(PGA)), double(p.getz()+dir.*e3(PGA)), PGA);
+            point_b = gapoint(double(p.getx()-dir.*e1(PGA)), double(p.gety()-dir.*e2(PGA)), double(p.getz()-dir.*e3(PGA)), PGA);
             h = PGABLEDraw.plotline({point_a, point_b}, varargin{:});
 
             % Drawing hairs
             num_hairs = 20;
 
             hair_trans = gexp(2*glog(trans)/num_hairs);
-            hair_trans = (1-e0*dir/num_hairs);
+            hair_trans = (1-e0(PGA)*dir/num_hairs);
 
             phi = pi/3;
             % TODO: PGA4CS says to use -phi. It is not clear to me why this should be the case.
