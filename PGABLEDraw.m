@@ -203,52 +203,46 @@ classdef PGABLEDraw
         function h = hairyline(line, varargin)
             %HAIRYLINE - Draws a hairy line.
 
+            % Direction the line is pointing
+            dir = euclidean(normalize(line))/I3(PGA);
+            % Closest point to the origin
+            p = normalize(line)/dir;
+
+            PGABLEDraw.hairylineC(line, p, varargin{:});
+        end
+
+        function h = hairylineC(line, center, varargin)
+            %HAIRYLINEC - Draws a hairy line.
             hold on
 
-	        llen = norm(line);
+            llen = norm(line);
             line = normalize(line);
-            % Direction the line is pointing
-            dir = euclidean(line)/I3(PGA);
-            % Closest point to the origin
-            p = line/dir;
+	        
             % Translation in direction from origin
+            dir = euclidean(line)/I3(PGA);
             translation = ihd(dir + e0(PGA))/origin(PGA);
             trans = sqrt(translation);
-
-	    if 0
-            point_a = trans * p * inverse(trans);
-            point_b = inverse(trans) * p * trans;
-
-
-            % TODO: This is to suppress the warnings about imaginary values. We should not need to do this.
-            mat_a = matrix(point_a);
-            mat_a = real(mat_a);
-            point_a = PGA(mat_a);
-
-            mat_b = matrix(point_b);
-            mat_b = real(mat_b);
-            point_b = PGA(mat_b);
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	    end
             
             
             dir = llen*normalize(dir);
-            point_a = gapoint(double(p.getx()+dir.*e1(PGA)), double(p.gety()+dir.*e2(PGA)), double(p.getz()+dir.*e3(PGA)), PGA);
-            point_b = gapoint(double(p.getx()-dir.*e1(PGA)), double(p.gety()-dir.*e2(PGA)), double(p.getz()-dir.*e3(PGA)), PGA);
+            point_a = gapoint(double(center.getx()+dir.*e1(PGA)), ...
+                              double(center.gety()+dir.*e2(PGA)), ...
+                              double(center.getz()+dir.*e3(PGA)), PGA);
+            point_b = gapoint(double(center.getx()-dir.*e1(PGA)), ...
+                              double(center.gety()-dir.*e2(PGA)), ...
+                              double(center.getz()-dir.*e3(PGA)), PGA);
+
             h = PGABLEDraw.plotline({point_a, point_b}, varargin{:});
 
             % Drawing hairs
             num_hairs = 20;
 
-            hair_trans = gexp(2*glog(trans)/num_hairs);
             hair_trans = (1-e0(PGA)*dir/num_hairs);
 
             phi = pi/3;
             % TODO: PGA4CS says to use -phi. It is not clear to me why this should be the case.
             hair_rot = gexp(-phi*normalize(line)/2);
-
             hair_trans_rot = hair_trans * hair_rot;
-            
 
             % Creating hair base and tip.
             hair_base = point_b;
@@ -280,8 +274,88 @@ classdef PGABLEDraw
             end
         end
 
+        function h = hairyline_test(line, varargin)
+            %HAIRYLINEC - Draws a hairy line.
+
+            % TODO: fix comment above
+            hold on
+	        
+            
+            % These two things are equivalent
+            %direction = [e23coeff(line), -e13coeff(line), e12coeff(line)];
+            dir = euclidean(normalize(line))/I3(PGA);
+            direction = [e1coeff(dir), e2coeff(dir), e3coeff(dir)]
+
+
+            %TODO: determine why the line below isn't a valid way to extract the moment
+            %moment = [e01coeff(line), e02coeff(line), e03coeff(line)]
+            p = pd(normalize(line)*dir);
+            moment = [e1coeff(p), e2coeff(p), e3coeff(p)]
+            dir 
+            p = zeroepsilons(p)
+            OGAcast(p)
+
+            
+
+            h = PGABLEDraw.hairyline_by_coordinates(line, OGAcast(dir), OGAcast(p), varargin{:});
+        end
+
+        function h = hairyline_by_coordinates(line, direction, moment, varargin)
+            point_a = gapoint(moment-direction, PGA)
+            point_b = gapoint(moment+direction, PGA)
+            h = PGABLEDraw.plotline({
+                point_a, point_b
+            }, varargin{:});
+
+
+            %%%%%%%%%% Drawing hairs %%%%%%%%%%
+
+            llen = norm(line);
+            
+            % number of hairs
+            num_hairs = 20;
+
+            hair_trans = (1-e0(PGA)*PGAcast(direction)/num_hairs);
+
+            phi = pi/3;
+            % TODO: PGA4CS says to use -phi. It is not clear to me why this should be the case.
+            hair_rot = gexp(-phi*normalize(line)/2);
+            hair_trans_rot = hair_trans * hair_rot;
+
+            % Creating hair base and tip.
+            hair_base = point_a;
+            hair_tip = gapoint(0.05*llen, 0, 0, PGA);
+            
+            % Rotate
+            hair_tip_rot = sqrt(euclidean(line)/(e1(PGA)^e2(PGA)));
+            hair_tip = hair_tip_rot * hair_tip * inverse(hair_tip_rot);
+
+            % Translate
+            hair_tip_trans = sqrt(point_a/origin(PGA));
+            hair_tip = hair_tip_trans * hair_tip * inverse(hair_tip_trans);
+
+            for i = 1:num_hairs
+                hair_base = hair_trans_rot * hair_base * inverse(hair_trans_rot);
+
+                % TODO: This is to suppress the warnings about imaginary values. We should not need to do this.
+                mat_h_b = matrix(hair_base);
+                mat_h_b = real(mat_h_b);
+                h_b = PGA(mat_h_b);
+
+                mat_h_t = matrix(hair_tip);
+                mat_h_t = real(mat_h_t);
+                h_t = PGA(mat_h_t);
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+                h = [h PGABLEDraw.plotline({h_b, h_t}, varargin{:})];
+                hair_tip = hair_trans_rot * hair_tip * inverse(hair_trans_rot);
+            end
+
+
+        end
+
         function h = pointingplaneC(plane, center, varargin)
-            %POINTINGPLANE - Draws a plane with pointing arrows.
+            %POINTINGPLANEC - Draws a plane with pointing arrows.
 
             % TODO: verify input is PGA vector
             arguments
@@ -304,11 +378,7 @@ classdef PGABLEDraw
 
 
             delta = -e0coeff(plane);
-
-            support_vec = euclidean(plane); 
-
-            %center = ihd(delta*support_vec + e0(PGA));
-
+            support_vec = euclidean(plane);
             sv = OGAcast(support_vec);
             
             biv = e1(OGA)^sv;
@@ -322,6 +392,10 @@ classdef PGABLEDraw
 
             dir1 = beta*dir1;
             dir2 = beta*dir2;
+
+
+
+            % Projecting the center onto the plane
 
             cx = center.getx();
             cy = center.gety();
@@ -339,104 +413,6 @@ classdef PGABLEDraw
             p2t = gapoint(cx - dir1x + dir2x, cy - dir1y + dir2y, cz - dir1z + dir2z, PGA);
             p3t = gapoint(cx - dir1x - dir2x, cy - dir1y - dir2y, cz - dir1z - dir2z, PGA);
             p4t = gapoint(cx + dir1x - dir2x, cy + dir1y - dir2y, cz + dir1z - dir2z, PGA);
-            
-            h = PGABLEDraw.patch({p1t, p2t, p3t, p4t}, varargin{:});
-
-            
-            
-
-            % gs is the grid size. 1 -> one arrow on each corner
-            %                      2 -> arrows in 3x3 grid
-            %                      etc, etc. 
-            gs = 2;
-
-            k = 0.3; % length of arrows, as percentage of area of square
-            nsv = beta*k*sv;
-
-            l = 0.2;
-            nad = l*k*dir2; % Note: dir2 is already scaled up by beta
-
-            % Length of arrow head, as percentage of length of arrow staffs
-            r = 0.2;
-
-            for x = 0:gs
-                for y  = 0:gs
-                    xper = x/gs;
-                    yper = y/gs;
-
-                    % Arrow base
-                    ab = (1-yper)*((1-xper)*p1t + xper*p2t) + yper*((1-xper)*p4t + xper*p3t);
-                    % Arrow tip
-                    at = gapoint(ab.getx() + nsv.getx(), ab.gety() + nsv.gety(), ab.getz() + nsv.getz(), PGA);
-                    h = [h PGABLEDraw.plotline({ab, at}, 'Color', 'k')];
-                    am = r*ab + (1-r)*at;
-                    af1 = gapoint(am.getx() + nad.getx(), am.gety() + nad.gety(), am.getz() + nad.getz(), PGA);
-                    af2 = gapoint(am.getx() - nad.getx(), am.gety() - nad.gety(), am.getz() - nad.getz(), PGA);
-                    h = [h PGABLEDraw.plotline({af1, at, af2}, 'Color', 'k')];
-                end
-            end
-
-        end
-
-	% TODO: reduct this to just computing the center and calling pointingplaneC
-        function h = pointingplane(plane, varargin)
-            %POINTINGPLANE - Draws a plane with pointing arrows.
-
-            % TODO: verify input is PGA vector
-            arguments
-                plane;
-            end
-            arguments (Repeating)
-                varargin
-            end
-
-            hold on
-
-            % TODO: Can currently only draw normalized planes. Perhaps should visualize non-unitness somehow.
-            beta = sqrt(norm(plane));
-            plane = normalize(plane);
-
-            if euclidean(plane) == 0
-                error("This is a plane at infinity. Cannot currently display this object.");
-            end
-
-
-            delta = -e0coeff(plane);
-
-            support_vec = euclidean(plane); 
-
-            center = ihd(delta*support_vec + e0(PGA));
-
-            sv = OGAcast(support_vec);
-            
-            biv = e1(OGA)^sv;
-            if biv == 0
-                dir1 = normalize(dual(e2(OGA)^sv));
-            else
-                dir1 = normalize(dual(biv));
-            end
-
-            dir2 = normalize(dual(dir1^sv));
-
-            dir1 = beta*dir1;
-            dir2 = beta*dir2;
-
-            cx = center.getx();
-            cy = center.gety();
-            cz = center.getz();
-
-            dir1x = dir1.getx();
-            dir1y = dir1.gety();
-            dir1z = dir1.getz();
-
-            dir2x = dir2.getx();
-            dir2y = dir2.gety();
-            dir2z = dir2.getz();
-
-            p1t =gapoint(cx + dir1x + dir2x, cy + dir1y + dir2y, cz + dir1z + dir2z, PGA);
-            p2t =gapoint(cx - dir1x + dir2x, cy - dir1y + dir2y, cz - dir1z + dir2z, PGA);
-            p3t =gapoint(cx - dir1x - dir2x, cy - dir1y - dir2y, cz - dir1z - dir2z, PGA);
-            p4t =gapoint(cx + dir1x - dir2x, cy + dir1y - dir2y, cz + dir1z - dir2z, PGA);
             
             h = PGABLEDraw.patch({p1t, p2t, p3t, p4t}, varargin{:});
 
