@@ -1176,11 +1176,20 @@ classdef PGA < GA
                 
             elseif GAisa(A, 'line')
 
+                offset = [];
                 % Custom input handling
                 argsize = size(varargin, 2);
                 if argsize == 1
                     if isa(varargin{1}, "char")
                         varargin = ['Color', varargin];
+                    elseif isa(varargin{1}, "GA")
+                        offset = varargin{1};
+                        varargin = {};
+                    end
+                elseif argsize == 2
+                    if isa(varargin{1}, "GA") && isa(varargin{2}, "char")
+                        offset = varargin{1};
+                        varargin{1} = 'Color';
                     end
                 end
 
@@ -1189,13 +1198,21 @@ classdef PGA < GA
                 % TODO: get this to work
                 %updated_varargin = PGABLEDraw.defaultvarargin('LineWidth', [1.5], updated_varargin{:});
                 if euclidean(A) == 0
+                    if ~isempty(offset)
+                        error("Cannot offset lines at infinity. Do not provide an offset argument.")
+                    end
                     % TODO perhaps make drawing as part of the constructor of the dynamic item
                     %TODO: make dashedness work
                     updated_varargin = [{'--'}, updated_varargin];
                     h = PGA.drawvanishingline(A, updated_varargin{:});
                     GAScene.adddynamicitem(GASceneDynamicItem(A, h, @()PGA.drawvanishingline(A, updated_varargin{:})));
                 else
-                    h = PGABLEDraw.hairyline(A, updated_varargin{:});
+                    if isempty(offset)
+                        h = PGABLEDraw.hairyline(A, updated_varargin{:});
+                    else 
+                        h = PGABLEDraw.hairylineC(A, offset, updated_varargin{:});
+                    end
+                    
                     GAScene.addstillitem(GASceneStillItem(A, h));
                 end
 

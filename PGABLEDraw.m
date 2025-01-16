@@ -274,10 +274,10 @@ classdef PGABLEDraw
         %     end
         % end
 
-        function h = hairyline_by_coordinates(direction, moment, varargin)
+        function h = hairyline_by_coordinates(direction, center, varargin)
             arguments
                 direction OGA;
-                moment OGA;
+                center OGA;
             end
             arguments (Repeating)
                 varargin
@@ -285,8 +285,8 @@ classdef PGABLEDraw
 
             hold on
             
-            point_a = gapoint(moment-direction, PGA);
-            point_b = gapoint(moment+direction, PGA);
+            point_a = gapoint(center-direction, PGA);
+            point_b = gapoint(center+direction, PGA);
             h = PGABLEDraw.plotline({
                 point_a, point_b
             }, varargin{:});
@@ -295,15 +295,15 @@ classdef PGABLEDraw
             num_hairs = 20;
 
             size = norm(direction);
-            hair_mom = moment;
-            if norm(hair_mom) == 0
-                %TODO: This is temporary
-                hair_mom = meet(dual(normalize(direction)), e1(OGA));
+            
+            hair_mom = meet(dual(normalize(direction)), e1(OGA));
+            if GAisa(hair_mom, 'scalar')
+                hair_mom = meet(dual(normalize(direction)), e2(OGA));
                 if GAisa(hair_mom, 'scalar')
-                    %TODO: This is temporary
-                    hair_mom = meet(dual(normalize(direction)), e2(OGA));
+                    hair_mom = meet(dual(normalize(direction)), e3(OGA));
                 end
             end
+            
             
             hair = size/num_hairs * normalize(hair_mom);
             
@@ -315,8 +315,8 @@ classdef PGABLEDraw
                 
                 hair = rot*hair;
 
-                d1 = moment - direction + ((i*2)/num_hairs)*direction;
-                d2 = moment - direction + ((i*2-2)/num_hairs)*direction;
+                d1 = center - direction + ((i*2)/num_hairs)*direction;
+                d2 = center - direction + ((i*2-2)/num_hairs)*direction;
 
                 h2 = PGABLEDraw.plotline({
                     gapoint(d1, PGA), gapoint(d2 + hair, PGA)
