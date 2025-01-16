@@ -824,6 +824,8 @@ classdef OGA < GA
                     if isa(varargin{1}, "GA") && isa(varargin{2}, "char")
                         offset = varargin{1};
                         varargin{1} = 'Color';
+                    elseif isa(varargin{1}, "char") && isa(varargin{2}, "GA")
+                        error("Arguments are in an incorrect order. It should be draw(ELEMENT, OFFSET, COLOR).")
                     end
                 end
 
@@ -847,6 +849,8 @@ classdef OGA < GA
                     if isa(varargin{1}, "GA") && isa(varargin{2}, "char")
                         offset = varargin{1};
                         varargin{1} = 'FaceColor';
+                    elseif isa(varargin{1}, "char") && isa(varargin{2}, "GA")
+                        error("Arguments are in an incorrect order. It should be draw(ELEMENT, OFFSET, COLOR).")
                     end
                 end
 
@@ -868,6 +872,8 @@ classdef OGA < GA
                     if isa(varargin{1}, "GA") && isa(varargin{2}, "char")
                         offset = varargin{1};
                         varargin{1} = 'Color';
+                    elseif isa(varargin{1}, "char") && isa(varargin{2}, "GA")
+                        error("Arguments are in an incorrect order. It should be draw(ELEMENT, OFFSET, COLOR).")
                     end
                 end
 
