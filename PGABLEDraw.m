@@ -291,64 +291,67 @@ classdef PGABLEDraw
             %moment = [e01coeff(line), e02coeff(line), e03coeff(line)]
             p = pd(normalize(line)*dir);
             moment = [e1coeff(p), e2coeff(p), e3coeff(p)]
-            dir 
-            p = zeroepsilons(p)
-            OGAcast(p)
-
+            %dir 
+            %p = zeroepsilons(p)
+            %OGAcast(p)
+            mom = e1coeff(p)*e1(OGA) + e2coeff(p)*e2(OGA) + e3coeff(p)*e3(OGA);
             
 
-            h = PGABLEDraw.hairyline_by_coordinates(line, OGAcast(dir), OGAcast(p), varargin{:});
+            h = PGABLEDraw.hairyline_by_coordinates(OGAcast(dir), OGAcast(mom), varargin{:});
         end
 
-        function h = hairyline_by_coordinates(line, direction, moment, varargin)
-            point_a = gapoint(moment-direction, PGA)
-            point_b = gapoint(moment+direction, PGA)
+        function h = hairyline_by_coordinates(direction, moment, varargin)
+            arguments
+                direction OGA;
+                moment OGA;
+            end
+            arguments (Repeating)
+                varargin
+            end
+
+            hold on
+
+            moment 
+            direction
+            
+            point_a = gapoint(moment-direction, PGA);
+            point_b = gapoint(moment+direction, PGA);
             h = PGABLEDraw.plotline({
                 point_a, point_b
             }, varargin{:});
 
-
-            %%%%%%%%%% Drawing hairs %%%%%%%%%%
-
-            llen = norm(line);
-            
             % number of hairs
             num_hairs = 20;
 
-            hair_trans = (1-e0(PGA)*PGAcast(direction)/num_hairs);
-
-            phi = pi/3;
-            % TODO: PGA4CS says to use -phi. It is not clear to me why this should be the case.
-            hair_rot = gexp(-phi*normalize(line)/2);
-            hair_trans_rot = hair_trans * hair_rot;
-
-            % Creating hair base and tip.
-            hair_base = point_a;
-            hair_tip = gapoint(0.05*llen, 0, 0, PGA);
+            size = norm(direction);
+            hair_mom = moment
+            if norm(hair_mom) == 0
+                %TODO: This is temporary
+                hair_mom = meet(dual(direction), e1(OGA));
+                if GAisa(hair_mom, 'scalar')
+                    %TODO: This is temporary
+                    hair_mom = meet(dual(direction), e2(OGA));
+                end
+            end
             
-            % Rotate
-            hair_tip_rot = sqrt(euclidean(line)/(e1(PGA)^e2(PGA)));
-            hair_tip = hair_tip_rot * hair_tip * inverse(hair_tip_rot);
-
-            % Translate
-            hair_tip_trans = sqrt(point_a/origin(PGA));
-            hair_tip = hair_tip_trans * hair_tip * inverse(hair_tip_trans);
+            hair = size/num_hairs * normalize(hair_mom);
+            rot = dual(direction);
+            % Make the rotation 60 degrees rather than 90 degrees
+            rot = 0.5 + 0.866*rot;
+            
 
             for i = 1:num_hairs
-                hair_base = hair_trans_rot * hair_base * inverse(hair_trans_rot);
+                
+                hair = rot*hair;
 
-                % TODO: This is to suppress the warnings about imaginary values. We should not need to do this.
-                mat_h_b = matrix(hair_base);
-                mat_h_b = real(mat_h_b);
-                h_b = PGA(mat_h_b);
+                d1 = moment - direction + ((i*2)/num_hairs)*direction;
+                d2 = moment - direction + ((i*2-2)/num_hairs)*direction;
 
-                mat_h_t = matrix(hair_tip);
-                mat_h_t = real(mat_h_t);
-                h_t = PGA(mat_h_t);
-                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                h2 = PGABLEDraw.plotline({
+                    gapoint(d1, PGA), gapoint(d2 + hair, PGA)
+                }, varargin{:}); %TODO: for now just make it red
 
-                h = [h PGABLEDraw.plotline({h_b, h_t}, varargin{:})];
-                hair_tip = hair_trans_rot * hair_tip * inverse(hair_trans_rot);
+                h = [h h2];
             end
 
 
