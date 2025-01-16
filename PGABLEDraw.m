@@ -221,9 +221,6 @@ classdef PGABLEDraw
             num_hairs = 20;
 
             size = norm(direction);
-
-            "Dual of direction"
-            dual(normalize(direction))
             
             hair_mom = meet(dual(normalize(direction)), e1(OGA));
             if GAisa(hair_mom, 'scalar')
