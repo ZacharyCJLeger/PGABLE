@@ -200,80 +200,6 @@ classdef PGABLEDraw
                  PGABLEDraw.patch({p_e1p, p_e2p, p_e3p}, varargin{:})];
         end
 
-        % function h = hairyline(line, varargin)
-        %     %HAIRYLINE - Draws a hairy line.
-
-        %     % Direction the line is pointing
-        %     dir = euclidean(normalize(line))/I3(PGA);
-        %     % Closest point to the origin
-        %     p = normalize(line)/dir;
-
-        %     PGABLEDraw.hairylineC(line, p, varargin{:});
-        % end
-
-        % function h = hairylineC(line, center, varargin)
-        %     %HAIRYLINEC - Draws a hairy line.
-        %     hold on
-
-        %     llen = norm(line);
-        %     line = normalize(line);
-	        
-        %     % Translation in direction from origin
-        %     dir = euclidean(line)/I3(PGA);
-        %     translation = ihd(dir + e0(PGA))/origin(PGA);
-        %     trans = sqrt(translation);
-            
-            
-        %     dir = llen*normalize(dir);
-        %     point_a = gapoint(double(center.getx()+dir.*e1(PGA)), ...
-        %                       double(center.gety()+dir.*e2(PGA)), ...
-        %                       double(center.getz()+dir.*e3(PGA)), PGA);
-        %     point_b = gapoint(double(center.getx()-dir.*e1(PGA)), ...
-        %                       double(center.gety()-dir.*e2(PGA)), ...
-        %                       double(center.getz()-dir.*e3(PGA)), PGA);
-
-        %     h = PGABLEDraw.plotline({point_a, point_b}, varargin{:});
-
-        %     % Drawing hairs
-        %     num_hairs = 20;
-
-        %     hair_trans = (1-e0(PGA)*dir/num_hairs);
-
-        %     phi = pi/3;
-        %     % TODO: PGA4CS says to use -phi. It is not clear to me why this should be the case.
-        %     hair_rot = gexp(-phi*normalize(line)/2);
-        %     hair_trans_rot = hair_trans * hair_rot;
-
-        %     % Creating hair base and tip.
-        %     hair_base = point_b;
-        %     hair_tip = gapoint(0.05*llen, 0, 0, PGA);
-            
-        %     % Rotate
-        %     hair_tip_rot = sqrt(euclidean(line)/(e1(PGA)^e2(PGA)));
-        %     hair_tip = hair_tip_rot * hair_tip * inverse(hair_tip_rot);
-
-        %     % Translate
-        %     hair_tip_trans = sqrt(point_b/origin(PGA));
-        %     hair_tip = hair_tip_trans * hair_tip * inverse(hair_tip_trans);
-
-        %     for i = 1:num_hairs
-        %         hair_base = hair_trans_rot * hair_base * inverse(hair_trans_rot);
-
-        %         % TODO: This is to suppress the warnings about imaginary values. We should not need to do this.
-        %         mat_h_b = matrix(hair_base);
-        %         mat_h_b = real(mat_h_b);
-        %         h_b = PGA(mat_h_b);
-
-        %         mat_h_t = matrix(hair_tip);
-        %         mat_h_t = real(mat_h_t);
-        %         h_t = PGA(mat_h_t);
-        %         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-        %         h = [h PGABLEDraw.plotline({h_b, h_t}, varargin{:})];
-        %         hair_tip = hair_trans_rot * hair_tip * inverse(hair_trans_rot);
-        %     end
-        % end
-
         function h = hairyline_by_coordinates(direction, center, varargin)
             arguments
                 direction OGA;
@@ -344,14 +270,23 @@ classdef PGABLEDraw
             
             % These two things are equivalent
             dir = euclidean(line)/I3(PGA);
+            % Calculating the moment
+            p = pd(line*dir);
+            mom = e1coeff(p)*e1(OGA) + e2coeff(p)*e2(OGA) + e3coeff(p)*e3(OGA);
+            % Converting center to OGA
+            % TODO: make a function for this
+            center_OGA = center.getx()*e1(OGA) + center.gety()*e2(OGA) + center.getz()*e3(OGA);
             
-            mom = center.getx()*e1(OGA) + center.gety()*e2(OGA) + center.getz()*e3(OGA);
-            
+            dir = OGAcast(dir);
+
+            % Projected center
+            new_center = mom + (inner(center_OGA - mom, dir)/inner(dir, dir))*dir;
+
 
             % Scale dir to be not normalized anymore
             dir = llen*dir;      
 
-            h = PGABLEDraw.hairyline_by_coordinates(OGAcast(dir), OGAcast(mom), varargin{:});
+            h = PGABLEDraw.hairyline_by_coordinates(OGAcast(dir), OGAcast(new_center), varargin{:});
         end
         
 
