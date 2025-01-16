@@ -660,7 +660,7 @@ classdef PGABLEDraw
             for k = 1:length(varargin)
                 arg = varargin{k};
 
-                if isa(arg, "string") && strcmp(arg, key)
+                if isa(arg, "char") && strcmp(arg, key)
                     v = varargin;
                     return
                 end
