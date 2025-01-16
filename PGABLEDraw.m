@@ -221,12 +221,15 @@ classdef PGABLEDraw
             num_hairs = 20;
 
             size = norm(direction);
+
+            "Dual of direction"
+            dual(normalize(direction))
             
             hair_mom = meet(dual(normalize(direction)), e1(OGA));
             if GAisa(hair_mom, 'scalar')
                 hair_mom = meet(dual(normalize(direction)), e2(OGA));
                 if GAisa(hair_mom, 'scalar')
-                    hair_mom = meet(dual(normalize(direction)), e3(OGA));
+                    hair_mom = meet(dual(normalize(direction)), e12(OGA));
                 end
             end
             
@@ -240,6 +243,7 @@ classdef PGABLEDraw
             for i = 1:num_hairs
                 
                 hair = rot*hair;
+                hair = zeroepsilons(hair);
 
                 d1 = center - direction + ((i*2)/num_hairs)*direction;
                 d2 = center - direction + ((i*2-2)/num_hairs)*direction;
@@ -658,7 +662,7 @@ classdef PGABLEDraw
         function v = defaultvarargin(key, val, varargin)
             for k = 1:length(varargin)
                 arg = varargin{k};
-                
+
                 if isa(arg, "string") && strcmp(arg, key)
                     v = varargin;
                     return
