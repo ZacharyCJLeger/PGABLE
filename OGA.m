@@ -933,6 +933,18 @@ classdef OGA < GA
             M = matrix(A);
             r = M(8);
         end
+
+        function r = geoPGA(A)
+            if GAisa(A, 'vector')
+                l = dual(A);
+                r = -PGAcast(l);
+            elseif GAisa(A, 'bivector')
+                normal = dual(A);
+                r = PGAcast(normal);
+            else
+                error('Error is not a vector or a bivector. PGABLE cannot geometrically convert this element.');
+            end
+        end
     end
 
 end
