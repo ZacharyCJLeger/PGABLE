@@ -362,9 +362,19 @@ classdef PGABLEDraw
 
             % Projecting the center onto the plane
 
+
+
             cx = center.getx();
             cy = center.gety();
             cz = center.getz();
+
+            center_OGA = cx*e1(OGA) + cy*e2(OGA) + cz*e3(OGA);
+            new_center = center_OGA - (inner(sv, center_OGA)/inner(sv, sv))*sv;
+
+            cx = new_center.getx();
+            cy = new_center.gety();
+            cz = new_center.getz();
+            
 
             dir1x = dir1.getx();
             dir1y = dir1.gety();
