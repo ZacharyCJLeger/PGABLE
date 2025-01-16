@@ -362,8 +362,6 @@ classdef PGABLEDraw
 
             % Projecting the center onto the plane
 
-
-
             cx = center.getx();
             cy = center.gety();
             cz = center.getz();
@@ -660,7 +658,8 @@ classdef PGABLEDraw
         function v = defaultvarargin(key, val, varargin)
             for k = 1:length(varargin)
                 arg = varargin{k};
-                if arg == key
+                
+                if isa(arg, "string") && strcmp(arg, key)
                     v = varargin;
                     return
                 end

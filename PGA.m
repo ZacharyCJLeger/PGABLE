@@ -1195,8 +1195,7 @@ classdef PGA < GA
 
 
                 updated_varargin = PGABLEDraw.defaultvarargin('Color', 'b', varargin{:});
-                % TODO: get this to work
-                %updated_varargin = PGABLEDraw.defaultvarargin('LineWidth', [1.5], updated_varargin{:});
+                updated_varargin = PGABLEDraw.defaultvarargin('LineWidth', 1.5, updated_varargin{:});
                 if euclidean(A) == 0
                     if ~isempty(offset)
                         error("Cannot offset lines at infinity. Do not provide an offset argument.")
