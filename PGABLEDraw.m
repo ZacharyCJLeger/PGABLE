@@ -370,7 +370,7 @@ classdef PGABLEDraw
             cz = center.getz();
 
             center_OGA = cx*e1(OGA) + cy*e2(OGA) + cz*e3(OGA);
-            new_center = center_OGA - (inner(pop, center_OGA - pop)/inner(pop, pop))*pop;
+            new_center = center_OGA - (inner(sv, center_OGA - pop)/inner(sv, sv))*sv;
 
             cx = new_center.getx();
             cy = new_center.gety();
