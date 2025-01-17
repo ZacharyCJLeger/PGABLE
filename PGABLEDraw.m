@@ -346,6 +346,8 @@ classdef PGABLEDraw
             delta = -e0coeff(plane);
             support_vec = euclidean(plane);
             sv = OGAcast(support_vec);
+            % pop = point on plane
+            pop = sv*delta;
             
             biv = e1(OGA)^sv;
             if biv == 0
@@ -368,7 +370,7 @@ classdef PGABLEDraw
             cz = center.getz();
 
             center_OGA = cx*e1(OGA) + cy*e2(OGA) + cz*e3(OGA);
-            new_center = center_OGA - (inner(sv, center_OGA)/inner(sv, sv))*sv;
+            new_center = center_OGA - (inner(pop, center_OGA - pop)/inner(pop, pop))*pop;
 
             cx = new_center.getx();
             cy = new_center.gety();
