@@ -370,11 +370,7 @@ classdef PGABLEDraw
             cz = center.getz();
 
             center_OGA = cx*e1(OGA) + cy*e2(OGA) + cz*e3(OGA);
-	    if abs(delta) > GA.epsilon_tolerance
-		    new_center = center_OGA - (inner(pop, center_OGA - pop)/inner(pop, pop))*pop;
-	    else
-		    new_center = center_OGA;
-	    end
+            new_center = center_OGA - (inner(pop, center_OGA - pop)/inner(pop, pop))*pop;
 
             cx = new_center.getx();
             cy = new_center.gety();
