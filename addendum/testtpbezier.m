@@ -1,3 +1,4 @@
+clear cp
 cp(1,1) = gapoint(0,0,0);
 cp(1,2) = gapoint(0.2,1,0.5);
 cp(1,3) = gapoint(0,2,0);
