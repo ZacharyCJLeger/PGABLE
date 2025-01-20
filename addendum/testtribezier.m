@@ -89,4 +89,4 @@ end
 
 [pt,tp] = tribezierD(qcp,1/3,1/3,1/3);
 draw(pt,'r');
-drawTP(2*tp,pt,'c');
+draw(2*tp,pt,'c');
