@@ -33,4 +33,4 @@ A = [0 0; cumsum(A)];
 for i=1:r
   hcp(i) = gapoint(A(i,1),A(i,2),0);
 end
-drawbspline(2,hcp,(1:r+2),cpf)
+drawbspline(2,hcp,(1:r+3),cpf)
