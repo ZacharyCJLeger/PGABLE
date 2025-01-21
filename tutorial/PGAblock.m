@@ -1,5 +1,5 @@
 function PGAblock(GAn)
-%GAblock: run sample code in tutorial.
+%PGAblock: run sample code in tutorial.
 
 % PGABLE, Copyright (c) 2024, University of Waterloo
 % Copying, use and development for non-commercial purposes permitted.
