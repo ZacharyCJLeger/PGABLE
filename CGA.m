@@ -1425,6 +1425,14 @@ M = [
 		r = sqrt(r);
 		h = PGABLEDraw.wfsphere(A, r, varargin);
 		GAScene.addstillitem(GASceneStillItem(A,h));
+	    elseif GAisa(A, 'circle')
+disp('draw circle');
+	        nx = EO23; ny = -EO13; nz = EO12;
+		nx,ny,nz
+		pln = A^ni
+		draw(pln) % for testing
+		cp = A*ni*A;
+		draw(cp) % for testing
             elseif GAisa(A, 'line')
 disp('draw line');
 
