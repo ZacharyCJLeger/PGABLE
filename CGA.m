@@ -413,15 +413,15 @@ classdef CGA < GA
 		   return;
 		 end
 
-		 A.m(2:6)
-	         ptc = A.m(2:6)/A.m(2)
-		 v = ptc(2:4)
+	         ptc = A.m(2:6)/A.m(2);
+		 v = ptc(2:4);
 		 if strcmp(t, 'point')
 		   %norm(v)
 		   %norm(v)*norm(v)/2 - ptc(5)
 		   %norm(v)*GA.epsilon_tolerance()
 		   % We need the scaling of epsilon just because that's how the numerics work
-		   if abs(norm(v)*norm(v)/2 - ptc(5)) < 10*norm(v)*GA.epsilon_tolerance() 
+		   % The '=' is to handle the origin
+		   if abs(norm(v)*norm(v)/2 - ptc(5)) <= 10*norm(v)*GA.epsilon_tolerance() 
   		     b = true;
 		   else
 		     b = false;
@@ -1462,13 +1462,15 @@ disp('draw line');
 
 		    % Extract direction, vector to origin
 		    vx = EO1I; vy = EO2I; vz = EO3I;
-		    mx = E12I; my = E23I; mz = E13I; % not quite sure of sign
+		    mx = E23I; my = -E13I; mz = E12I; % not quite sure of sign
 		    %len = sqrt(vx*vx+vy*vy+vz*vz)
 		    %mx = mx/len; my=my/len; mz=mz/len;
-		    mx,my,mz
-		    pgaP = gapoint(mx,my,mz,PGA)
-		    pgaV = vx*e1(PGA) + vy*e2(PGA) + vz*e3(PGA)
-		    pgaA = pgaP .*  pgaV
+		    %mx,my,mz
+		    pgaPc = cross([vx,vy,vz],[mx,my,mz]);
+		    pgaPc = pgaPc/(vx*vx+vy*vy+vz*vz);
+		    pgaP = gapoint(pgaPc(1),pgaPc(2),pgaPc(3),PGA);
+		    pgaV = vx*e1(PGA) + vy*e2(PGA) + vz*e3(PGA);
+		    pgaA = pgaP .*  pgaV;
                     if isempty(offset)
                         h = PGABLEDraw.hairyline(pgaA, updated_varargin{:});
                     else 
