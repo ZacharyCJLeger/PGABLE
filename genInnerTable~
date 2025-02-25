@@ -1,0 +1,205 @@
+#!/usr/bin/perl
+# Generate the inner product table.  The basic idea is remove common elements and keep only unique elements, and keep track of the sign.
+
+@be = qw(S  EO E1 E2 E3 EI  EO1 EO2 EO3 EOI E12 E13 E1I E23 E2I E3I  EO12 EO13 EO1I EO23 EO2I EO3I E123 E12I E13I E23I EO123 EO12I EO13I EO23I E123I EO123I);
+#@be = qw(S E1 E2 E3 E12 E23 E13 E123);
+#@be = qw(S E1 E2 E12);
+
+$sz = 32;
+#$sz = 8;
+#$sz = 4;
+my @GParray = map[("") x $sz], 1 .. $sz;
+
+sub AddTerm {
+	my($sgn,$alpha,$beta,$gamma) = @_;
+
+	printf("AddTerm($sgn,$alpha,$beta,$gamma)\n");
+	if ( length($GParray[$gamma][$beta]) > 0 ) {
+		$GParray[$gamma][$beta] = $GParray[$gamma][$beta] . " + ";
+	}
+	$a = $be[$alpha];
+	printf("   alpha is $alpha, a is $a\n");
+
+#	$a =~ s/E/A/;
+#	$a =~ s/S/A0/;
+	$a =~ s/S/scal/;
+#			$a =~ s/S/scal/;
+	if ( $sgn < 0 ) {
+		$a = "-" . $a;
+	}
+	printf("   a is $a at $gamma,$beta\n");
+	$GParray[$gamma][$beta] = $GParray[$gamma][$beta] . $a;
+}
+
+sub ipTerms {
+  my($aind,$bind) = @_;
+  my($sgn) = 1;
+  my($combInd);
+
+  printf("\nipTerm($aind,$bind)\n");
+  if ( $aind==0 ) {
+	  printf("  aind==0\n");
+	  $combInd=$bind;
+	  AddTerm(1,$aind,$bind,$combInd);
+	  return;
+    } elsif ($bind==0 ) {
+	  printf("  bind==0\n");
+	  $combInd=$aind;
+	  AddTerm(1,$aind,$bind,$combInd);
+	  return;
+  } else {
+
+    my $astr = $be[$aind];
+    my $bstr = $be[$bind];
+    
+    my @arr=(0,0,0,0,0);
+    my @brr=(0,0,0,0,0);
+
+    # Extract which elements are non-zero in each of a and b
+    if ( $astr =~ /O/ ) { $arr[0] = 1; }
+    if ( $astr =~ /1/ ) { $arr[1] = 1; }
+    if ( $astr =~ /2/ ) { $arr[2] = 1; }
+    if ( $astr =~ /3/ ) { $arr[3] = 1; }
+    if ( $astr =~ /I/ ) { $arr[4] = 1; }
+
+    if ( $bstr =~ /O/ ) { $brr[0] = 1; }
+    if ( $bstr =~ /1/ ) { $brr[1] = 1; }
+    if ( $bstr =~ /2/ ) { $brr[2] = 1; }
+    if ( $bstr =~ /3/ ) { $brr[3] = 1; }
+    if ( $bstr =~ /I/ ) { $brr[4] = 1; }
+
+    printf("arr = @arr\n");
+    printf("brr = @brr\n");
+
+    # count number of no,ni
+    my($nno,$nni);
+    $nno = $arr[0] + $brr[0];  $nni = $arr[4]+$brr[4];
+
+    printf(" nno $nnO, nni $nni\n");
+
+    # Some easy cases: terms equal and no no or ni
+    #  or both no and ni in both terms
+    if ( $aind==$bind &&
+	 ( ($nno==0 && $nni==0 ) ||
+	   ($nno==2 && $nni==2)
+	 ) ){
+	    my($suma);
+	    $suma = $arr[1]+$arr[2]+$arr[3];
+	    printf(" $aind == $bind, suma == $suma\n");
+	    if ( $suma==0 || $suma == 1 ) {
+		    AddTerm(1,$aind,$bind,0);
+		    return;
+	    } elsif ( $suma==2 || $suma==3 ) {
+		    AddTerm(-1,$aind,$bind,0);
+		    return;
+	    }
+    } elsif ( $aind==$bind && $nno==2 && $nni ==2 ) {
+	    printf(" SHOULD NEVER OCCUR sum==0, nno==2, nni==2\n");
+	    AddTerm(-1,$aind,$bind,0);
+	    return -1,$bind,0;
+    }
+
+    # More easy cases: (no^e1).(no^e1)=0; (e1^ni).(e2^ni)=0
+    # These are the only 0 cases
+    if ( ($nno+$nni)==2 && ($nno==2||$nni==2) ) {
+	    printf("  nno+nni==2 and nno=2 or nni=2.  Result is 0\n");
+	    return;
+    }
+
+    # Another easy case: no common basis elements (given that we handled
+    # 1. and .1 above)
+    if ( ($arr[0]+$brr[4])<=1 && ($arr[1]+$brr[1])<=1 &&
+	 ($arr[2]+$brr[2])<=1 && ($arr[3]+$brr[3])<=1 &&
+	 ($arr[4]+$brr[0])<=1 ) {
+	    printf("  no common basis elements; Result is 0.\n");
+	    return;
+    }
+
+    my($r,);
+    my @rrr=(0,0,0,0,0);
+    $r = "E";
+    if ( ($arr[0]==1 && $brr[4] == 0) || ($arr[4]==0 && $brr[0]==1)  ) { $r = $r . 'O'; $rrr[0]=1;}
+    if ( $arr[1]+$brr[1] == 1 ) { $r = $r . '1'; $rrr[1]=1;}
+    if ( $arr[2]+$brr[2] == 1 ) { $r = $r . '2'; $rrr[2]=1;}
+    if ( $arr[3]+$brr[3] == 1 ) { $r = $r . '3'; $rrr[3]=1;}
+    if ( ($arr[0]==0 && $brr[4] == 1) || ($arr[4]==1 && $brr[0]==0)  ) { $r = $r . 'I'; $rrr[4]=1;}
+
+    $sgn = 1;
+    # Adjust sign for no.ni
+    if ( $arr[0]&&$brr[4] ) { $sgn = -1*$sgn; }
+    if ( $arr[4]&&$brr[0] ) { $sgn = -1*$sgn; }
+    
+    printf(" rrr = @rrr\n");
+    my($sum) = $rrr[0] + $rrr[1] + $rrr[2] + $rrr[3] + $rrr[4];
+    printf(" sum is $sum\n");
+
+    # Compute the sign of r due to swaps between a and b
+    printf(" P sgn = $sgn\n");
+    if ($arr[0] && $brr[4] ) {
+	    if ( ($arr[1] + $arr[2] + $arr[3] + $arr[4] + $brr[0] + $brr[1] + $brr[2] + $brr[3])%2==1 ) { $sgn = -1*$sgn; }
+	    printf(" no/ni sgn = $sgn\n");
+    }
+    if ( $arr[1] && $brr[1] ) {
+	    if ( ($arr[2] + $arr[3] + $arr[4] +$brr[0])%2==1 ) { $sgn = -1*$sgn; }
+	    printf(" e1 sgn = $sgn\n");
+    }
+    if ( $arr[2] && $brr[2] ) {
+	    # If arr1==brr1==1, then we don't want to flip sign of e2 because
+	    #  of brr1 (since e1 sign got rid of brr1).
+	    #  But if arr1==0&&brr1==1 then we do.  Thus, the arr1==0&&brr1==1 term
+	    if ( ( ($arr[1]==0 && $brr[1]==1) + $arr[3] + $arr[4] + $brr[0])%2==1 ) { $sgn = -1*$sgn; }
+	    printf(" e2 sgn = $sgn\n");
+    }
+    if ( $arr[3] && $brr[3] ) {
+	    # Similarly, for both e1 and e2
+	    if ( (($arr[1]==0 && $brr[1]==1)+($arr[2]==0 && $brr[2]==1)+$arr[4]+$brr[0])%2==1 ) { $sgn = -1*$sgn; }
+	    printf(" e3 sgn = $sgn\n");
+    }
+
+    printf("$be[$aind].$be[$bind] = $r\n");
+    printf("  r is $r, sgn is $sgn\n");
+
+    my($idx);
+    printf(" strlen($r) = %d\n",length($r));
+    if ( length($r)==1 ) {
+	    $idx=0;
+    } else {
+	    for ($idx=1; $idx<=$#be; $idx++) {
+		    printf("$idx: $be[$idx], $r\n");
+		    if ( $be[$idx] =~ $r ) { last; }
+	    }
+    }
+    printf("  idx is $idx\n");
+    $combInd = $idx;
+  }
+
+  printf("sgn $sgn, bind $bind, combInd $combInd\n");
+
+  if ($sgn != 0 ) {
+	  AddTerm($sgn,$aind,$bind,$combInd);
+  }
+
+  return $sgn,$bind,$combInd;
+}
+
+
+for ($i=0; $i<$sz; $i++) {
+	for ($j=0; $j<$sz; $j++) {
+		printf("\n $be[$i]^$be[$j]");
+		ipTerms($i,$j);
+	}
+}
+
+printf("sz is $sz\n");
+
+for ($i=0; $i<$sz; $i++) {
+	for ($j=0; $j<$sz; $j++) {
+		if ( length($GParray[$i][$j])>=2 ) {
+			printf(" %11s ",$GParray[$i][$j]);
+		} else {
+			printf(" %11s ", "0");
+		} 
+	}
+	printf(";\n");
+}
+#use Data::Dump 'dd'; dd @Aarray;

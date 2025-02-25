@@ -169,12 +169,61 @@ classdef PGABLEDraw
             % h.Color = c;
         end
 
+	function h = wfsphere(center_point, radius, varargin)
+            %WFSPHERE - Draws a wire frame sphere
 
+            arguments 
+                center_point GA;
+                radius double;
+            end
+            arguments (Repeating)
+                varargin
+            end
+
+            hold on
+	    cx = center_point.getx();
+	    cy = center_point.gety();
+	    cz = center_point.getz();
+	    [X,Y,Z]=sphere(8);
+	    X = radius*X;
+	    Y = radius*Y;
+	    Z = radius*Z;
+	    h = plot3(X+cx,Y+cy,Z+cz)';
+	    for i=1:size(X,1)
+	      for j=1:size(X,2)
+	              x(j) = X(i,j);
+		      y(j) = Y(i,j);
+		      z(j) = Z(i,j);
+	      end
+	      ht = plot3(x+cx,y+cy,z+cz)';
+	      h = [h ht];
+	     end
+	     % Draw the hairs; for now, just outward pointing
+	     rs = 1;
+	     if rs==1
+	       d = 1.2;
+	     else
+	       d = 0.85;
+             end
+	     for i=1:size(X,1)
+	         for j=mod(i,2)+1:2:size(X,2)
+		   xh(1,j) = X(i,j);
+		   xh(2,j) = d*X(i,j);
+		   yh(1,j) = Y(i,j);
+		   yh(2,j) = d*Y(i,j);
+		   zh(1,j) = Z(i,j);
+		   zh(2,j) = d*Z(i,j);
+		  end
+		  ht = plot3(xh+cx,yh+cy,zh+cz)';
+		  h = [h ht];
+	     end
+	end
+	
         function h = octahedron(center_point, radius, varargin)
             %OCTAHEDRON - Draws an octahedron.
 
             arguments 
-                center_point PGA;
+                center_point GA;
                 radius double;
             end
             arguments (Repeating)
@@ -183,13 +232,24 @@ classdef PGABLEDraw
 
             hold on
 
+	    if 0
             p_e1m = (gapoint(-radius, 0, 0, PGA)/origin(PGA))*center_point;
             p_e1p = (gapoint(radius, 0, 0, PGA)/origin(PGA))*center_point;
             p_e2m = (gapoint(0, -radius, 0, PGA)/origin(PGA))*center_point;
             p_e2p = (gapoint(0, radius, 0, PGA)/origin(PGA))*center_point;
             p_e3m = (gapoint(0, 0, -radius, PGA)/origin(PGA))*center_point;
             p_e3p = (gapoint(0, 0, radius, PGA)/origin(PGA))*center_point;
-
+	    else
+	    cx = center_point.getx();
+	    cy = center_point.gety();
+	    cz = center_point.getz();
+            p_e1m = gapoint(cx-radius, cy, cz, PGA);
+            p_e1p = gapoint(cx+radius, cy, cz, PGA);
+            p_e2m = gapoint(cx, cy-radius, cz, PGA);
+            p_e2p = gapoint(cx, cy+radius, cz, PGA);
+            p_e3m = gapoint(cx, cy, cz-radius, PGA);
+            p_e3p = gapoint(cx, cy, cz+radius, PGA);
+	    end
             h = [PGABLEDraw.patch({p_e1m, p_e2m, p_e3m}, varargin{:}), ...
                  PGABLEDraw.patch({p_e1m, p_e2m, p_e3p}, varargin{:}), ...
                  PGABLEDraw.patch({p_e1m, p_e2p, p_e3m}, varargin{:}), ...

@@ -15,6 +15,8 @@ function e = origin(model)
     end
   
     switch model
+        case "CGA"
+            e = no(CGA);
         case "PGA"
             e = hd(e0(PGA));
         case "OGA"

@@ -1,5 +1,5 @@
-function e = e12(model)
-    % e12
+function e = noe3(model)
+    % noe3
 
     % PGABLE, Copyright (c) 2024, University of Waterloo
     % Copying, use and development for non-commercial purposes permitted.
@@ -16,11 +16,11 @@ function e = e12(model)
     
     switch model
         case "CGA"
-            e = CGA(0, 0, [0, 0, 0, 0, 1, 0, 0, 0, 0, 0], 0, 0, 0);
+            e = CGA(0, 0, [0, 0, 1, 0, 0, 0, 0, 0, 0, 0], 0, 0, 0);
         case "PGA"
-            e = PGA(0, 0, [0, 0, 0, 1, 0, 0], 0, 0);
+	    error('Cannot create noe3 element as it does not exist in the OGA model. Type  GA.model(CGA)  to switch to the CGA model.')
         case "OGA"
-            e = OGA(0, 0, [1, 0, 0], 0);
+	    error('Cannot create noe3 element as it does not exist in the OGA model. Type  GA.model(CGA)  to switch to the CGA model.')
         otherwise
             error('Cannot create element due to being in an implemented GA model.')
     end

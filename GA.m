@@ -1,15 +1,15 @@
 classdef (Abstract) GA
     %GA - An abstract class that encompasses all geometric algebra objects.
     %   Specific models of geometric algebra are child classes of this abstract class,
-    %   namely OGA and PGA. To see more specific information on elements and methods
-    %   of those particular models, run "help OGA" or "help PGA".
+    %   namely OGA, CGA and PGA. To see more specific information on elements and methods
+    %   of those particular models, run "help OGA", "help CGA", or "help PGA".
     %   To learn how the drawing routines work, run "help GAScene".
     %   
     %   Settings common to all GA models are stored by static variables in this class.
     %   To see which settings are available, run "GA.settings".
     %   To see how to use GA.settings, run "help GA.settings".
     %
-    %   See also PGA, OGA.
+    %   See also PGA, CGA, OGA.
 
     % PGABLE, Copyright (c) 2024, University of Waterloo
     % Copying, use and development for non-commercial purposes permitted.
@@ -267,6 +267,7 @@ classdef (Abstract) GA
             %   where [dim] is the dimensionality of the space. Thus the following notation is used:
             %      OGA: I3 := e1^e2^e3
             %      PGA: I4 := e0^e1^e2^e3
+            %      CGA: I5 := no^e1^e2^e3^ni
             %   When set to false, this notation is not used.
             %   If no argument is provided, COMPACT_PSEUDOSCALAR returns the current value of the COMPACT_PSEUDOSCLAR setting.
             %
@@ -863,7 +864,7 @@ classdef (Abstract) GA
         function b = isgrade(A, g)
             %ISGRADE - Returns true if the multivector A is a blade of grade g, and false otherwise.
             %
-            %   See also GAisa, PGA.GAisa, OGA.GAisa.
+            %   See also GAisa, PGA.GAisa, CGA.GAisa, OGA.GAisa.
 
             arguments
                 A GA;

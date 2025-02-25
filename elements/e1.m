@@ -15,6 +15,8 @@ function e = e1(model)
     end
 
     switch model
+        case "CGA"
+            e = CGA(0, [0, 1, 0, 0, 0], 0, 0, 0, 0);
         case "PGA"
             e = PGA(0, [0, 1, 0, 0], 0, 0, 0);
         case "OGA"

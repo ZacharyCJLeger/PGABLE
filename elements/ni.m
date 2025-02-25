@@ -1,7 +1,7 @@
-function e = e0(model)
-    % e0
+function e = ni(model)
+    % ni
 
-    % PGABLE, Copyright (c) 2024, University of Waterloo
+    % PGABLE, Copyright (c) 2025, University of Waterloo
     % Copying, use and development for non-commercial purposes permitted.
     %          All rights for commercial use reserved; for more information
     %          contact Stephen Mann (smann@uwaterloo.ca)
@@ -15,12 +15,12 @@ function e = e0(model)
     end
 
     switch model
-        case "PGA"
-            e = PGA(0, [1, 0, 0, 0], 0, 0, 0);
         case "CGA"
-            error('Cannot create e0 element as it does not exist in the CGA model. Type  GA.model(PGA)  to switch to the PGA model.')
+            e = CGA(0, [0, 0, 0, 0, 1], 0, 0, 0, 0);
+        case "PGA"
+            error('Cannot create no element as it does not exist in the PGA model. Type  GA.model(CGA)  to switch to the CGA model.')
         case "OGA"
-            error('Cannot create e0 element as it does not exist in the OGA model. Type  GA.model(PGA)  to switch to the PGA model.')
+            error('Cannot create no element as it does not exist in the OGA model. Type  GA.model(CGA)  to switch to the CGA model.')
         otherwise
         error('Cannot create element due to being in an implemented GA model.')
     end

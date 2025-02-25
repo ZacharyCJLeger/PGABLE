@@ -30,7 +30,7 @@ function e = gapoint(x, y, z, model)
             z = x.getz();
             y = x.gety();
             x = x.getx();
-        elseif isa(x, "PGA")
+        elseif isa(x, "PGA") | isa(x, "CGA")
             z = e3coeff(x);
             y = e2coeff(x);
             x = e1coeff(x);
@@ -43,7 +43,7 @@ function e = gapoint(x, y, z, model)
             z = x.getz();
             y = x.gety();
             x = x.getx();
-        elseif isa(x, "PGA")
+        elseif isa(x, "PGA") | isa(x, "CGA")
             z = e3coeff(x);
             y = e2coeff(x);
             x = e1coeff(x);
@@ -57,6 +57,8 @@ function e = gapoint(x, y, z, model)
     end
   
     switch model
+        case "CGA"
+            e = CGA(0, [1,x,y,z,0.5*((x*x)+(y*y)+(z*z))], 0, 0, 0, 0);
         case "PGA"
             e = PGA(0, 0, 0, [-z, y, -x, 1], 0);
         case "OGA"

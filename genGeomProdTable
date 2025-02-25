@@ -1,0 +1,156 @@
+#!/usr/bin/perl
+# Generate the geometric product table.  The basic idea is remove common elements and keep only unique elements, and keep track of the sign.
+
+@be = qw(S  EO E1 E2 E3 EI  EO1 EO2 EO3 EOI E12 E13 E1I E23 E2I E3I  EO12 EO13 EO1I EO23 EO2I EO3I E123 E12I E13I E23I EO123 EO12I EO13I EO23I E123I EO123I);
+@be = qw(S E1 E2 E3 E12 E23 E13 E123);
+#@be = qw(S E1 E2 E12);
+
+$sz = 32;
+$sz = 8;
+#$sz = 4;
+my @GParray = map[("") x $sz], 1 .. $sz;
+
+sub AddTerm {
+	my($alpha,$beta,$gamma,$sigO,$sig1,$sig2,$sig3,$sigI) = @_;
+
+	printf("AddTerm($alpha,$beta,$gamma,$sigO,$sig1,$sig2,$sig3,$sigI)\n");
+	if ( length($GParray[$gamma][$beta]) > 0 ) {
+		$GParray[$gamma][$beta] = $GParray[$gamma][$beta] . " + ";
+	}
+	$a = $be[$alpha];
+	printf("   alpha is $alpha, a is $a\n");
+
+	$a =~ s/E/A/;
+	$a =~ s/S/A0/;
+#			$a =~ s/S/scal/;
+	if ( $sigI !=0 ) { $a = "SI " . $a; }
+	if ( $sig3 !=0 ) { $a = "S3 " . $a; }
+	if ( $sig2 !=0 ) { $a = "S2 " . $a; }
+	if ( $sig1 !=0 ) { $a = "S1 " . $a; }
+	if ( $sigO !=0 ) { $a = "SO " . $a; }
+	if ( $v < 0 ) {
+		$a = "-" . $a;
+	}
+	printf("   a is $a\n");
+	$GParray[$gamma][$beta] = $GParray[$gamma][$beta] . $a;
+}
+
+sub geoTerms {
+  my($aind,$bind) = @_;
+  my($v) = 1;
+    my($sigO,$sig1,$sig2,$sig3,$sigI)=(0,0,0,0,0);
+
+  printf("\ngeoTerm($aind,$bind)\n");
+  if ( $aind==0 ) {
+  printf("  aind==0\n");
+    $combInd=$bind;
+  } elsif ($bind==0 ) {
+  printf("  bind==0\n");
+  $combInd=$aind;
+  } elsif ( $aind==$bind ) {
+	  $combInd=0;
+  } else {
+
+    my $astr = $be[$aind];
+    my $bstr = $be[$bind];
+    
+    my @arr=(0,0,0,0,0);
+    my @brr=(0,0,0,0,0);
+
+    # Extract which elements are non-zero in each of a and b
+    if ( $astr =~ /O/ ) { $arr[0] = 1; }
+    if ( $astr =~ /1/ ) { $arr[1] = 1; }
+    if ( $astr =~ /2/ ) { $arr[2] = 1; }
+    if ( $astr =~ /3/ ) { $arr[3] = 1; }
+    if ( $astr =~ /I/ ) { $arr[4] = 1; }
+
+    if ( $bstr =~ /O/ ) { $brr[0] = 1; }
+    if ( $bstr =~ /1/ ) { $brr[1] = 1; }
+    if ( $bstr =~ /2/ ) { $brr[2] = 1; }
+    if ( $bstr =~ /3/ ) { $brr[3] = 1; }
+    if ( $bstr =~ /I/ ) { $brr[4] = 1; }
+
+    printf("arr = @arr\n");
+    printf("brr = @brr\n");
+
+    # Result is entries that exactly 1 of a and b are 1
+    my($r);
+    my @rrr=(0,0,0,0,0);
+    $r = "E";
+    if ( $arr[0]+$brr[0] == 1 ) { $r = $r . 'O'; $rrr[0]=1;}
+    if ( $arr[1]+$brr[1] == 1 ) { $r = $r . '1'; $rrr[1]=1;}
+    if ( $arr[2]+$brr[2] == 1 ) { $r = $r . '2'; $rrr[2]=1;}
+    if ( $arr[3]+$brr[3] == 1 ) { $r = $r . '3'; $rrr[3]=1;}
+    if ( $arr[4]+$brr[4] == 1 ) { $r = $r . 'I'; $rrr[4]=1;}
+
+    # Compute the sigma's.  When ei.ej=0 (i!=j)
+    $sigO = $arr[0]&&$brr[0];
+    $sig1 = $arr[1]&&$brr[1];
+    $sig2 = $arr[2]&&$brr[2];
+    $sig3 = $arr[3]&&$brr[3];
+    $sigI = $arr[4]&&$brr[4];
+
+    printf("rrr = @rrr\n");
+    my($sum) = $rrr[0] + $rrr[1] + $rrr[2] + $rrr[3] + $rrr[4];
+    printf("sum is $sum\n");
+    if ( $sum==0 ) {
+	    $v = 0;
+	    return $v,-1,-1, 0,0,0,0,0;
+    }
+    
+    # Compute the sign of r due to swaps between a and b
+    $s=1;
+    if ($rrr[0] && $brr[0] ) {
+	    if ( ($arr[1]*$rrr[1] + $arr[2]*$rrr[2] + $arr[3]*$rrr[3] + $arr[4]*$rrr[4])%2==1 ) { $s =$s*-1; }
+    }
+    if ($rrr[1] && $brr[1] ) {
+	    if ( ($arr[2]*$rrr[2] + $arr[3]*$rrr[3] + $arr[4]*$rrr[4])%2==1 ) { $s =$s*-1; }
+    }
+    if ($rrr[2] && $brr[2] ) {
+	    if ( ($arr[3]*$rrr[3] + $arr[4]*$rrr[4])%2==1 ) { $s =$s*-1; }
+    }
+    if ($rrr[3] && $brr[3] ) {
+	    if ( ($arr[4]*$rrr[4])%2==1 ) { $s =$s*-1; }
+    }
+
+    $v = $s;
+    
+    printf("$be[$aind]*$be[$bind] = $r\n");
+
+    printf("  r is $r, v is $v\n");
+    my($idx);
+    for ($idx=0; $idx<=$#be; $idx++) {
+	    printf("$dxi: $be[$idx], $r\n");
+	    if ( $be[$idx] =~ $r ) { last; }
+    }
+    printf("  idx is $idx\n");
+    $combInd = $idx;
+  }
+  printf("v $v, bind $bind, combInd $combInd\n");
+  printf(" sO $sigO, s1 $sig1, s2 $sig2, s3 $sig3, sI $sigI\n");
+  if ($v != 0 ) {
+	  AddTerm($i,$bind,$combInd,$sigO,$sig1,$sig2,$sig3,$sigI);
+  }
+  return $v,$bind,$combInd,$sigO,$sig1,$sig2,$sig3,$sigI;
+}
+
+
+for ($i=0; $i<$sz; $i++) {
+	for ($j=0; $j<$sz; $j++) {
+		printf(" $be[$i]^$be[$j]");
+		my($v,$bi,$ci,$sO,$s1,$s2,$s3,$sI) = geoTerms($i,$j);
+	}
+}
+
+
+for ($i=0; $i<$sz; $i++) {
+	for ($j=0; $j<$sz; $j++) {
+		if ( length($GParray[$i][$j])>=0 ) {
+			printf(" %11s ",$GParray[$i][$j]);
+		} else {
+			printf(" %11s ", 0);
+		}
+	}
+	printf(";\n");
+}
+#use Data::Dump 'dd'; dd @Aarray;

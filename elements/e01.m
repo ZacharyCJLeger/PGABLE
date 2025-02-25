@@ -17,6 +17,8 @@ function e = e01(model)
     switch model
         case "PGA"
             e = PGA(0, 0, [1, 0, 0, 0, 0, 0], 0, 0);
+        case "CGA"
+            error('Cannot create e01 element as it does not exist in the CGA model.')
         case "OGA"
             error('Cannot create e01 element as it does not exist in the OGA model.')
         otherwise
