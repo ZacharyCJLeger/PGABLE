@@ -1422,17 +1422,54 @@ M = [
 		if r<0
                    r = -1*r;
 		end
-		r = sqrt(r);
+		r = sqrt(r)
 		h = PGABLEDraw.wfsphere(A, r, varargin);
 		GAScene.addstillitem(GASceneStillItem(A,h));
 	    elseif GAisa(A, 'circle')
 disp('draw circle');
+		%A = (1./norm(A))*A
 	        nx = EO23; ny = -EO13; nz = EO12;
-		nx,ny,nz
+		nx,ny,nz;
+		nlen = sqrt(nx*nx + ny*ny + nz*nz)
+		unx = nx/nlen; uny = ny/nlen; unz = nz/nlen;
+
 		pln = A^ni
-		draw(pln) % for testing
+		draw(2*pln) % for testing
+
 		cp = A*ni*A;
+		cp = (1./cp.nocoeff())*cp
+		cpx = cp.e1coeff(); cpy = cp.e2coeff(); cpz = cp.e3coeff();
+		cpsq = cpx*cpx + cpy*cpy + cpz*cpz
+
+		E23I,E13I,E12I
+		r = sqrt(cpsq-2*(E23I/nx-E13I/ny+E12I/nz))
+		r = sqrt(cpsq-2*E23I/nx)
+		r = sqrt(cpsq-2*E12I/nz)
+		
+		if abs(unx)<abs(uny) && abs(unx)<abs(unz)
+		  vvec = cross([1 0 0],[unx,uny,unz]);
+		  wvec = cross(vvec,[unx,uny,unz]);
+		elseif abs(uny)<abs(unz) && abs(uny)<abs(unz)
+		  vvec = cross([0 1 0],[unx,uny,unz]);
+		  wvec = cross(vvec,[unx,uny,unz]);
+		else
+		  vvec = cross([0 0 1],[unx,uny,unz]);
+		  wvec = cross(vvec,[unx,uny,unz]);
+		end
+		
 		draw(cp) % for testing
+		ptB=[0 0 0];
+		for i=0:51
+		   ang=i/50*2*pi;
+		   ptA = r*cos(ang)*vvec + r*sin(ang)*wvec;
+		   
+		   if i~=0
+		     plot3([ptB(1)+cpx ptA(1)+cpx],...
+     			   [ptB(2)+cpy ptA(2)+cpy],...
+			   [ptB(3)+cpz ptA(3)+cpz],'r','LineWidth',2);
+		     ptB=ptA;
+		   end
+		end
             elseif GAisa(A, 'line')
 disp('draw line');
 
@@ -1500,12 +1537,12 @@ disp('draw plane');
 %                    error("This is a plane at infinity. Cannot currently display this object.");
 %                end
 %                delta = -e0coeff(A);
-                support_vec = euclidean(A) 
+                support_vec = euclidean(A) ;
 		delta = A.nicoeff();
                 center = delta*support_vec + no(CGA);
 
                 % Setting the default offset to be the desired center
-                offset = center
+                offset = center;
 
                 % Custom input handling
                 argsize = size(varargin, 2);
@@ -1529,7 +1566,7 @@ disp('draw plane');
                 updated_varargin = PGABLEDraw.defaultvarargin('FaceColor', 'g', varargin{:});
                 updated_varargin = PGABLEDraw.defaultvarargin('FaceAlpha', 0.5, updated_varargin{:});
 		% Convert CGA to PGA
-		pgaoffset = gapoint(offset.getx(), offset.gety(), offset.getz(), PGA)
+		pgaoffset = gapoint(offset.getx(), offset.gety(), offset.getz(), PGA);
 		pgaA = support_vec.e1coeff()*e1(PGA) +...
 		       support_vec.e2coeff()*e2(PGA) +...
 		       support_vec.e3coeff()*e3(PGA) -...
