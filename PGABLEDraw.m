@@ -184,7 +184,7 @@ classdef PGABLEDraw
 	    cx = center_point.getx();
 	    cy = center_point.gety();
 	    cz = center_point.getz();
-	    [X,Y,Z]=sphere(8);
+	    [X,Y,Z]=sphere(8*3);
 	    X = radius*X;
 	    Y = radius*Y;
 	    Z = radius*Z;
@@ -199,6 +199,10 @@ classdef PGABLEDraw
 	      h = [h ht];
 	     end
 	     % Draw the hairs; for now, just outward pointing
+	    [X,Y,Z]=sphere(8);
+	    X = radius*X;
+	    Y = radius*Y;
+	    Z = radius*Z;
 	     rs = 1;
 	     if rs==1
 	       d = 1.2;

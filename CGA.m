@@ -387,8 +387,8 @@ classdef CGA < GA
             scalar_nz = nzm(1) ~= 0;
             vector_nz = sum(nzm(2:6)) ~= 0;
             bivector_nz = sum(nzm(7:16)) ~= 0;
-            trivector_nz = sum(nzm(17:26) ~= 0);
-            fourvector_nz = sum(nzm(27:31) ~= 0);
+            trivector_nz = sum(nzm(17:26)) ~= 0;
+            fourvector_nz = sum(nzm(27:31)) ~= 0;
             fivevector_nz = nzm(32) ~= 0;
         end
 
@@ -431,7 +431,7 @@ classdef CGA < GA
 		 end
 		 return;
 	      elseif isgrade(A,4)
-		A = dual(A)
+		A = dual(A);
 	        if strcmp(t,'sphere')
 		   if abs(A.m(2)) > GA.epsilon_tolerance()
   	             b = true;
@@ -454,7 +454,23 @@ classdef CGA < GA
 	    end
 
 	    if strcmp(t, 'circle') || strcmp(t,'line')
-	       if isgrade(A,3)
+	       if isgrade(A,2)
+	          if  abs(E3I)< GA.epsilon_tolerance()  &&  abs(E2I)< GA.epsilon_tolerance()  &&  abs(E1I)< GA.epsilon_tolerance()
+		     if strcmp(t,'line')
+		        b = true;
+		     else
+		        b = false;
+		     end
+		     return
+		  else
+		     if strcmp(t,'circle')
+		        b = true;
+		     else
+		        b = false;
+		     end
+		     return
+		  end
+	       elseif isgrade(A,3)
 	          if  abs(EO12)< GA.epsilon_tolerance()  &&  abs(EO13)< GA.epsilon_tolerance()  &&  abs(EO23)< GA.epsilon_tolerance()
 		     if strcmp(t,'line')
 		        b = true;
@@ -1403,7 +1419,6 @@ M = [
                 end
                 
 	    elseif GAisa(A, 'sphere')
-
 	        % don't worry about dual vs primal spheres for now
 	        if isgrade(A,4)
 		  A = dual(A);
@@ -1418,33 +1433,46 @@ M = [
 		cx = A.getx(); cy = A.gety(); cz = A.getz();
 		len = sqrt(cx*cx + cy*cy + cz*cz);
 		r = 2*A.nicoeff()-len;
+		r = sqrt(double(1./double((A^ni)*(A^ni)) * (A*A)));
 		% Don't worry about imaginary vs real spheres for now
 		if r<0
                    r = -1*r;
 		end
-		r = sqrt(r)
+		%r = sqrt(r)
 		h = PGABLEDraw.wfsphere(A, r, varargin);
 		GAScene.addstillitem(GASceneStillItem(A,h));
 	    elseif GAisa(A, 'circle')
 disp('draw circle');
+	        if grade(A) == 2
+		'dual'
+		  A = dual(A);
+	          [scal,  EO, E1, E2, E3, EI,  EO1, EO2, EO3, EOI, E12, E13, E1I, E23, E2I, E3I,  EO12, EO13, EO1I, EO23, EO2I, EO3I, E123, E12I, E13I, E23I, EO123, EO12I, EO13I, EO23I, E123I, EO123I] = decompose_(A);
+		end
 		%A = (1./norm(A))*A
-	        nx = EO23; ny = -EO13; nz = EO12;
-		nx,ny,nz;
-		nlen = sqrt(nx*nx + ny*ny + nz*nz)
-		unx = nx/nlen; uny = ny/nlen; unz = nz/nlen;
 
-		pln = A^ni
-		draw(2*pln) % for testing
+	        nx = EO23; ny = -EO13; nz = EO12;
+
+		nlen = sqrt(nx*nx + ny*ny + nz*nz);
+		unx = nx/nlen; uny = ny/nlen; unz = nz/nlen;
+		nA = 1./nlen*A;
+
+		% for testing
+		%pln = A^ni
+		%draw(2*pln)
 
 		cp = A*ni*A;
-		cp = (1./cp.nocoeff())*cp
+		cp = (1./cp.nocoeff())*cp;
 		cpx = cp.e1coeff(); cpy = cp.e2coeff(); cpz = cp.e3coeff();
-		cpsq = cpx*cpx + cpy*cpy + cpz*cpz
+		cpsq = cpx*cpx + cpy*cpy + cpz*cpz;
 
-		E23I,E13I,E12I
-		r = sqrt(cpsq-2*(E23I/nx-E13I/ny+E12I/nz))
-		r = sqrt(cpsq-2*E23I/nx)
-		r = sqrt(cpsq-2*E12I/nz)
+		r = sqrt(2*E1I/nx-cpsq);
+
+		%r = sqrt(4*(cpsq-(E23I/nx-E13I/ny+E12I/nz)))
+		%r = sqrt(cpsq-2*E23I/nx)
+		%r = sqrt(cpsq-2*E12I/nz)
+%		%r = sqrt(-1/sqrt(norm(A))*double((dual(A)*dual(A))))
+		% Works for a sphere...
+		r = sqrt(-1*double(1./double((A^ni)*(A^ni)) * (A*A)));
 		
 		if abs(unx)<abs(uny) && abs(unx)<abs(unz)
 		  vvec = cross([1 0 0],[unx,uny,unz]);
@@ -1456,9 +1484,10 @@ disp('draw circle');
 		  vvec = cross([0 0 1],[unx,uny,unz]);
 		  wvec = cross(vvec,[unx,uny,unz]);
 		end
-		
-		draw(cp) % for testing
-		ptB=[0 0 0];
+		vvec = 1./norm(vvec)*vvec;
+		wvec = 1./norm(wvec)*wvec;
+		%draw(cp) % for testing
+		ptB=r*vvec;
 		for i=0:51
 		   ang=i/50*2*pi;
 		   ptA = r*cos(ang)*vvec + r*sin(ang)*wvec;
@@ -1467,6 +1496,7 @@ disp('draw circle');
 		     plot3([ptB(1)+cpx ptA(1)+cpx],...
      			   [ptB(2)+cpy ptA(2)+cpy],...
 			   [ptB(3)+cpz ptA(3)+cpz],'r','LineWidth',2);
+		     hold on;
 		     ptB=ptA;
 		   end
 		end
