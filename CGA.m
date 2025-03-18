@@ -395,102 +395,102 @@ classdef CGA < GA
         function b = GAisa_(A, t)
             [scalar_nz, vector_nz, bivector_nz, trivector_nz, fourvector_nz, fivevector_nz] = gradestatus_(A);
 
-	    [scal, ...
-	     EO, E1, E2, E3, EI, ...
- 	     EO1, EO2, EO3, EOI, E12, E13, E1I, E23, E2I, E3I, ...
-	     EO12, EO13, EO1I, EO23, EO2I, EO3I, E123, E12I, E13I, E23I, ...
-	     EO123, EO12I, EO13I, EO23I, E123I, ...
-	     EO123I] = decompose_(A);
+            [scal, ...
+            EO, E1, E2, E3, EI, ...
+            EO1, EO2, EO3, EOI, E12, E13, E1I, E23, E2I, E3I, ...
+            EO12, EO13, EO1I, EO23, EO2I, EO3I, E123, E12I, E13I, E23I, ...
+            EO123, EO12I, EO13I, EO23I, E123I, ...
+            EO123I] = decompose_(A);
 	     
-	    if strcmp(t, 'point') || strcmp(t,'sphere') || strcmp(t, 'plane')
-	      if isgrade(A,1)
-	         if abs(A.m(2)) < GA.epsilon_tolerance()
-		   if strcmp(t, 'plane') 
- 		     b = true;
-		   else
-		     b = false;
-		   end
-		   return;
-		 end
+            if strcmp(t, 'point') || strcmp(t,'sphere') || strcmp(t, 'plane')
+                if isgrade(A,1)
+                    if abs(A.m(2)) < GA.epsilon_tolerance()
+                        if strcmp(t, 'plane') 
+                            b = true;
+                        else
+                            b = false;
+                        end
+                        return;
+                    end
 
-	         ptc = A.m(2:6)/A.m(2);
-		 v = ptc(2:4);
-		 if strcmp(t, 'point')
-		   %norm(v)
-		   %norm(v)*norm(v)/2 - ptc(5)
-		   %norm(v)*GA.epsilon_tolerance()
-		   % We need the scaling of epsilon just because that's how the numerics work
-		   % The '=' is to handle the origin
-		   if abs(norm(v)*norm(v)/2 - ptc(5)) <= 10*norm(v)*GA.epsilon_tolerance() 
-  		     b = true;
-		   else
-		     b = false;
-		   end
-		 else
-		   b = true;
-		 end
-		 return;
-	      elseif isgrade(A,4)
-		A = dual(A);
-	        if strcmp(t,'sphere')
-		   if abs(A.m(2)) > GA.epsilon_tolerance()
-  	             b = true;
-		   else
-		     b = false;
-		   end
-		   return;
-		elseif strcmp(t,'plane')
-		   if abs(A.m(2)) < GA.epsilon_tolerance()
-  	             b = true;
-		   else
-		     b = false;
-		   end
-		   return;
+	                ptc = A.m(2:6)/A.m(2);
+		            v = ptc(2:4);
+		            if strcmp(t, 'point')
+                        %norm(v)
+                        %norm(v)*norm(v)/2 - ptc(5)
+                        %norm(v)*GA.epsilon_tolerance()
+                        % We need the scaling of epsilon just because that's how the numerics work
+                        % The '=' is to handle the origin
+                        if abs(norm(v)*norm(v)/2 - ptc(5)) <= 10*norm(v)*GA.epsilon_tolerance() 
+                            b = true;
+                        else
+                            b = false;
+                        end
+                    else
+                        b = true;
+                    end
+		            return;
+	            elseif isgrade(A,4)
+		            A = dual(A);
+                    if strcmp(t,'sphere')
+                        if abs(A.m(2)) > GA.epsilon_tolerance()
+                            b = true;
+                        else
+                            b = false;
+                        end
+                        return;
+		            elseif strcmp(t,'plane')
+                        if abs(A.m(2)) < GA.epsilon_tolerance()
+                                b = true;
+                        else
+                            b = false;
+                        end
+		                return;
+                    end
+                else
+	                b = false;
+		        return;
+	            end
+	        end
+
+            if strcmp(t, 'circle') || strcmp(t,'line')
+                if isgrade(A,2)
+                    if  abs(E3I)< GA.epsilon_tolerance()  &&  abs(E2I)< GA.epsilon_tolerance()  &&  abs(E1I)< GA.epsilon_tolerance()
+                        if strcmp(t,'line')
+                            b = true;
+                        else
+                            b = false;
+                        end
+                        return
+                    else
+                        if strcmp(t,'circle')
+                            b = true;
+                        else
+                            b = false;
+                        end
+                        return
+                    end
+                elseif isgrade(A,3)
+                    if  abs(EO12) < GA.epsilon_tolerance() && abs(EO13) < GA.epsilon_tolerance() && abs(EO23) < GA.epsilon_tolerance()
+                        if strcmp(t,'line')
+                            b = true;
+                        else
+                            b = false;
+                        end
+                        return
+		            else
+                        if strcmp(t,'circle')
+                            b = true;
+                        else
+                            b = false;
+                        end
+		            return
+		            end
+                else
+                    b = false;
+                return;
                 end
-              else
-	         b = false;
-		 return;
-	      end
-	    end
-
-	    if strcmp(t, 'circle') || strcmp(t,'line')
-	       if isgrade(A,2)
-	          if  abs(E3I)< GA.epsilon_tolerance()  &&  abs(E2I)< GA.epsilon_tolerance()  &&  abs(E1I)< GA.epsilon_tolerance()
-		     if strcmp(t,'line')
-		        b = true;
-		     else
-		        b = false;
-		     end
-		     return
-		  else
-		     if strcmp(t,'circle')
-		        b = true;
-		     else
-		        b = false;
-		     end
-		     return
-		  end
-	       elseif isgrade(A,3)
-	          if  abs(EO12)< GA.epsilon_tolerance()  &&  abs(EO13)< GA.epsilon_tolerance()  &&  abs(EO23)< GA.epsilon_tolerance()
-		     if strcmp(t,'line')
-		        b = true;
-		     else
-		        b = false;
-		     end
-		     return
-		  else
-		     if strcmp(t,'circle')
-		        b = true;
-		     else
-		        b = false;
-		     end
-		     return
-		  end
-	       else
-	          b = false;
-		  return;
-	       end
-	    end
+            end
 	    
             if strcmp(t, 'double') || strcmp(t, 'scalar') 
                 b = ~(             vector_nz || bivector_nz || trivector_nz || fourvector_nz || fivevector_nz);
@@ -506,7 +506,7 @@ classdef CGA < GA
                 b = ~(scalar_nz || vector_nz || bivector_nz || trivector_nz || fourvector_nz                  );
             elseif strcmp(t,'multivector')
                 b = sum([scalar_nz vector_nz bivector_nz trivector_nz fourvector_nz fivevector]) > 1;
-	    elsif strcmp(t,'plane')
+            elseif strcmp(t,'plane')
   	        % this is wrong
                 b = ~(scalar_nz ||              bivector_nz || trivector_nz || fourvector_nz || fivevector_nz);
             else
@@ -537,10 +537,10 @@ classdef CGA < GA
         end
 
 
-	function [SO,S1,S2,S3,SI, ...
-	         SO1, SO2, SO3, SOI, S12, S13, S1I, S23, S2I, S3I, ...
-		 SO12, SO13, SO1I, SO23, SO2I, S123, S12I, S23I,...
-		 SO123, SO12I, SO13I, SO23I, S123I, SO123I] = computeSCoef()
+        function [SO,S1,S2,S3,SI, ...
+                SO1, SO2, SO3, SOI, S12, S13, S1I, S23, S2I, S3I, ...
+                SO12, SO13, SO1I, SO23, SO2I, S123, S12I, S23I,...
+                SO123, SO12I, SO13I, SO23I, S123I, SO123I] = computeSCoef()
             [SO, S1, S2, S3, SI] = CGA.signature();
             SO1 = SO*S1;
             SO2 = SO*S2;
@@ -551,34 +551,34 @@ classdef CGA < GA
             S1I = S1*SI;
             S23 = S2*S3;
             S2I = S2*SI;
-	    S3I = S3*SI;
-	    
+            S3I = S3*SI;
+            
             SO12 = SO1*S2;
             SO13 = SO1*S3;
             SO1I = SO1*SI;
             SO23 = SO2*S3;
             SO2I = SO2*SI;
             S123 = S12*S3;
-	    S12I = S12*SI;
-	    S23I = S23*SI;
+            S12I = S12*SI;
+            S23I = S23*SI;
 
             SO123 = SO12*S3; 
             SO12I = SO12*SI; 
             SO13I = SO13*SI; 
             SO23I = SO23*SI; 
             S123I = S123*SI;
-	    
+            
             SO123I = SO123*SI; 
-	end
+        end
         % ***** Geometric Product Stuff *****
 
         function R = product_(A, B)
             [scal, ...
-	    EO, E1, E2, E3, EI, ...
-	    EO1, EO2, EO3, EOI, E12, E13, E1I, E23, E2I, E3I, ...
-	    EO12, EO13, EO1I, EO23, EO2I, EO3I, E123, E12I, E13I, E23I, ...
-	    EO123, EO12I, EO13I, EO23I, E123I, ...
-	    EO123I] = decompose_(A);
+            EO, E1, E2, E3, EI, ...
+            EO1, EO2, EO3, EOI, E12, E13, E1I, E23, E2I, E3I, ...
+            EO12, EO13, EO1I, EO23, EO2I, EO3I, E123, E12I, E13I, E23I, ...
+            EO123, EO12I, EO13I, EO23I, E123I, ...
+            EO123I] = decompose_(A);
 
 % 	    [SO,S1,S2,S3,SI, SO1, SO2, SO3, SOI, S12, S13, S1I, S23, S2I, S3I, SO12, SO13, SO1I, SO23, SO2I, S123, S12I, S23I, SO123, SO12I, SO13I, SO23I, S123I, SO123I] = computeSCoef();
 
@@ -630,21 +630,21 @@ classdef CGA < GA
             EO1 = A.m(7); EO2 = A.m(8); EO3 = A.m(9); EOI = A.m(10);
             E12 = A.m(11); E13 = A.m(12); E1I = A.m(13);
             E23 = A.m(14); E2I = A.m(15);
-	    E3I = A.m(16);
+	        E3I = A.m(16);
 	    
             EO12 = A.m(17); EO13 = A.m(18); EO1I = A.m(19);
-	    EO23 = A.m(20); EO2I = A.m(21);
-	    EO3I = A.m(22);
-	    E123 = A.m(23); E12I = A.m(24); 
-	    E13I = A.m(25);
-	    E23I = A.m(26);
+            EO23 = A.m(20); EO2I = A.m(21);
+            EO3I = A.m(22);
+            E123 = A.m(23); E12I = A.m(24); 
+            E13I = A.m(25);
+            E23I = A.m(26);
 
-	    EO123 = A.m(27); EO12I = A.m(28);
-	    EO13I = A.m(29);
-	    EO23I = A.m(30);
-	    E123I = A.m(31);
-	    
-	    EO123I = A.m(32);
+            EO123 = A.m(27); EO12I = A.m(28);
+            EO13I = A.m(29);
+            EO23I = A.m(30);
+            E123I = A.m(31);
+            
+            EO123I = A.m(32);
         end
 
         % ***** The Outer Product *****
@@ -992,7 +992,7 @@ M = [
                 elseif n == 4
                     R = CGA(0, 0, 0, 0, [A.m(27); A.m(28); A.m(29); A.m(30); A.m(31)], 0);
                 elseif n == 5
-		    R = CGA(0, 0, 0, 0, 0, A.m(32));
+		            R = CGA(0, 0, 0, 0, 0, A.m(32));
                 else
                     R = CGA(0);
                 end
@@ -1113,11 +1113,10 @@ M = [
             [s, pl] = GA.charifyval_(p.m(5), 'e3', s, pl);
             [s, pl] = GA.charifyval_(p.m(6), 'ni', s, pl);
 
-
-	    [s, pl] = GA.charifyval_(p.m(7), 'no^e1', s, pl);
+	        [s, pl] = GA.charifyval_(p.m(7), 'no^e1', s, pl);
             [s, pl] = GA.charifyval_(p.m(8), 'no^e2', s, pl);
-	    [s, pl] = GA.charifyval_(p.m(9), 'no^e3', s, pl);
- 	    [s, pl] = GA.charifyval_(p.m(10), 'no^ni', s, pl);
+	        [s, pl] = GA.charifyval_(p.m(9), 'no^e3', s, pl);
+ 	        [s, pl] = GA.charifyval_(p.m(10), 'no^ni', s, pl);
             if GA.compact_notation()
                 if ~PGA.increasing_order()
                     [s, pl] = GA.charifyval_(p.m(11), 'e23', s, pl);
@@ -1164,11 +1163,11 @@ M = [
                     [s, pl] = GA.charifyval_(-p.m(25), 'e3^e1^ni', s, pl);
                     [s, pl] = GA.charifyval_(p.m(24), 'e1^e2^ni', s, pl);
 
- 	    	    [s, pl] = GA.charifyval_(p.m(30), 'no^e2^e3^ni', s, pl);
-	    	    [s, pl] = GA.charifyval_(-p.m(29), 'no^e3^e1^ni', s, pl);
-		    [s, pl] = GA.charifyval_(p.m(28), 'no^e1^e2^ni', s, pl);
-		    [s, pl] = GA.charifyval_(p.m(27), 'no^e1^e2^e3', s, pl);
- 	    	    [s, pl] = GA.charifyval_(p.m(31), 'e1^e2^e3^ni', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(30), 'no^e2^e3^ni', s, pl);
+                    [s, pl] = GA.charifyval_(-p.m(29), 'no^e3^e1^ni', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(28), 'no^e1^e2^ni', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(27), 'no^e1^e2^e3', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(31), 'e1^e2^e3^ni', s, pl);
                 else
                     [s, pl] = GA.charifyval_(p.m(11), 'e1^e2', s, pl);
                     [s, pl] = GA.charifyval_(p.m(12), 'e1^e3', s, pl);
@@ -1188,11 +1187,11 @@ M = [
                     [s, pl] = GA.charifyval_(p.m(25), 'e1^e3^ni', s, pl);
                     [s, pl] = GA.charifyval_(p.m(26), 'e2^e3^ni', s, pl);
 
-		    [s, pl] = GA.charifyval_(p.m(27), 'no^e1^e2^e3', s, pl);
-		    [s, pl] = GA.charifyval_(p.m(28), 'no^e1^e2^ni', s, pl);
-	    	    [s, pl] = GA.charifyval_(p.m(29), 'no^e1^e3^ni', s, pl);
- 	    	    [s, pl] = GA.charifyval_(p.m(30), 'no^e2^e3^ni', s, pl);
- 	    	    [s, pl] = GA.charifyval_(p.m(31), 'e1^e2^e3^ni', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(27), 'no^e1^e2^e3', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(28), 'no^e1^e2^ni', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(29), 'no^e1^e3^ni', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(30), 'no^e2^e3^ni', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(31), 'e1^e2^e3^ni', s, pl);
                 end
 
                 if GA.compact_pseudoscalar()
@@ -1345,7 +1344,7 @@ M = [
         end
 
         function R = PGAcast(A)
-	    display('PGAcast: Still to be written\n');
+	        display('PGAcast: Still to be written\n');
             R = A;
         end
 
@@ -1357,7 +1356,7 @@ M = [
         function drawTP(A, center, c)
             arguments
                 A PGA;
-		center PGA;
+		        center PGA;
                 c = [];
             end
             if GAisa(A, 'plane')
@@ -1366,21 +1365,21 @@ M = [
                     c = 'g';
                 end
 
-		dist = double(outer(A,center).noneuclidean.*I3);
-		% Check if center on plane A; if not, then project onto A
-		if abs(dist) > eps
-		   nrm = norm(A.euclidean)
-		   t = A.euclidean*dist/(nrm*nrm);
-		   trans = 1-e0*(t)/2;
-		   transi = 1+e0*(t)/2;
-		   center = trans*center*transi;
-		end
-            h = PGABLEDraw.pointingplaneC(A, center, c);
-            GAScene.addstillitem(GASceneStillItem(A, h));
-        else
-            error('Error is not a point, line, or plane. PGA cannot draw it.');
-        end
-	end
+		        dist = double(outer(A,center).noneuclidean.*I3);
+                % Check if center on plane A; if not, then project onto A
+                if abs(dist) > eps
+                    nrm = norm(A.euclidean)
+                    t = A.euclidean*dist/(nrm*nrm);
+                    trans = 1-e0*(t)/2;
+                    transi = 1+e0*(t)/2;
+                    center = trans*center*transi;
+                end
+                h = PGABLEDraw.pointingplaneC(A, center, c);
+                GAScene.addstillitem(GASceneStillItem(A, h));
+            else
+                error('Error is not a point, line, or plane. PGA cannot draw it.');
+            end
+	    end
 
         function draw(A, varargin)
             arguments
@@ -1390,8 +1389,6 @@ M = [
                 varargin
             end
             GAScene.usefigure();
-
-            
 	    
             A = zeroepsilons_(A);
             
@@ -1418,90 +1415,87 @@ M = [
                     GAScene.addstillitem(GASceneStillItem(A, h));
                 end
                 
-	    elseif GAisa(A, 'sphere')
-	        % don't worry about dual vs primal spheres for now
-	        if isgrade(A,4)
-		  A = dual(A);
-		end
-		% Only worry about sign of weight (no) for now
-		if A.nocoeff() > 0
-		  rs = -1;
-		else
-		  rs = 1;
-		end
-		A = (1./A.nocoeff())*A;
-		cx = A.getx(); cy = A.gety(); cz = A.getz();
-		len = sqrt(cx*cx + cy*cy + cz*cz);
-		r = 2*A.nicoeff()-len;
-		r = sqrt(double(1./double((A^ni)*(A^ni)) * (A*A)));
-		% Don't worry about imaginary vs real spheres for now
-		if r<0
-                   r = -1*r;
-		end
-		%r = sqrt(r)
-		h = PGABLEDraw.wfsphere(A, r, varargin);
-		GAScene.addstillitem(GASceneStillItem(A,h));
-	    elseif GAisa(A, 'circle')
-disp('draw circle');
-	        if grade(A) == 2
-		'dual'
-		  A = dual(A);
-	          [scal,  EO, E1, E2, E3, EI,  EO1, EO2, EO3, EOI, E12, E13, E1I, E23, E2I, E3I,  EO12, EO13, EO1I, EO23, EO2I, EO3I, E123, E12I, E13I, E23I, EO123, EO12I, EO13I, EO23I, E123I, EO123I] = decompose_(A);
-		end
-		%A = (1./norm(A))*A
+            elseif GAisa(A, 'sphere')
+                % don't worry about dual vs primal spheres for now
+                if isgrade(A,4)
+                    A = dual(A);
+                end
+                % Only worry about sign of weight (no) for now
+                if A.nocoeff() > 0
+                    rs = -1;
+                else
+                    rs = 1;
+                end
+                A = (1./A.nocoeff())*A;
+                cx = A.getx(); cy = A.gety(); cz = A.getz();
+                len = sqrt(cx*cx + cy*cy + cz*cz);
+                r = 2*A.nicoeff()-len;
+                r = sqrt(double(1./double((A^ni)*(A^ni)) * (A*A)));
+                % Don't worry about imaginary vs real spheres for now
+                if r<0
+                    r = -1*r;
+                end
+                %r = sqrt(r)
+                h = PGABLEDraw.wfsphere(A, r, varargin);
+                GAScene.addstillitem(GASceneStillItem(A,h));
+            elseif GAisa(A, 'circle')
+                if grade(A) == 2
+                    A = dual(A);
+                    [scal,  EO, E1, E2, E3, EI,  EO1, EO2, EO3, EOI, E12, E13, E1I, E23, E2I, E3I,  EO12, EO13, EO1I, EO23, EO2I, EO3I, E123, E12I, E13I, E23I, EO123, EO12I, EO13I, EO23I, E123I, EO123I] = decompose_(A);
+                end
+                %A = (1./norm(A))*A
 
-	        nx = EO23; ny = -EO13; nz = EO12;
+                nx = EO23; ny = -EO13; nz = EO12;
 
-		nlen = sqrt(nx*nx + ny*ny + nz*nz);
-		unx = nx/nlen; uny = ny/nlen; unz = nz/nlen;
-		nA = 1./nlen*A;
+                nlen = sqrt(nx*nx + ny*ny + nz*nz);
+                unx = nx/nlen; uny = ny/nlen; unz = nz/nlen;
+                nA = 1./nlen*A;
 
-		% for testing
-		%pln = A^ni
-		%draw(2*pln)
+                % for testing
+                %pln = A^ni
+                %draw(2*pln)
 
-		cp = A*ni*A;
-		cp = (1./cp.nocoeff())*cp;
-		cpx = cp.e1coeff(); cpy = cp.e2coeff(); cpz = cp.e3coeff();
-		cpsq = cpx*cpx + cpy*cpy + cpz*cpz;
+                cp = A*ni*A;
+                cp = (1./cp.nocoeff())*cp;
+                cpx = cp.e1coeff(); cpy = cp.e2coeff(); cpz = cp.e3coeff();
+                cpsq = cpx*cpx + cpy*cpy + cpz*cpz;
 
-		r = sqrt(2*E1I/nx-cpsq);
+                r = sqrt(2*E1I/nx-cpsq);
 
-		%r = sqrt(4*(cpsq-(E23I/nx-E13I/ny+E12I/nz)))
-		%r = sqrt(cpsq-2*E23I/nx)
-		%r = sqrt(cpsq-2*E12I/nz)
-%		%r = sqrt(-1/sqrt(norm(A))*double((dual(A)*dual(A))))
-		% Works for a sphere...
-		r = sqrt(-1*double(1./double((A^ni)*(A^ni)) * (A*A)));
-		
-		if abs(unx)<abs(uny) && abs(unx)<abs(unz)
-		  vvec = cross([1 0 0],[unx,uny,unz]);
-		  wvec = cross(vvec,[unx,uny,unz]);
-		elseif abs(uny)<abs(unz) && abs(uny)<abs(unz)
-		  vvec = cross([0 1 0],[unx,uny,unz]);
-		  wvec = cross(vvec,[unx,uny,unz]);
-		else
-		  vvec = cross([0 0 1],[unx,uny,unz]);
-		  wvec = cross(vvec,[unx,uny,unz]);
-		end
-		vvec = 1./norm(vvec)*vvec;
-		wvec = 1./norm(wvec)*wvec;
-		%draw(cp) % for testing
-		ptB=r*vvec;
-		for i=0:51
-		   ang=i/50*2*pi;
-		   ptA = r*cos(ang)*vvec + r*sin(ang)*wvec;
-		   
-		   if i~=0
-		     plot3([ptB(1)+cpx ptA(1)+cpx],...
-     			   [ptB(2)+cpy ptA(2)+cpy],...
-			   [ptB(3)+cpz ptA(3)+cpz],'r','LineWidth',2);
-		     hold on;
-		     ptB=ptA;
-		   end
-		end
+                %r = sqrt(4*(cpsq-(E23I/nx-E13I/ny+E12I/nz)))
+                %r = sqrt(cpsq-2*E23I/nx)
+                %r = sqrt(cpsq-2*E12I/nz)
+        %		%r = sqrt(-1/sqrt(norm(A))*double((dual(A)*dual(A))))
+                % Works for a sphere...
+                r = sqrt(-1*double(1./double((A^ni)*(A^ni)) * (A*A)));
+                
+                if abs(unx)<abs(uny) && abs(unx)<abs(unz)
+                    vvec = cross([1 0 0],[unx,uny,unz]);
+                    wvec = cross(vvec,[unx,uny,unz]);
+                elseif abs(uny) < abs(unz) && abs(uny) < abs(unx)
+                    vvec = cross([0 1 0],[unx,uny,unz]);
+                    wvec = cross(vvec,[unx,uny,unz]);
+                else
+                    vvec = cross([0 0 1],[unx,uny,unz]);
+                    wvec = cross(vvec,[unx,uny,unz]);
+                end
+                vvec = 1./norm(vvec)*vvec;
+                wvec = 1./norm(wvec)*wvec;
+                %draw(cp) % for testing
+                ptB = r*vvec;
+                for i=0:51
+                    ang = i/50*2*pi;
+                    ptA = r*cos(ang)*vvec + r*sin(ang)*wvec;
+                
+                    if i ~= 0
+                        plot3([ptB(1)+cpx ptA(1)+cpx], ...
+                            [ptB(2)+cpy ptA(2)+cpy], ...
+                            [ptB(3)+cpz ptA(3)+cpz], 'r', 'LineWidth', 2);
+                        hold on;
+                        ptB = ptA;
+                    end
+                end
             elseif GAisa(A, 'line')
-disp('draw line');
 
                 offset = [];
                 % Custom input handling
@@ -1524,51 +1518,51 @@ disp('draw line');
 
                 updated_varargin = PGABLEDraw.defaultvarargin('Color', 'b', varargin{:});
                 updated_varargin = PGABLEDraw.defaultvarargin('LineWidth', 1.5, updated_varargin{:});
-%                if euclidean(A) == 0
-%                    if ~isempty(offset)
-%                        error("Cannot offset lines at infinity. Do not provide an offset argument.")
-%                    end
-%                    % TODO perhaps make drawing as part of the constructor of the dynamic item
-%                    %TODO: make dashedness work
-%                    updated_varargin = [{'--'}, updated_varargin];
-%                    h = PGA.drawvanishingline(A, updated_varargin{:});
-%                    GAScene.adddynamicitem(GASceneDynamicItem(A, h, @()PGA.drawvanishingline(A, updated_varargin{:})));
-%                else
+    %                if euclidean(A) == 0
+    %                    if ~isempty(offset)
+    %                        error("Cannot offset lines at infinity. Do not provide an offset argument.")
+    %                    end
+    %                    % TODO perhaps make drawing as part of the constructor of the dynamic item
+    %                    %TODO: make dashedness work
+    %                    updated_varargin = [{'--'}, updated_varargin];
+    %                    h = PGA.drawvanishingline(A, updated_varargin{:});
+    %                    GAScene.adddynamicitem(GASceneDynamicItem(A, h, @()PGA.drawvanishingline(A, updated_varargin{:})));
+    %                else
 
-		    % Extract direction, vector to origin
-		    vx = EO1I; vy = EO2I; vz = EO3I;
-		    mx = E23I; my = -E13I; mz = E12I; % not quite sure of sign
-		    %len = sqrt(vx*vx+vy*vy+vz*vz)
-		    %mx = mx/len; my=my/len; mz=mz/len;
-		    %mx,my,mz
-		    pgaPc = cross([vx,vy,vz],[mx,my,mz]);
-		    pgaPc = pgaPc/(vx*vx+vy*vy+vz*vz);
-		    pgaP = gapoint(pgaPc(1),pgaPc(2),pgaPc(3),PGA);
-		    pgaV = vx*e1(PGA) + vy*e2(PGA) + vz*e3(PGA);
-		    pgaA = pgaP .*  pgaV;
-                    if isempty(offset)
-                        h = PGABLEDraw.hairyline(pgaA, updated_varargin{:});
-                    else 
-                        h = PGABLEDraw.hairylineC(pgaA, offset, updated_varargin{:});
-                    end
-                    
-                    GAScene.addstillitem(GASceneStillItem(pgaA, h));
-%                end
+                % Extract direction, vector to origin
+                vx = EO1I; vy = EO2I; vz = EO3I;
+                mx = E23I; my = -E13I; mz = E12I; % not quite sure of sign
+                %len = sqrt(vx*vx+vy*vy+vz*vz)
+                %mx = mx/len; my=my/len; mz=mz/len;
+                %mx,my,mz
+                pgaPc = cross([vx,vy,vz],[mx,my,mz]);
+                pgaPc = pgaPc/(vx*vx+vy*vy+vz*vz);
+                pgaP = gapoint(pgaPc(1),pgaPc(2),pgaPc(3),PGA);
+                pgaV = vx*e1(PGA) + vy*e2(PGA) + vz*e3(PGA);
+                pgaA = pgaP .*  pgaV;
+                if isempty(offset)
+                    h = PGABLEDraw.hairyline(pgaA, updated_varargin{:});
+                else 
+                    h = PGABLEDraw.hairylineC(pgaA, offset, updated_varargin{:});
+                end
+                        
+                GAScene.addstillitem(GASceneStillItem(pgaA, h));
+    %                end
 
             elseif GAisa(A, 'plane')
-disp('draw plane');
-	        % Don't worry about dual planes for now
-	        if isgrade(A,4)
-		  A = dual(A);
-		end
-                % Calculating center
-%                plane = normalize(A);
-%                if euclidean(plane) == 0
-%                    error("This is a plane at infinity. Cannot currently display this object.");
-%                end
-%                delta = -e0coeff(A);
+
+                % Don't worry about dual planes for now
+                if isgrade(A,4)
+                    A = dual(A);
+                end
+                    % Calculating center
+    %                plane = normalize(A);
+    %                if euclidean(plane) == 0
+    %                    error("This is a plane at infinity. Cannot currently display this object.");
+    %                end
+    %                delta = -e0coeff(A);
                 support_vec = euclidean(A) ;
-		delta = A.nicoeff();
+                delta = A.nicoeff();
                 center = delta*support_vec + no(CGA);
 
                 % Setting the default offset to be the desired center
@@ -1595,22 +1589,22 @@ disp('draw plane');
 
                 updated_varargin = PGABLEDraw.defaultvarargin('FaceColor', 'g', varargin{:});
                 updated_varargin = PGABLEDraw.defaultvarargin('FaceAlpha', 0.5, updated_varargin{:});
-		% Convert CGA to PGA
-		pgaoffset = gapoint(offset.getx(), offset.gety(), offset.getz(), PGA);
-		pgaA = support_vec.e1coeff()*e1(PGA) +...
-		       support_vec.e2coeff()*e2(PGA) +...
-		       support_vec.e3coeff()*e3(PGA) -...
-		       delta*e0(PGA)
+                % Convert CGA to PGA
+                pgaoffset = gapoint(offset.getx(), offset.gety(), offset.getz(), PGA);
+                pgaA = support_vec.e1coeff()*e1(PGA) +...
+                support_vec.e2coeff()*e2(PGA) +...
+                support_vec.e3coeff()*e3(PGA) -...
+                delta*e0(PGA)
                 h = PGABLEDraw.pointingplaneC(pgaA, pgaoffset, updated_varargin{:});
                 GAScene.addstillitem(GASceneStillItem(A, h));
             else
-                error('Error is not a point, line, or plane. PGA cannot draw it.');
+                    error('This element is not of a type that can be drawn in CGAs.');
             end
         end
 
         function R = euclidean(A)
             %EUCLIDEAN - Returns the euclidean portion of the multivector.
-	    % For CGA, this is the e1,e2,e3 portion
+	        % For CGA, this is the e1, e2, e3 portion
 
             [scal,  EO, E1, E2, E3, EI,  EO1, EO2, EO3, EOI, E12, E13, E1I, E23, E2I, E3I,  EO12, EO13, EO1I, EO23, EO2I, EO3I, E123, E12I, E13I, E23I, EO123, EO12I, EO13I, EO23I, E123I, EO123I] = decompose_(A);
             R = CGA(0, [0, E1, E2, E3,0 ], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0], 0); 
@@ -1618,7 +1612,7 @@ disp('draw plane');
 
         function R = noneuclidean(A)
             %NONEUCLIDEAN - Returns the non-euclidean portion of the multivector.
-	    % For CGA, this is the no,ni portion
+	        % For CGA, this is the no, ni portion
 
             [scal,  EO, E1, E2, E3, EI,  EO1, EO2, EO3, EOI, E12, E13, E1I, E23, E2I, E3I,  EO12, EO13, EO1I, EO23, EO2I, EO3I, E123, E12I, E13I, E23I, EO123, EO12I, EO13I, EO23I, E123I, EO123I] = decompose_(A);
             R = CGA(0, [EO, 0, 0, 0, EI], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 0, 0, 0);
