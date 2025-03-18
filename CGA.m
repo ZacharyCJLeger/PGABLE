@@ -1422,9 +1422,9 @@ M = [
                 end
                 % Only worry about sign of weight (no) for now
                 if A.nocoeff() > 0
-                    rs = -1;
+                    outn = 1;
                 else
-                    rs = 1;
+                    outn = 0;
                 end
                 A = (1./A.nocoeff())*A;
                 cx = A.getx(); cy = A.gety(); cz = A.getz();
@@ -1436,7 +1436,7 @@ M = [
                     r = -1*r;
                 end
                 %r = sqrt(r)
-                h = PGABLEDraw.wfsphere(A, r, varargin);
+                h = PGABLEDraw.wfsphere(A, r, outn, varargin);
                 GAScene.addstillitem(GASceneStillItem(A,h));
             elseif GAisa(A, 'circle')
                 if grade(A) == 2

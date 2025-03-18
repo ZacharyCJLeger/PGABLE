@@ -169,12 +169,13 @@ classdef PGABLEDraw
             % h.Color = c;
         end
 
-	function h = wfsphere(center_point, radius, varargin)
+	function h = wfsphere(center_point, radius, outn, varargin)
             %WFSPHERE - Draws a wire frame sphere
 
             arguments 
                 center_point GA;
                 radius double;
+		outn double;
             end
             arguments (Repeating)
                 varargin
@@ -184,7 +185,7 @@ classdef PGABLEDraw
 	    cx = center_point.getx();
 	    cy = center_point.gety();
 	    cz = center_point.getz();
-	    [X,Y,Z]=sphere(8*3);
+	    [X,Y,Z]=sphere(6*3);
 	    X = radius*X;
 	    Y = radius*Y;
 	    Z = radius*Z;
@@ -199,15 +200,15 @@ classdef PGABLEDraw
 	      h = [h ht];
 	     end
 	     % Draw the hairs; for now, just outward pointing
-	    [X,Y,Z]=sphere(8);
+	    [X,Y,Z]=sphere(6);
 	    X = radius*X;
 	    Y = radius*Y;
 	    Z = radius*Z;
 	     rs = 1;
-	     if rs==1
+	     if outn==1
 	       d = 1.2;
 	     else
-	       d = 0.85;
+	       d = 0.75;
              end
 	     for i=1:size(X,1)
 	         for j=mod(i,2)+1:2:size(X,2)
@@ -218,7 +219,7 @@ classdef PGABLEDraw
 		   zh(1,j) = Z(i,j);
 		   zh(2,j) = d*Z(i,j);
 		  end
-		  ht = plot3(xh+cx,yh+cy,zh+cz)';
+		  ht = plot3(xh+cx,yh+cy,zh+cz,'r','LineWidth',1.5)';
 		  h = [h ht];
 	     end
 	end
