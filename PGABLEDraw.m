@@ -189,6 +189,7 @@ classdef PGABLEDraw
 	    X = radius*X;
 	    Y = radius*Y;
 	    Z = radius*Z;
+	    varargin{:}
 	    h = plot3(X+cx,Y+cy,Z+cz)';
 	    for i=1:size(X,1)
 	      for j=1:size(X,2)
@@ -196,10 +197,10 @@ classdef PGABLEDraw
 		      y(j) = Y(i,j);
 		      z(j) = Z(i,j);
 	      end
-	      ht = plot3(x+cx,y+cy,z+cz)';
+	      ht = plot3(x+cx,y+cy,z+cz,'r')';
 	      h = [h ht];
 	     end
-	     % Draw the hairs; for now, just outward pointing
+	     % Draw the hairs
 	    [X,Y,Z]=sphere(6);
 	    X = radius*X;
 	    Y = radius*Y;
