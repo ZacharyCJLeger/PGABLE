@@ -181,6 +181,14 @@ classdef PGABLEDraw
                 varargin
             end
 
+	    argsize = size(varargin, 2);
+	    if argsize == 1
+	       if isa(varargin{1}, "char")
+	         varargin = ['Color', varargin];
+	       end
+	    end
+	    updated_varargin = PGABLEDraw.defaultvarargin('Color', 'r', varargin{:})
+
             hold on
 	    cx = center_point.getx();
 	    cy = center_point.gety();
@@ -190,14 +198,15 @@ classdef PGABLEDraw
 	    Y = radius*Y;
 	    Z = radius*Z;
 	    varargin{:}
-	    h = plot3(X+cx,Y+cy,Z+cz)';
+	    h = plot3(X+cx,Y+cy,Z+cz,updated_varargin{:})';
 	    for i=1:size(X,1)
 	      for j=1:size(X,2)
 	              x(j) = X(i,j);
 		      y(j) = Y(i,j);
 		      z(j) = Z(i,j);
 	      end
-	      ht = plot3(x+cx,y+cy,z+cz,'r')';
+	      %ht = plot3(x+cx,y+cy,z+cz,'r')';
+	      ht = plot3(x+cx,y+cy,z+cz,updated_varargin{:})';
 	      h = [h ht];
 	     end
 	     % Draw the hairs

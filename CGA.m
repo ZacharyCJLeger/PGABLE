@@ -1476,7 +1476,7 @@ R = [
                     r = -1*r;
                 end
                 %r = sqrt(r)
-                h = PGABLEDraw.wfsphere(A, r, outn, varargin);
+                h = PGABLEDraw.wfsphere(A, r, outn, varargin{:});
                 GAScene.addstillitem(GASceneStillItem(A,h));
             elseif GAisa(A, 'circle')
                 if grade(A) == 2
@@ -1534,7 +1534,7 @@ R = [
                     if ii ~= 0 && (~isImaginary || mod(ii,2)==0)
                         plot3([ptB(1)+cpx ptA(1)+cpx], ...
                             [ptB(2)+cpy ptA(2)+cpy], ...
-                            [ptB(3)+cpz ptA(3)+cpz], 'r', 'LineWidth', 2);
+                            [ptB(3)+cpz ptA(3)+cpz], 'LineWidth', 2, varargin{:});
                         hold on;
                     end
                     ptB = ptA;
