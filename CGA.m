@@ -915,7 +915,8 @@ R = [
         end
 
         function r = vnorm_(A)
-            r = norm_(hodgedual_(A));
+	    error('The vnorm cannot be performed on CGA elements.');
+
         end
 
         function R = normalize_(A)
@@ -987,7 +988,7 @@ R = [
         end
 
         function R = join_(A, B)
-            R = inversehodgedual_((hodgedual_(A).outer_(hodgedual_(B))));
+            error('join hasn't been implemented for CGA elements.');
         end
 
         function R = meet_(A, B)
@@ -1492,7 +1493,7 @@ R = [
 	         varargin = ['Color', varargin];
 	       end
 	    end
-	    updated_varargin = PGABLEDraw.defaultvarargin('Color', 'y', varargin{:})
+	    updated_varargin = PGABLEDraw.defaultvarargin('Color', 'y', varargin{:});
 	    
                 nx = EO23; ny = -EO13; nz = EO12;
 

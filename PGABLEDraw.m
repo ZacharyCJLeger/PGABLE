@@ -187,7 +187,7 @@ classdef PGABLEDraw
 	         varargin = ['Color', varargin];
 	       end
 	    end
-	    updated_varargin = PGABLEDraw.defaultvarargin('Color', 'r', varargin{:})
+	    updated_varargin = PGABLEDraw.defaultvarargin('Color', 'r', varargin{:});
 
             hold on
 	    cx = center_point.getx();
