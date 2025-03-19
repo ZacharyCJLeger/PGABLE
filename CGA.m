@@ -988,7 +988,7 @@ R = [
         end
 
         function R = join_(A, B)
-            error('join hasn't been implemented for CGA elements.');
+            error('join has not been implemented for CGA elements.');
         end
 
         function R = meet_(A, B)
