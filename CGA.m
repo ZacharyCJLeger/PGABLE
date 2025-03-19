@@ -1485,6 +1485,15 @@ R = [
                 end
                 %A = (1./norm(A))*A
 
+
+	    argsize = size(varargin, 2);
+	    if argsize == 1
+	       if isa(varargin{1}, "char")
+	         varargin = ['Color', varargin];
+	       end
+	    end
+	    updated_varargin = PGABLEDraw.defaultvarargin('Color', 'y', varargin{:})
+	    
                 nx = EO23; ny = -EO13; nz = EO12;
 
                 nlen = sqrt(nx*nx + ny*ny + nz*nz);
@@ -1534,7 +1543,7 @@ R = [
                     if ii ~= 0 && (~isImaginary || mod(ii,2)==0)
                         plot3([ptB(1)+cpx ptA(1)+cpx], ...
                             [ptB(2)+cpy ptA(2)+cpy], ...
-                            [ptB(3)+cpz ptA(3)+cpz], 'LineWidth', 2, varargin{:});
+                            [ptB(3)+cpz ptA(3)+cpz], 'LineWidth', 2, updated_varargin{:});
                         hold on;
                     end
                     ptB = ptA;
