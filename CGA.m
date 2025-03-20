@@ -1523,11 +1523,11 @@ R = [
 		  r = imag(r);
 		  isImaginary=1
 		end
-                
-                if abs(unx)<abs(uny) && abs(unx)<abs(unz)
+
+                if abs(unx)<=abs(uny) && abs(unx)<=abs(unz)
                     vvec = cross([1 0 0],[unx,uny,unz]);
                     wvec = cross(vvec,[unx,uny,unz]);
-                elseif abs(uny) < abs(unz) && abs(uny) < abs(unx)
+                elseif abs(uny) <= abs(unz) && abs(uny) <= abs(unx)
                     vvec = cross([0 1 0],[unx,uny,unz]);
                     wvec = cross(vvec,[unx,uny,unz]);
                 else
