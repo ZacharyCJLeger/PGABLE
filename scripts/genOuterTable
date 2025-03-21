@@ -94,6 +94,7 @@ sub outTerms {
 
 
 $sz = 32;
+#$sz = 8;
 my @array = map[(0) x $sz], 1 .. $sz;
 my @Aarray = map[(-1) x $sz], 1 .. $sz;
 
@@ -149,9 +150,9 @@ for ($i=0; $i<$sz; $i++) {
 			if ( $array[$i][$j] < 0 ) {
 				$a = "-" . $a;
 			}
-			printf(" %5s ",$a);
+			printf(" %6s ",$a);
 		} else {
-			printf(" %5s ", 0);
+			printf(" %6s ", 0);
 		}
 	}
 	printf(";\n");

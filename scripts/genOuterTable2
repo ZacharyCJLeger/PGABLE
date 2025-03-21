@@ -1,8 +1,8 @@
 #!/usr/bin/perl
-# Generate the geometric product table.  The basic idea is remove common elements and keep only unique elements, and keep track of the sign.
+# Generate the outer product table.  The basic idea is remove common elements and keep only unique elements, and keep track of the sign.
 
 @be = qw(S  EO E1 E2 E3 EI  EO1 EO2 EO3 EOI E12 E13 E1I E23 E2I E3I  EO12 EO13 EO1I EO23 EO2I EO3I E123 E12I E13I E23I EO123 EO12I EO13I EO23I E123I EO123I);
-@be = qw(S E1 E2 E3 E12 E23 E13 E123);
+#@be = qw(S E1 E2 E3 E12 E23 E13 E123);
 #@be = qw(S E1 E2 E12);
 
 sub geoTerms {
@@ -17,8 +17,6 @@ sub geoTerms {
   } elsif ($bind==0 ) {
   printf("  bind==0\n");
   $combInd=$aind;
-  } elsif ( $aind==$bind ) {
-	  $combInd=0;
   } else {
 
     my $astr = $be[$aind];
@@ -43,6 +41,13 @@ sub geoTerms {
     printf("arr = @arr\n");
     printf("brr = @brr\n");
 
+    # If two entries are non-zero, then result is 0
+    if ( $arr[0]+$brr[0] == 2 ) { return 0,-1,-1; }
+    if ( $arr[1]+$brr[1] == 2 ) { return 0,-1,-1; }
+    if ( $arr[2]+$brr[2] == 2 ) { return 0,-1,-1; }
+    if ( $arr[3]+$brr[3] == 2 ) { return 0,-1,-1; }
+    if ( $arr[4]+$brr[4] == 2 ) { return 0,-1,-1; }
+    
     # Result is entries that exactly 1 of a and b are 1
     my($r);
     my @rrr=(0,0,0,0,0);
@@ -53,19 +58,13 @@ sub geoTerms {
     if ( $arr[3]+$brr[3] == 1 ) { $r = $r . '3'; $rrr[3]=1;}
     if ( $arr[4]+$brr[4] == 1 ) { $r = $r . 'I'; $rrr[4]=1;}
 
-    # Compute the sigma's.  THIS MAY BE INCORRECT
-    $sigO = $arr[0]&&$brr[0];
-    $sig1 = $arr[1]&&$brr[1];
-    $sig2 = $arr[2]&&$brr[2];
-    $sig3 = $arr[3]&&$brr[3];
-    $sigI = $arr[4]&&$brr[4];
 
     printf("rrr = @rrr\n");
     my($sum) = $rrr[0] + $rrr[1] + $rrr[2] + $rrr[3] + $rrr[4];
     printf("sum is $sum\n");
     if ( $sum==0 ) {
 	    $v = 0;
-	    return $v,-1,-1, 0,0,0,0,0;
+	    return $v,-1,-1;
     }
     
     # Compute the sign of r due to swaps between a and b
@@ -85,6 +84,7 @@ sub geoTerms {
 
     $v = $s;
     
+    
     printf("$be[$aind]*$be[$bind] = $r\n");
 
     printf("  r is $r, v is $v\n");
@@ -97,21 +97,16 @@ sub geoTerms {
     $combInd = $idx;
   }
   printf("v $v, bind $bind, combInd $combInd\n");
-  printf(" sO $sigO, s1 $sig1, s2 $sig2, s3 $sig3, sI $sigI\n");
-  return $v,$bind,$combInd,$sigO,$sig1,$sig2,$sig3,$sigI;
+  return $v,$bind,$combInd;
 }
 
 
 $sz = 32;
-$sz = 8;
+#$sz = 8;
 #$sz = 4;
 my @array = map[(0) x $sz], 1 .. $sz;
 my @Aarray = map[(-1) x $sz], 1 .. $sz;
-my @SOarray = map[(0) x $sz], 1 .. $sz;
-my @S1array = map[(0) x $sz], 1 .. $sz;
-my @S2array = map[(0) x $sz], 1 .. $sz;
-my @S3array = map[(0) x $sz], 1 .. $sz;
-my @SIarray = map[(0) x $sz], 1 .. $sz;
+
 
 #printf("array is @array\n");
 #use Data::Dump 'dd'; dd @array;
@@ -119,28 +114,12 @@ my @SIarray = map[(0) x $sz], 1 .. $sz;
 for ($i=0; $i<$sz; $i++) {
   for ($j=0; $j<$sz; $j++) {
       printf(" $be[$i]^$be[$j]");
-	my($v,$bi,$ci,$sO,$s1,$s2,$s3,$sI) = geoTerms($i,$j);
+	my($v,$bi,$ci) = geoTerms($i,$j);
       printf("bi $bi, ci $ci\n");
       if ( $bi != -1 && $ci != -1 ) {
 	      $array[$ci][$bi] = $v; $Aarray[$ci][$bi]=$i;
-	      $SOarray[$ci][$bi]=$sO;
-	      $S1array[$ci][$bi]=$s1;
-	      $S2array[$ci][$bi]=$s2;
-	      $S3array[$ci][$bi]=$s3;
-	      $SIarray[$ci][$bi]=$sI;
       }
-	printf("vls = $v,$bi,$ci, $sO,$s1,$s2,$s3,$sI\n");
-#    if ( ($be[$i]=~/O/ && $be[$j]=~/O/) ||
-#         ($be[$i]=~/1/ && $be[$j]=~/1/) ||
-#         ($be[$i]=~/2/ && $be[$j]=~/2/) ||
-#         ($be[$i]=~/3/ && $be[$j]=~/3/) ||
-#         ($be[$i]=~/I/ && $be[$j]=~/I/) 
-#          ) {
-#        printf(" 0");
-#    } else {
-#        printf(" $be[$i]^$be[$j]");
-        #[$v,$fi,$si] =
- #   }
+	printf("vls = $v,$bi,$ci\n");
   printf("\n");
   }
   printf("\n");
@@ -166,20 +145,15 @@ for ($i=0; $i<$sz; $i++) {
 	for ($j=0; $j<$sz; $j++) {
 		if ( $Aarray[$i][$j]>=0 ) {
 			$a = $be[$Aarray[$i][$j]];
-			$a =~ s/E/A/;
-			$a =~ s/S/A0/;
-#			$a =~ s/S/scal/;
-			if ( $SIarray[$i][$j] !=0 ) { $a = "SI " . $a; }
-			if ( $S3array[$i][$j] !=0 ) { $a = "S3 " . $a; }
-			if ( $S2array[$i][$j] !=0 ) { $a = "S2 " . $a; }
-			if ( $S1array[$i][$j] !=0 ) { $a = "S1 " . $a; }
-			if ( $SOarray[$i][$j] !=0 ) { $a = "SO " . $a; }
+#			$a =~ s/E/A/;
+#			$a =~ s/S/A0/;
+			$a =~ s/S/scal/;
 			if ( $array[$i][$j] < 0 ) {
 				$a = "-" . $a;
 			}
-			printf(" %11s ",$a);
+			printf(" %6s ",$a);
 		} else {
-			printf(" %11s ", 0);
+			printf(" %6s ", 0);
 		}
 	}
 	printf(";\n");
