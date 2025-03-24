@@ -10,6 +10,10 @@ function b = DrawBivector(A,B,c)
 %
 %          This software is unsupported.
 
+if GA.model() ~= "OGA"
+   error("DrawBivector only works in OGA.  Use GA.model(OGA) to switch to OGA.");
+   return;
+end
 
 if nargin == 2
     c = 'y';
@@ -22,11 +26,11 @@ if ~GAisa(A,'vector') | ~GAisa(B,'vector')
     error('DrawBivector: A and B must both be vectors.');
 end
 % DrawBivector: draw the parallelogram bounded by A,B.
-X = [0 A.getx() A.getx()+B.getx() B.getx()];
-Y = [0 A.gety() A.gety()+B.gety() B.gety()];
-Z = [0 A.getz() A.getz()+B.getz() B.getz()];
+Pts = {gapoint(0,0,0,PGA), gapoint(A.getx(),A.gety(),A.getz(),PGA), gapoint(A.getx()+B.getx(),A.gety()+B.gety(),A.getz()+B.getz(),PGA), gapoint(B.getx(),B.gety(),B.getz(),PGA)};
 %biarrow(B,A,'g');
-patch(X,Y,Z,c);
-draw(A);
-draw(B); %biarrow would be a better choice
+PGABLEDraw.patch(Pts,'FaceColor',c);
+
+draw(A,'LineWidth',1.5);
+draw(B,'LineWidth',1.5);
+PGABLEDraw.arrow(gapoint(A.getx(),A.gety(),A.getz(),PGA),gapoint(A.getx()+B.getx(),A.gety()+B.gety(),A.getz()+B.getz(),PGA),'LineWidth',1.5,'Color','g');
 b = A^B;

@@ -14,38 +14,47 @@ if nargin == 3
     c = 'y';
 end
 
-draw(A,'b');
-draw(B,'g');
-draw(C,'m');
+if GA.model() ~= "OGA"
+   error("DrawTrivector only works in OGA.  Use GA.model(OGA) to switch to OGA.");
+   return;
+end
 
-X = [0 A.getx() A.getx()+B.getx() B.getx()];
-Y = [0 A.gety() A.gety()+B.gety() B.gety()];
-Z = [0 A.getz() A.getz()+B.getz() B.getz()];
-patch(X,Y,Z,c);
+draw(A,'LineWidth',1.5,'Color','r');
+draw(B,'LineWidth',1.5,'Color','g');
+draw(C,'LineWidth',1.5,'Color','b');
 
-X = [A.getx() A.getx()+C.getx() A.getx()+B.getx()+C.getx() A.getx()+B.getx() ];
-Y = [A.gety() A.gety()+C.gety() A.gety()+B.gety()+C.gety() A.gety()+B.gety() ];
-Z = [A.getz() A.getz()+C.getz() A.getz()+B.getz()+C.getz() A.getz()+B.getz() ];
-patch(X,Y,Z,c);
+Pts = {gapoint(0,0,0,PGA), gapoint(A.getx(),A.gety(),A.getz(),PGA), gapoint(A.getx()+B.getx(),A.gety()+B.gety(),A.getz()+B.getz(),PGA), gapoint(B.getx(),B.gety(),B.getz(),PGA)};
+PGABLEDraw.patch(Pts,'FaceColor',c);
 
-X = [0 A.getx() A.getx()+C.getx() C.getx()];
-Y = [0 A.gety() A.gety()+C.gety() C.gety()];
-Z = [0 A.getz() A.getz()+C.getz() C.getz()];
-patch(X,Y,Z,c);
+Pts = {gapoint(A.getx(), A.gety(), A.getz(),PGA),...
+       gapoint(A.getx()+C.getx(), A.gety()+C.gety(), A.getz()+C.getz(), PGA),...
+       gapoint(A.getx()+B.getx()+C.getx(), A.gety()+B.gety()+C.gety(), A.getz()+B.getz()+C.getz(), PGA),...
+       gapoint(A.getx()+B.getx(), A.gety()+B.gety(), A.getz()+B.getz(), PGA)};
+PGABLEDraw.patch(Pts,'FaceColor',c);
 
-X = [B.getx() B.getx()+C.getx() A.getx()+B.getx()+C.getx() A.getx()+B.getx() ];
-Y = [B.gety() B.gety()+C.gety() A.gety()+B.gety()+C.gety() A.gety()+B.gety() ];
-Z = [B.getz() B.getz()+C.getz() A.getz()+B.getz()+C.getz() A.getz()+B.getz() ];
-patch(X,Y,Z,c);
+Pts = {gapoint(0, 0, 0, PGA), ...
+       gapoint( A.getx(), A.gety(), A.getz(), PGA), ...
+       gapoint( A.getx()+C.getx(), A.gety()+C.gety(), A.getz()+C.getz(), PGA), ...
+       gapoint( C.getx(), C.gety(), C.getz(), PGA)};
+PGABLEDraw.patch(Pts,'FaceColor',c);
 
-X = [0 B.getx() B.getx()+C.getx() C.getx()];
-Y = [0 B.gety() B.gety()+C.gety() C.gety()];
-Z = [0 B.getz() B.getz()+C.getz() C.getz()];
-patch(X,Y,Z,c);
+Pts = {gapoint(B.getx(), B.gety(), B.getz(),PGA),...
+      gapoint(B.getx()+C.getx(), B.gety()+C.gety(), B.getz()+C.getz(),PGA),...
+      gapoint(A.getx()+B.getx()+C.getx(), A.gety()+B.gety()+C.gety(), A.getz()+B.getz()+C.getz(),PGA),...
+      gapoint(A.getx()+B.getx(), A.gety()+B.gety(), A.getz()+B.getz(),PGA)};
+PGABLEDraw.patch(Pts,'FaceColor',c);
 
-X = [C.getx() A.getx()+C.getx() A.getx()+B.getx()+C.getx() C.getx()+B.getx() ];
-Y = [C.gety() A.gety()+C.gety() A.gety()+B.gety()+C.gety() C.gety()+B.gety() ];
-Z = [C.getz() A.getz()+C.getz() A.getz()+B.getz()+C.getz() C.getz()+B.getz() ];
-patch(X,Y,Z,c);
+Pts = {gapoint(0, 0, 0, PGA), ...
+       gapoint(B.getx(), B.gety(), B.getz(),PGA), ...
+       gapoint(B.getx()+C.getx(), B.gety()+C.gety(), B.getz()+C.getz(),PGA), ...
+       gapoint(C.getx(), C.gety(), C.getz(),PGA)};
+PGABLEDraw.patch(Pts,'FaceColor',c);
+
+Pts = {gapoint(C.getx(), C.gety(), C.getz(), PGA), ...
+       gapoint(A.getx()+C.getx(), A.gety()+C.gety(), A.getz()+C.getz(), PGA), ...
+       gapoint(A.getx()+B.getx()+C.getx(), A.gety()+B.gety()+C.gety(), A.getz()+B.getz()+C.getz(), PGA),...
+       gapoint(C.getx()+B.getx() , C.gety()+B.gety(), C.getz()+B.getz(), PGA)};
+PGABLEDraw.patch(Pts,'FaceColor',c);
+
 
 t = A^B^C;
