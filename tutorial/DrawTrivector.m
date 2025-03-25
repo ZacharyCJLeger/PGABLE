@@ -1,4 +1,4 @@
-function t = DrawTrivector(A,B,C,c)
+function t = DrawTrivector(A,B,C,varargin)
 % DrawTrivector(A,B,C): draw the parallelepiped bounded by A,B,C.  
 %
 %See also gable, DrawBivector.
@@ -10,8 +10,17 @@ function t = DrawTrivector(A,B,C,c)
 %
 %          This software is unsupported.
 
-if nargin == 3
-    c = 'y';
+arguments
+  A OGA;
+  B OGA;
+  C OGA;
+end
+arguments (Repeating)
+  varargin
+end
+
+if length(varargin)==0
+    varargin = {'y'};
 end
 
 if GA.model() ~= "OGA"
@@ -19,45 +28,53 @@ if GA.model() ~= "OGA"
    return;
 end
 
+solid = 0;
+varargin(1)
+if varargin{1} == "Solid"
+  varargin = varargin(2:end);
+  solid = 1;
+end
+
+
 draw(A,'LineWidth',1.5,'Color','b');
 draw(B,'LineWidth',1.5,'Color','g');
 draw(C,'LineWidth',1.5,'Color','m');
 
 t = A^B^C;
 
-if 0
-Pts = {gapoint(0,0,0,PGA), gapoint(A.getx(),A.gety(),A.getz(),PGA), gapoint(A.getx()+B.getx(),A.gety()+B.gety(),A.getz()+B.getz(),PGA), gapoint(B.getx(),B.gety(),B.getz(),PGA)};
-PGABLEDraw.patch(Pts,'FaceColor',c);
+if solid
+   Pts = {gapoint(0,0,0,PGA), gapoint(A.getx(),A.gety(),A.getz(),PGA), gapoint(A.getx()+B.getx(),A.gety()+B.gety(),A.getz()+B.getz(),PGA), gapoint(B.getx(),B.gety(),B.getz(),PGA)};
+   PGABLEDraw.patch(Pts,'FaceColor',varargin{:});
 
-Pts = {gapoint(A.getx(), A.gety(), A.getz(),PGA),...
+   Pts = {gapoint(A.getx(), A.gety(), A.getz(),PGA),...
        gapoint(A.getx()+C.getx(), A.gety()+C.gety(), A.getz()+C.getz(), PGA),...
        gapoint(A.getx()+B.getx()+C.getx(), A.gety()+B.gety()+C.gety(), A.getz()+B.getz()+C.getz(), PGA),...
        gapoint(A.getx()+B.getx(), A.gety()+B.gety(), A.getz()+B.getz(), PGA)};
-PGABLEDraw.patch(Pts,'FaceColor',c);
+   PGABLEDraw.patch(Pts,'FaceColor',varargin{:});
 
-Pts = {gapoint(0, 0, 0, PGA), ...
+   Pts = {gapoint(0, 0, 0, PGA), ...
        gapoint( A.getx(), A.gety(), A.getz(), PGA), ...
        gapoint( A.getx()+C.getx(), A.gety()+C.gety(), A.getz()+C.getz(), PGA), ...
        gapoint( C.getx(), C.gety(), C.getz(), PGA)};
-PGABLEDraw.patch(Pts,'FaceColor',c);
+   PGABLEDraw.patch(Pts,'FaceColor',varargin{:});
 
-Pts = {gapoint(B.getx(), B.gety(), B.getz(),PGA),...
+   Pts = {gapoint(B.getx(), B.gety(), B.getz(),PGA),...
       gapoint(B.getx()+C.getx(), B.gety()+C.gety(), B.getz()+C.getz(),PGA),...
       gapoint(A.getx()+B.getx()+C.getx(), A.gety()+B.gety()+C.gety(), A.getz()+B.getz()+C.getz(),PGA),...
       gapoint(A.getx()+B.getx(), A.gety()+B.gety(), A.getz()+B.getz(),PGA)};
-PGABLEDraw.patch(Pts,'FaceColor',c);
+   PGABLEDraw.patch(Pts,'FaceColor',varargin{:});
 
-bPts = {gapoint(0, 0, 0, PGA), ...
+   Pts = {gapoint(0, 0, 0, PGA), ...
        gapoint(B.getx(), B.gety(), B.getz(),PGA), ...
        gapoint(B.getx()+C.getx(), B.gety()+C.gety(), B.getz()+C.getz(),PGA), ...
        gapoint(C.getx(), C.gety(), C.getz(),PGA)};
-PGABLEDraw.patch(Pts,'FaceColor',c);
+   PGABLEDraw.patch(Pts,'FaceColor',varargin{:});
 
-Pts = {gapoint(C.getx(), C.gety(), C.getz(), PGA), ...
+   Pts = {gapoint(C.getx(), C.gety(), C.getz(), PGA), ...
        gapoint(A.getx()+C.getx(), A.gety()+C.gety(), A.getz()+C.getz(), PGA), ...
        gapoint(A.getx()+B.getx()+C.getx(), A.gety()+B.gety()+C.gety(), A.getz()+B.getz()+C.getz(), PGA),...
        gapoint(C.getx()+B.getx() , C.gety()+B.gety(), C.getz()+B.getz(), PGA)};
-PGABLEDraw.patch(Pts,'FaceColor',c);
+   PGABLEDraw.patch(Pts,'FaceColor',varargin{:});
 else
   h = [];
   h = [h PGABLEDraw.plotline({A,A+B,A+B+C,A+C,A},'r')];
