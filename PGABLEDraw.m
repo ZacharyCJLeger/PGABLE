@@ -81,7 +81,8 @@ classdef PGABLEDraw
                         varargin{:});
                 h = [h ht];
             end
-        end
+ 
+       end
 
         function polygon(Poly, BV, position, c)
             %POLYGON - Draws a polygon on a bivector with offset.
