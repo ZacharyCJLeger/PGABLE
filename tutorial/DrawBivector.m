@@ -25,9 +25,10 @@ if ~GAisa(A,'vector') | ~GAisa(B,'vector')
     B
     error('DrawBivector: A and B must both be vectors.');
 end
+GAScene.usefigure();
 
 draw(A,'LineWidth',1.5);
-draw(B,'LineWidth',1.5);
+%draw(B,'LineWidth',1.5);
 PGABLEDraw.arrow(gapoint(A.getx(),A.gety(),A.getz(),PGA),gapoint(A.getx()+B.getx(),A.gety()+B.gety(),A.getz()+B.getz(),PGA),'LineWidth',1.5,'Color','g');
 b = A^B;
 

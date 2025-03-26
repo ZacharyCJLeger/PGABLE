@@ -29,7 +29,6 @@ if GA.model() ~= "OGA"
 end
 
 solid = 0;
-varargin(1)
 if varargin{1} == "Solid"
   varargin = varargin(2:end);
   solid = 1;
@@ -43,6 +42,9 @@ draw(C,'LineWidth',1.5,'Color','m');
 t = A^B^C;
 
 if solid
+   if length(varargin)==0
+     varargin = {'y'};
+   end
    Pts = {gapoint(0,0,0,PGA), gapoint(A.getx(),A.gety(),A.getz(),PGA), gapoint(A.getx()+B.getx(),A.gety()+B.gety(),A.getz()+B.getz(),PGA), gapoint(B.getx(),B.gety(),B.getz(),PGA)};
    PGABLEDraw.patch(Pts,'FaceColor',varargin{:});
 
