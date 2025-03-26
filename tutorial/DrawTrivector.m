@@ -35,6 +35,8 @@ if varargin{1} == "Solid"
 end
 
 
+GAScene.usefigure()
+
 draw(A,'LineWidth',1.5,'Color','b');
 draw(B,'LineWidth',1.5,'Color','g');
 draw(C,'LineWidth',1.5,'Color','m');
