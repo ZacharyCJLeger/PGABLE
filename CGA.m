@@ -1434,7 +1434,6 @@ R = [
             A = zeroepsilons_(A);
             
             [scal,  EO, E1, E2, E3, EI,  EO1, EO2, EO3, EOI, E12, E13, E1I, E23, E2I, E3I,  EO12, EO13, EO1I, EO23, EO2I, EO3I, E123, E12I, E13I, E23I, EO123, EO12I, EO13I, EO23I, E123I, EO123I] = decompose_(A);
-
             if GAisa(A, 'point')
 
                 % Custom input handling
