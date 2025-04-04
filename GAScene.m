@@ -22,9 +22,66 @@ classdef GAScene
         scenename;
     end
 
+
     % ******************** Public Static Methods ********************
 
     methods (Access = public, Static)
+
+        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
+        %           Settings           %
+        %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
+
+        function settings()
+            %SETTINGS - Displays the current configuration settings for PGABLE.
+            %   To retrieve a particular setting, run "GA.[setting]".
+            %   For example, to retrieve the value of autoscalar, run "GA.autoscalar".
+            %   To change the value of a particular setting, run "GA.[setting]([value])".
+            %   For example, to set the value of autoscalar to false, run
+            %   "GA.autoscalar(false)".
+            %   For more information on a particular setting, run help "GA.[setting]".
+            %   To surpress the console output of changing a settings, set the second
+            %   parameter to true, for example "GA.epsilon_tolerance(1E-13, true)" will set
+            %   the epsilon tolerance to 1E-13 without printing the change to the console.
+
+            disp("   ~~~~~~~~~~ Settings ~~~~~~~~~~")
+            disp("   dimensions:           " + GAScene.dimensions())
+            
+        end
+
+        function val = dimensions(newval, surpress_output)
+            %DIMENSIONS - Set/retreive the DIMENSION setting.
+            %   The DIMENSION setting is the dimensionality of the scene display.
+            %   Currently supported values are 2 (for 2D) and 3 (for 3D)
+            %   If no argument is provided, DIMENSIONS returns the current value of the
+            %   DIMENSIONS setting.
+            
+            arguments
+                newval = [];
+                surpress_output = false;
+            end
+
+            persistent currentval;
+            
+            % By default the autoscalar setting is set to true
+            if isempty(currentval)
+                currentval = 3;
+            end
+
+            if isempty(newval)
+                % User is trying to retrieve the current value
+                val = currentval;
+            else
+                % User is trying to set the value
+                if isnumeric(newval) && (newval == 2 || newval == 3)
+                    currentval = newval;
+                    if ~surpress_output
+                        disp("   dimensions set to " + currentval)
+                    end
+                else
+                    error('dimensions must be either 2 or 3')
+                end
+            end 
+        end
 
         %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
         %        Item Management       %
