@@ -159,7 +159,7 @@ classdef GAScene
             %GETFIGURE - Returns the figure object for GASCene.
 
             persistent static_fig;
-            
+	    
             if ~isempty(static_fig) && isvalid(static_fig)
                 obj = static_fig;
             else
