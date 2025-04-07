@@ -48,6 +48,42 @@ classdef GAScene
             
         end
 
+        function val = dimension(newval, surpress_output)
+            % DIMENSION - Set/retreive the DIMENSION setting.
+            %   The DIMENSION setting is the dimensionality of the scene.
+            %   Currently supported values are 2 (for 2D) and 3 (for 3D)
+            %   If no argument is provided, DIMENSION returns the current value of the
+            %   DIMENSION setting.
+            
+            arguments
+                newval = [];
+                surpress_output = false;
+            end
+
+            persistent currentval;
+            
+            % By default the autoscalar setting is set to true
+            if isempty(currentval)
+                currentval = 3;
+            end
+
+            if isempty(newval)
+                % User is trying to retrieve the current value
+                val = currentval;
+            else
+                % User is trying to set the value
+                if isnumeric(newval) && (newval == 2 || newval == 3)
+                    currentval = newval;
+		    GAScene.view(newval);
+                    if ~surpress_output
+                        disp("   dimensions set to " + currentval)
+                    end
+                else
+                    error('dimensions must be either 2 or 3')
+                end
+            end 
+        end
+	
         function val = view(newval, surpress_output)
             % VIEW - Set/retreive the VIEW setting.
             %   The VIEW setting is the dimensionality of the scene display.
@@ -74,7 +110,6 @@ classdef GAScene
                 % User is trying to set the value
                 if isnumeric(newval) && (newval == 2 || newval == 3)
                     currentval = newval;
-		    GAScene.view(newval);
                     if ~surpress_output
                         disp("   view dimensions set to " + currentval)
                     end
