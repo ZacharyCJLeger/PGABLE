@@ -48,12 +48,12 @@ classdef GAScene
             
         end
 
-        function val = dimensions(newval, surpress_output)
-            %DIMENSIONS - Set/retreive the DIMENSION setting.
-            %   The DIMENSION setting is the dimensionality of the scene display.
+        function val = view(newval, surpress_output)
+            % VIEW - Set/retreive the VIEW setting.
+            %   The VIEW setting is the dimensionality of the scene display.
             %   Currently supported values are 2 (for 2D) and 3 (for 3D)
-            %   If no argument is provided, DIMENSIONS returns the current value of the
-            %   DIMENSIONS setting.
+            %   If no argument is provided, VIEW returns the current value of the
+            %   VIEW setting.
             
             arguments
                 newval = [];
@@ -74,14 +74,16 @@ classdef GAScene
                 % User is trying to set the value
                 if isnumeric(newval) && (newval == 2 || newval == 3)
                     currentval = newval;
+		    GAScene.view(newval);
                     if ~surpress_output
-                        disp("   dimensions set to " + currentval)
+                        disp("   view dimensions set to " + currentval)
                     end
                 else
-                    error('dimensions must be either 2 or 3')
+                    error('view dimensions must be either 2 or 3')
                 end
             end 
         end
+
 
         %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
         %        Item Management       %
@@ -167,7 +169,7 @@ classdef GAScene
                 % TODO: make figure name changable
                 static_fig = figure('Name', "GA Scene",'NumberTitle','off');
                 axis equal
-                view(3)
+                view(GAScene.view())
 
                 ax = gca;
                 addlistener(ax, {'XLim', 'YLim', 'ZLim'}, 'PostSet', @(obj, evd)GAScene.manage_dynamic_items_(true, obj, evd));
@@ -181,7 +183,7 @@ classdef GAScene
 
             figure(GAScene.getfigure());
             axis equal;
-            view(3)
+            view(GAScene.view())
         end
     end
 
