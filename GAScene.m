@@ -87,7 +87,8 @@ classdef GAScene
         function val = view(newval, surpress_output)
             % VIEW - Set/retreive the VIEW setting.
             %   The VIEW setting is the dimensionality of the scene display.
-            %   Currently supported values are 2 (for 2D) and 3 (for 3D)
+            %   Currently supported values are 2 (for 2D) and 3 (for 3D),
+	    %   or 0 for "don't change the view"
             %   If no argument is provided, VIEW returns the current value of the
             %   VIEW setting.
             
@@ -108,7 +109,7 @@ classdef GAScene
                 val = currentval;
             else
                 % User is trying to set the value
-                if isnumeric(newval) && (newval == 2 || newval == 3)
+                if isnumeric(newval) && (newval == 0 || newval == 2 || newval == 3)
                     currentval = newval;
                     if ~surpress_output
                         disp("   view dimensions set to " + currentval)
@@ -217,8 +218,10 @@ classdef GAScene
             %USEFIGURE - Sets the GAScene figure in use.
 
             figure(GAScene.getfigure());
-            axis equal;
-            view(GAScene.view())
+	    if (GAScene.view() ~= 0 )
+              axis equal;
+              view(GAScene.view())
+	    end
         end
     end
 
