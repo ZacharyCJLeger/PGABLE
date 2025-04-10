@@ -80,13 +80,13 @@ while ~done
       end
       
       if i~=pt21 && j~=pt21
-        %fprintf("Case 1\n");
+        fprintf("Case 1\n");
         ep2 = pt21; ep2i = 1; prev2 = 3;
       elseif i~=pt22 && j~=pt22
-        %fprintf("Case 2\n");
+        fprintf("Case 2\n");
         ep2 = pt22; ep2i = 2; prev2 = 1;
       else
-        %fprintf("Case 3\n");
+        fprintf("Case 3\n");
         ep2 = pt23; ep2i = 3; prev2 = 2;
       end
       c = pts(pt11)^pts(pt12)^pts(pt13);
@@ -111,10 +111,12 @@ while ~done
          % in top triangle, prev1=pj; in bottom, prev2=pi
          %  So in top triangle, replace prev1 with ep2
          %  and in bot triangle, replace prev2 with ep1
+	 if i==5 && j==1
+           tri
+	 end
          tri(tri1,prev1) = ep2;
          tri(tri2,prev2) = ep1;
 	 done = 0;
-	 
 	draw(pts(ep2),'r');  
 	PGABLEDraw.plotline({pts(i),pts(j)},'Color','w','LineStyle',':','LineWidth',5);
 	pause(2)

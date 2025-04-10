@@ -112,9 +112,8 @@ for nxtV=4:npts
     fprintf("Point outside all triangles; add to exterior.\n");
     em = computeEdgeMatrix(tri,nxtV-1);
     % Iterate through edges, looking for exterior edges
-    done = 0; % used when we find the edge we're looking for
     for j=1:nxtV-1
-      for k=1:nxtV-1
+      for k=1:j-1
         % Look for an exterior edge
         if em(j,k)+em(k,j)==1
 	  if em(j,k)
@@ -126,34 +125,11 @@ for nxtV=4:npts
 	  if double((pts(nxtV)^pts(v2)^pts(v1)^ni^e3).*I5) > 0
 	     ntris = ntris+1;
 	     tri(ntris,1) = v2; tri(ntris,2) = v1; tri(ntris,3) = nxtV;
-             done = 1;
 	  end
 	end
-	if done
-	  break;
-	end
-      end
-      if done
-         break;
       end
     end
     plttris(tri)
-    % We want the exterior of the triangulation to be convex
-    % So check triangles formed with next two edges to make
-    %  sure everything is convex, adding a new triangle if
-    %  something is concave.  Make sure we don't recompute
-    %  em before this first call
-    [v1a,v2b] = getNextPrevEdge(em,v1,v2);;
-    c1 = pts(nxtV)^pts(v1)^pts(v1a);
-    c2 = pts(v2b)^pts(v2)^pts(nxtV);
-    if double(c1.*(ni^e1^e2)) > 0
-      ntris = ntris+1;
-      tri(ntris,1) = v1; tri(ntris,2) = v1a; tri(ntris,3) = nxtV;
-    end
-    if double(c2.*(ni^e1^e2)) > 0
-      ntris = ntris+1;
-      tri(ntris,1) = v2; tri(ntris,2) = v2b; tri(ntris,3) = nxtV;
-    end
   end
 plttris(tri);
 pause(1)
