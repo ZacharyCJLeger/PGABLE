@@ -69,6 +69,8 @@ tri(1,1) = 1;
 tri(1,2) = 2;
 tri(1,3) = 3;
 ntris = 1;
+    plttris(tri)
+    pause(1)
 
 c = pts(1)^pts(2)^pts(3);
 %double(c.*(ni^e1^e2)) 
