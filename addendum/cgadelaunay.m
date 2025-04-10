@@ -59,7 +59,7 @@ end
 done = 0;
 while ~done
   done=1;
-  etm = computeEdgeTriMatrix(tri,nvts)
+  etm = computeEdgeTriMatrix(tri,nvts);
   for i=1:nvts
     for j=1:i-1
       if etm(i,j)==0 || etm(j,i)==0
@@ -80,13 +80,13 @@ while ~done
       end
       
       if i~=pt21 && j~=pt21
-        fprintf("Case 1\n");
+        %fprintf("Case 1\n");
         ep2 = pt21; ep2i = 1; prev2 = 3;
       elseif i~=pt22 && j~=pt22
-        fprintf("Case 2\n");
+        %fprintf("Case 2\n");
         ep2 = pt22; ep2i = 2; prev2 = 1;
       else
-        fprintf("Case 3\n");
+        %fprintf("Case 3\n");
         ep2 = pt23; ep2i = 3; prev2 = 2;
       end
       c = pts(pt11)^pts(pt12)^pts(pt13);
