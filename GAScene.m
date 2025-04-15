@@ -111,6 +111,9 @@ classdef GAScene
                 % User is trying to set the value
                 if isnumeric(newval) && (newval == 0 || newval == 2 || newval == 3)
                     currentval = newval;
+		    if newval==2 || newval==3
+			    view(newval);
+		    end
                     if ~surpress_output
                         disp("   view dimensions set to " + currentval)
                     end
