@@ -1202,24 +1202,24 @@ R = [
 	       [s, pl] = GA.charifyval_(0.5*p.m(2)+p.m(6), 'e5', s, pl);
 	    end
 
-	    if ~CGA.noni_basis()
-	      if  p.m(7) ~= 0 || p.m(13) ~= 0
-	        [s, pl] = GA.charifyval_(0.5*p.m(7)-1*p.m(13), 'e1^e4', s, pl);
-	      end
-	      if  p.m(8) ~= 0 || p.m(15) ~= 0
-                [s, pl] = GA.charifyval_(0.5*p.m(8)-1*p.m(15), 'e2^e4', s, pl);
-	      end
-	      if  p.m(9) ~= 0 || p.m(16) ~= 0
-	        [s, pl] = GA.charifyval_(0.5*p.m(9)-1*p.m(16), 'e3^e4', s, pl);
-	      end
-	      if  p.m(10) ~= 0
- 	        [s, pl] = GA.charifyval_(p.m(10), 'e4^e5', s, pl);
-              end
-	    else
+	    if CGA.noni_basis()
 	        [s, pl] = GA.charifyval_(p.m(7), 'no^e1', s, pl);
                 [s, pl] = GA.charifyval_(p.m(8), 'no^e2', s, pl);
 	        [s, pl] = GA.charifyval_(p.m(9), 'no^e3', s, pl);
  	        [s, pl] = GA.charifyval_(p.m(10), 'no^ni', s, pl);
+	    else
+	      if  p.m(7) ~= 0 || p.m(13) ~= 0
+	        [s, pl] = GA.charifyval_(-(0.5*p.m(7)+1*p.m(13)), 'e1^e4', s, pl);
+	      end
+	      if  p.m(8) ~= 0 || p.m(15) ~= 0
+                [s, pl] = GA.charifyval_(-(0.5*p.m(8)+1*p.m(15)), 'e2^e4', s, pl);
+	      end
+	      if  p.m(9) ~= 0 || p.m(16) ~= 0
+	        [s, pl] = GA.charifyval_(-(0.5*p.m(9)+1*p.m(16)), 'e3^e4', s, pl);
+	      end
+	      if  p.m(10) ~= 0
+ 	        [s, pl] = GA.charifyval_(p.m(10), 'e4^e5', s, pl);
+              end
 	    end
 
             if GA.compact_notation()
@@ -1238,7 +1238,7 @@ R = [
 		    if CGA.noni_basis()
                       [s, pl] = GA.charifyval_(p.m(13), 'e1^ni', s, pl);
 		    else
-                      [s, pl] = GA.charifyval_(p.m(7)+0.5*p.m(13), 'e1^e5', s, pl);
+                      [s, pl] = GA.charifyval_(0.5*p.m(7)-1*p.m(13), 'e1^e5', s, pl);
 		    end
 
                     [s, pl] = GA.charifyval_(p.m(12), 'e012', s, pl);
@@ -1263,10 +1263,14 @@ R = [
                       [s, pl] = GA.charifyval_(p.m(16), 'e3^ni', s, pl);
 		    else
 		      if p.m(7)~=0 || p.m(13)~=0
-		        [s, pl] = GA.charifyval_(p.m(7)+0.5*p.m(13), 'e1^e5', s, pl);
+		        [s, pl] = GA.charifyval_(-0.5*p.m(7)+1*p.m(13), 'e1^e5', s, pl);
 		      end
-                      [s, pl] = GA.charifyval_(p.m(15), 'e2^ni', s, pl);
-                      [s, pl] = GA.charifyval_(p.m(16), 'e3^ni', s, pl);
+		      if p.m(8)~=0 || p.m(15)~=0
+		        [s, pl] = GA.charifyval_(-0.5*p.m(8)+1*p.m(15), 'e2^e5', s, pl);
+		      end
+		      if p.m(9)~=0 || p.m(16)~=0
+		        [s, pl] = GA.charifyval_(-0.5*p.m(9)+1*p.m(16), 'e3^e5', s, pl);
+		      end
 		    end
 		    
                     [s, pl] = GA.charifyval_(p.m(20), 'no^e2^e3', s, pl);
