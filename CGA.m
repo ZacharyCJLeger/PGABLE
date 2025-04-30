@@ -196,6 +196,46 @@ classdef CGA < GA
             end
         end
 
+
+        function val = noni_basis(newval, surpress_output)
+            %NONI_BASIS - Set/retrieve the NONI_output setting.
+            %   The NONI_BASIS setting is either true or false.
+            %   When set to true, CGA elements are represented by the basis:
+            %   1, no, e1, e2, e3, ni, etc.
+            %   When set to false, CGA elements are represented by the basis:
+            %   1, E, e1, e2, e3, BE, etc.
+            %   If no argument is provided, NONI_BASIS returns the current
+	    %   value of the NONI_BASIS setting.
+
+            arguments
+                newval = [];
+                surpress_output = false;
+            end
+
+            persistent currentval;
+            
+            % By default the noni_basis setting is set to true
+            if isempty(currentval)
+                currentval = true;
+            end
+
+            if isempty(newval)
+                % User is trying to retrieve the current value
+                val = currentval;
+            else
+                % User is trying to set the value
+                if islogical(newval)
+                    currentval = newval;
+                    if ~surpress_output
+                        disp("   noni_basis set to " + currentval)
+                    end
+                else
+                    error('noni_basis must have value true or false.')
+                end
+            end
+        end
+
+
         %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
         %  Dynamic Drawing Functions   %
         %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
@@ -1148,16 +1188,40 @@ R = [
                 pl = ' + ';
             end
 
-            [s, pl] = GA.charifyval_(p.m(2), 'no', s, pl);
+	    if CGA.noni_basis() 
+               [s, pl] = GA.charifyval_(p.m(2), 'no', s, pl);
+	    elseif (p.m(2) ~= 0 || p.m(6) ~= 0)
+	       [s, pl] = GA.charifyval_(0.5*p.m(2)-p.m(6), 'e4', s, pl);
+	    end
             [s, pl] = GA.charifyval_(p.m(3), 'e1', s, pl);
             [s, pl] = GA.charifyval_(p.m(4), 'e2', s, pl);
             [s, pl] = GA.charifyval_(p.m(5), 'e3', s, pl);
-            [s, pl] = GA.charifyval_(p.m(6), 'ni', s, pl);
+	    if CGA.noni_basis() 
+               [s, pl] = GA.charifyval_(p.m(6), 'ni', s, pl);
+            elseif (p.m(2) ~= 0 || p.m(6) ~= 0)
+	       [s, pl] = GA.charifyval_(0.5*p.m(2)+p.m(6), 'e5', s, pl);
+	    end
 
+	    if ~CGA.noni_basis()
+	      if  p.m(7) ~= 0 || p.m(13) ~= 0
+	        [s, pl] = GA.charifyval_(0.5*p.m(7)-1*p.m(13), 'e1^e4', s, pl);
+	      end
+	      if  p.m(8) ~= 0 || p.m(15) ~= 0
+                [s, pl] = GA.charifyval_(0.5*p.m(8)-1*p.m(15), 'e2^e4', s, pl);
+	      end
+	      if  p.m(9) ~= 0 || p.m(16) ~= 0
+	        [s, pl] = GA.charifyval_(0.5*p.m(9)-1*p.m(16), 'e3^e4', s, pl);
+	      end
+	      if  p.m(10) ~= 0
+ 	        [s, pl] = GA.charifyval_(p.m(10), 'e4^e5', s, pl);
+              end
+	    else
 	        [s, pl] = GA.charifyval_(p.m(7), 'no^e1', s, pl);
-            [s, pl] = GA.charifyval_(p.m(8), 'no^e2', s, pl);
+                [s, pl] = GA.charifyval_(p.m(8), 'no^e2', s, pl);
 	        [s, pl] = GA.charifyval_(p.m(9), 'no^e3', s, pl);
  	        [s, pl] = GA.charifyval_(p.m(10), 'no^ni', s, pl);
+	    end
+
             if GA.compact_notation()
                 if ~PGA.increasing_order()
                     [s, pl] = GA.charifyval_(p.m(11), 'e23', s, pl);
@@ -1171,7 +1235,11 @@ R = [
                 else 
                     [s, pl] = GA.charifyval_(p.m(11), 'e12', s, pl);
                     [s, pl] = GA.charifyval_(p.m(12), 'e13', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(13), 'e1^ni', s, pl);
+		    if CGA.noni_basis()
+                      [s, pl] = GA.charifyval_(p.m(13), 'e1^ni', s, pl);
+		    else
+                      [s, pl] = GA.charifyval_(p.m(7)+0.5*p.m(13), 'e1^e5', s, pl);
+		    end
 
                     [s, pl] = GA.charifyval_(p.m(12), 'e012', s, pl);
                     [s, pl] = GA.charifyval_(p.m(13), 'e013', s, pl);
@@ -1189,9 +1257,17 @@ R = [
                     [s, pl] = GA.charifyval_(p.m(14), 'e2^e3', s, pl);
                     [s, pl] = GA.charifyval_(-p.m(12), 'e3^e1', s, pl);
                     [s, pl] = GA.charifyval_(p.m(11), 'e1^e2', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(13), 'e1^ni', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(15), 'e2^ni', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(16), 'e3^ni', s, pl);
+		    if CGA.noni_basis()
+		      [s, pl] = GA.charifyval_(p.m(13), 'e1^ni', s, pl);
+                      [s, pl] = GA.charifyval_(p.m(15), 'e2^ni', s, pl);
+                      [s, pl] = GA.charifyval_(p.m(16), 'e3^ni', s, pl);
+		    else
+		      if p.m(7)~=0 || p.m(13)~=0
+		        [s, pl] = GA.charifyval_(p.m(7)+0.5*p.m(13), 'e1^e5', s, pl);
+		      end
+                      [s, pl] = GA.charifyval_(p.m(15), 'e2^ni', s, pl);
+                      [s, pl] = GA.charifyval_(p.m(16), 'e3^ni', s, pl);
+		    end
 		    
                     [s, pl] = GA.charifyval_(p.m(20), 'no^e2^e3', s, pl);
                     [s, pl] = GA.charifyval_(-p.m(18), 'no^e3^e1', s, pl);
@@ -1238,7 +1314,11 @@ R = [
                 if GA.compact_pseudoscalar()
                     [s, pl] = GA.charifyval_(p.m(32), 'I5', s, pl);
                 else
-                    [s, pl] = GA.charifyval_(p.m(32), 'no^e1^e2^e3^ni', s, pl);
+		    if CGA.noni_basis()
+                      [s, pl] = GA.charifyval_(p.m(32), 'no^e1^e2^e3^ni', s, pl);
+		    else
+                      [s, pl] = GA.charifyval_(-p.m(32), 'e1^e2^e3^e4^e5', s, pl);
+		    end
                 end
             end
             

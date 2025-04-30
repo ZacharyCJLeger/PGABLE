@@ -472,7 +472,7 @@ classdef OGA < GA
         end
 
         function R = grade_(A, n)
-            if nargin == 1
+            if nargin == 1 || n==-1
                 if A.m(1) ~= 0
                     if sum(abs(A.m(2:8))) == 0
                         R = 0;
@@ -486,7 +486,7 @@ classdef OGA < GA
                         R = -1;
                     end
                 elseif sum(abs(A.m(5:7))) ~= 0
-                    if A.m(8) == 0
+                   if A.m(8) == 0
                         R = 2;
                     else
                         R = -1;
