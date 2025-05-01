@@ -198,6 +198,94 @@ classdef CGA < GA
         end
 
 
+        function val = e4e5_basis(newval, surpress_output)
+	    %E4E5_BASIS - Set/retrieve the E4E5_output setting.
+            %   The E4E5_BASIS setting is either true or false.
+            %   When set to true, CGA elements are represented by the basis:
+            %   1, e1, e2, e3, e4, e5, etc.
+            %   When set to false, CGA elements are represented by the basis
+            %   dependent on the noni_basis setting.
+            %   If no argument is provided, E4E5_BASIS returns the current
+	    %   value of the E4E5_BASIS setting.
+
+            arguments
+                newval = [];
+                surpress_output = false;
+            end
+
+            persistent currentval;
+            
+            % By default the e4e5_basis setting is set to true
+            if isempty(currentval)
+                currentval = true;
+            end
+
+            if isempty(newval)
+                % User is trying to retrieve the current value
+                val = currentval;
+            else
+                % User is trying to set the value
+                if islogical(newval)
+		    if newval
+		      CGA.noni_basis(false,true);
+		      CGA.e0ei_basis(false,true);
+		      CGA.eoei_basis(false,true);
+		    end
+                    currentval = newval;
+
+                    if ~surpress_output
+                        disp("   e4e5_basis set to " + currentval)
+                    end
+                else
+                    error('e4e5_basis must have value true or false.')
+                end
+            end
+        end
+
+        function val = eoei_basis(newval, surpress_output)
+	    %EOEI_BASIS - Set/retrieve the EOEI_output setting.
+            %   The EOEI_BASIS setting is either true or false.
+            %   When set to true, CGA elements are represented by the basis:
+            %   1, eo, e1, e2, e3, ei, etc.
+            %   When set to false, CGA elements are represented by the basis
+            %   dependent on the noni_basis setting.
+            %   If no argument is provided, EOEI_BASIS returns the current
+	    %   value of the EOEI_BASIS setting.
+
+            arguments
+                newval = [];
+                surpress_output = false;
+            end
+
+            persistent currentval;
+            
+            % By default the eoei_basis setting is set to true
+            if isempty(currentval)
+                currentval = true;
+            end
+
+            if isempty(newval)
+                % User is trying to retrieve the current value
+                val = currentval;
+            else
+                % User is trying to set the value
+                if islogical(newval)
+		    if newval
+		      CGA.noni_basis(false,true);
+		      CGA.e0ei_basis(false,true);
+		      CGA.e4e5_basis(false,true);
+		    end
+                    currentval = newval;
+
+                    if ~surpress_output
+                        disp("   eoei_basis set to " + currentval)
+                    end
+                else
+                    error('eoei_basis must have value true or false.')
+                end
+            end
+        end
+	
         function val = e0ei_basis(newval, surpress_output)
 	    %E0EI_BASIS - Set/retrieve the E0EI_output setting.
             %   The E0EI_BASIS setting is either true or false.
@@ -227,9 +315,9 @@ classdef CGA < GA
                 % User is trying to set the value
                 if islogical(newval)
 		    if newval
-		      CGA.noni_basis(true,true);
-		    else
 		      CGA.noni_basis(false,true);
+		      CGA.eoei_basis(false,true);
+		      CGA.e4e5_basis(false,true);
 		    end
                     currentval = newval;
 
@@ -242,6 +330,11 @@ classdef CGA < GA
             end
         end
 
+	function val = noni_group()
+	%NONI_GROUP - Return true if output is any of no,ni; eo,ei; e0,ei
+	  val = CGA.noni_basis() || CGA.e0ei_basis() || CGA.eoei_basis();
+	end
+	
         function val = noni_basis(newval, surpress_output)
             %NONI_BASIS - Set/retrieve the NONI_output setting.
             %   The NONI_BASIS setting is either true or false.
@@ -272,6 +365,8 @@ classdef CGA < GA
                 if islogical(newval)
 		    if newval
 		      CGA.e0ei_basis(false,true);
+		      CGA.eoei_basis(false,true);
+		      CGA.e4e5_basis(false,true);
 		    end
                     currentval = newval;
                     if ~surpress_output
@@ -282,7 +377,6 @@ classdef CGA < GA
                 end
             end
         end
-
 
         %%%%%%%%%%~%%%%%%%%%%~%%%%%%%%%%
         %  Dynamic Drawing Functions   %
@@ -1236,22 +1330,22 @@ R = [
                 pl = ' + ';
             end
 
-	    if CGA.noni_basis() 
+	    if CGA.noni_group() 
                [s, pl] = GA.charifyval_(p.m(2), 'no', s, pl);
 	    end
             [s, pl] = GA.charifyval_(p.m(3), 'e1', s, pl);
             [s, pl] = GA.charifyval_(p.m(4), 'e2', s, pl);
             [s, pl] = GA.charifyval_(p.m(5), 'e3', s, pl);
-	    if ~CGA.noni_basis() && (p.m(2) ~= 0 || p.m(6) ~= 0)
+	    if ~CGA.noni_group() && (p.m(2) ~= 0 || p.m(6) ~= 0)
 	       [s, pl] = GA.charifyval_(0.5*p.m(2)-p.m(6), 'e4', s, pl);
 	    end
-	    if CGA.noni_basis() 
+	    if CGA.noni_group() 
                [s, pl] = GA.charifyval_(p.m(6), 'ni', s, pl);
             elseif (p.m(2) ~= 0 || p.m(6) ~= 0)
 	       [s, pl] = GA.charifyval_(0.5*p.m(2)+p.m(6), 'e5', s, pl);
 	    end
 
-	    if CGA.noni_basis()
+	    if CGA.noni_group()
 	        [s, pl] = GA.charifyval_(p.m(7), 'no^e1', s, pl);
                 [s, pl] = GA.charifyval_(p.m(8), 'no^e2', s, pl);
 	        [s, pl] = GA.charifyval_(p.m(9), 'no^e3', s, pl);
@@ -1284,7 +1378,7 @@ R = [
                 else 
                     [s, pl] = GA.charifyval_(p.m(11), 'e12', s, pl);
                     [s, pl] = GA.charifyval_(p.m(12), 'e13', s, pl);
-		    if CGA.noni_basis()
+		    if CGA.noni_group()
                       [s, pl] = GA.charifyval_(p.m(13), 'e1^ni', s, pl);
 		    else
                       [s, pl] = GA.charifyval_(0.5*p.m(7)-1*p.m(13), 'e1^e5', s, pl);
@@ -1306,7 +1400,7 @@ R = [
                     [s, pl] = GA.charifyval_(p.m(14), 'e2^e3', s, pl);
                     [s, pl] = GA.charifyval_(-p.m(12), 'e3^e1', s, pl);
                     [s, pl] = GA.charifyval_(p.m(11), 'e1^e2', s, pl);
-		    if CGA.noni_basis()
+		    if CGA.noni_group()
 		      [s, pl] = GA.charifyval_(p.m(13), 'e1^ni', s, pl);
                       [s, pl] = GA.charifyval_(p.m(15), 'e2^ni', s, pl);
                       [s, pl] = GA.charifyval_(p.m(16), 'e3^ni', s, pl);
@@ -1322,7 +1416,7 @@ R = [
 		      end
 		    end
 
-		    if CGA.noni_basis()
+		    if CGA.noni_group()
                       [s, pl] = GA.charifyval_(p.m(20), 'no^e2^e3', s, pl);
                       [s, pl] = GA.charifyval_(-p.m(18), 'no^e3^e1', s, pl);
                       [s, pl] = GA.charifyval_(p.m(17), 'no^e1^e2', s, pl);
@@ -1372,7 +1466,7 @@ R = [
 		      end
 		    end
                 else
-		  if CGA.noni_basis()
+		  if CGA.noni_group()
                     [s, pl] = GA.charifyval_(p.m(11), 'e1^e2', s, pl);
                     [s, pl] = GA.charifyval_(p.m(12), 'e1^e3', s, pl);
                     [s, pl] = GA.charifyval_(p.m(13), 'e1^ni', s, pl);
@@ -1427,7 +1521,7 @@ R = [
                 if GA.compact_pseudoscalar()
                     [s, pl] = GA.charifyval_(p.m(32), 'I5', s, pl);
                 else
-		    if CGA.noni_basis()
+		    if CGA.noni_group()
                       [s, pl] = GA.charifyval_(p.m(32), 'no^e1^e2^e3^ni', s, pl);
 		    else
                       [s, pl] = GA.charifyval_(-p.m(32), 'e1^e2^e3^e4^e5', s, pl);
@@ -1435,7 +1529,9 @@ R = [
                 end
             end
 
-	    if CGA.noni_basis() && CGA.e0ei_basis()
+	    if CGA.eoei_basis()
+ 	      s = strrep(strrep(s,'no','eo'),'ni','ei');
+	    elseif CGA.e0ei_basis()
  	      s = strrep(strrep(s,'no','e0'),'ni','ei');
             end
             if strcmp(pl, ' ')
