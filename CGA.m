@@ -198,6 +198,50 @@ classdef CGA < GA
         end
 
 
+        function val = e0ei_basis(newval, surpress_output)
+	    %E0EI_BASIS - Set/retrieve the E0EI_output setting.
+            %   The E0EI_BASIS setting is either true or false.
+            %   When set to true, CGA elements are represented by the basis:
+            %   1, e0, e1, e2, e3, ei, etc.
+            %   When set to false, CGA elements are represented by the basis
+            %   dependent on the noni_basis setting.
+            %   If no argument is provided, E0EI_BASIS returns the current
+	    %   value of the E0EI_BASIS setting.
+
+            arguments
+                newval = [];
+                surpress_output = false;
+            end
+
+            persistent currentval;
+            
+            % By default the e0ei_basis setting is set to true
+            if isempty(currentval)
+                currentval = true;
+            end
+
+            if isempty(newval)
+                % User is trying to retrieve the current value
+                val = currentval;
+            else
+                % User is trying to set the value
+                if islogical(newval)
+		    if newval
+		      CGA.noni_basis(true,true);
+		    else
+		      CGA.noni_basis(false,true);
+		    end
+                    currentval = newval;
+
+                    if ~surpress_output
+                        disp("   e0ei_basis set to " + currentval)
+                    end
+                else
+                    error('e0ei_basis must have value true or false.')
+                end
+            end
+        end
+
         function val = noni_basis(newval, surpress_output)
             %NONI_BASIS - Set/retrieve the NONI_output setting.
             %   The NONI_BASIS setting is either true or false.
@@ -217,7 +261,7 @@ classdef CGA < GA
             
             % By default the noni_basis setting is set to true
             if isempty(currentval)
-                currentval = true;
+                currentval = false;
             end
 
             if isempty(newval)
@@ -226,6 +270,9 @@ classdef CGA < GA
             else
                 % User is trying to set the value
                 if islogical(newval)
+		    if newval
+		      CGA.e0ei_basis(false,true);
+		    end
                     currentval = newval;
                     if ~surpress_output
                         disp("   noni_basis set to " + currentval)
@@ -1387,7 +1434,10 @@ R = [
 		    end
                 end
             end
-            
+
+	    if CGA.noni_basis() && CGA.e0ei_basis()
+ 	      s = strrep(strrep(s,'no','e0'),'ni','ei');
+            end
             if strcmp(pl, ' ')
                 s = '     0';
             end
