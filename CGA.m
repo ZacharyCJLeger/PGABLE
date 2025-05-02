@@ -1464,14 +1464,7 @@ R = [
 	      end
 	    else % increasing_order
 	      if CGA.noni_group()
-	            if 0
-                    [s, pl] = GA.charifyval_(p.m(11), 'e1^e2', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(12), 'e1^e3', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(13), 'e1^ni', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(14), 'e2^e3', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(15), 'e2^ni', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(16), 'e3^ni', s, pl);
-		    end
+
                     [s, pl] = GA.charifyval_(p.m(17), 'no^e1^e2', s, pl);
                     [s, pl] = GA.charifyval_(p.m(18), 'no^e1^e3', s, pl);
                     [s, pl] = GA.charifyval_(p.m(19), 'no^e1^ni', s, pl);
@@ -1489,16 +1482,7 @@ R = [
                     [s, pl] = GA.charifyval_(p.m(30), 'no^e2^e3^ni', s, pl);
                     [s, pl] = GA.charifyval_(p.m(31), 'e1^e2^e3^ni', s, pl);
 	        else
-		    % Need to update the following
-		    if 0
-		    [s, pl] = GA.charifyval_(p.m(11), 'e1^e2', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(12), 'e1^e3', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(13), 'e1^ni', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(14), 'e2^e3', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(15), 'e2^ni', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(16), 'e3^ni', s, pl);
-		    end
-
+                    [s, pl] = GA.charifyval_(p.m(23), 'e1^e2^e3', s, pl);
 	            if p.m(17)~=0 || p.m(24)~=0
                       [s, pl] = GA.charifyval_(0.5*p.m(17)-p.m(24), 'e1^e2^e4', s, pl);
 	            end
@@ -1509,9 +1493,8 @@ R = [
 	            if p.m(20)~=0 || p.m(26)~=0
                       [s, pl] = GA.charifyval_(0.5*p.m(20)-p.m(26), 'e2^e3^e4', s, pl);
 	            end
-                    [s, pl] = GA.charifyval_(p.m(21), 'no^e2^ni', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(22), 'no^e3^ni', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(23), 'e1^e2^e3', s, pl);
+                    [s, pl] = GA.charifyval_(-p.m(21), 'e2^e4^e5', s, pl);
+                    [s, pl] = GA.charifyval_(-p.m(22), 'e3^e4^e5', s, pl);
 
 	            if p.m(17)~=0 || p.m(24)~=0
                       [s, pl] = GA.charifyval_(0.5*p.m(17)+p.m(24), 'e1^e2^e5', s, pl);
@@ -1523,11 +1506,15 @@ R = [
                       [s, pl] = GA.charifyval_(0.5*p.m(20)+p.m(26), 'e2^e3^e5', s, pl);
 	            end
 
-                    [s, pl] = GA.charifyval_(p.m(27), 'no^e1^e2^e3', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(28), 'no^e1^e2^ni', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(29), 'no^e1^e3^ni', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(30), 'no^e2^e3^ni', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(31), 'e1^e2^e3^ni', s, pl);
+	            if p.m(27)~=0 || p.m(31)~=0
+                      [s, pl] = GA.charifyval_(-0.5*p.m(27)-p.m(31), 'e1^e2^e3^e4', s, pl);
+		    end
+                    [s, pl] = GA.charifyval_(p.m(28), 'e1^e2^e4^e5', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(29), 'e1^e3^e4^e5', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(30), 'e2^e3^e4^e5', s, pl);
+	            if p.m(27)~=0 || p.m(31)~=0
+                      [s, pl] = GA.charifyval_(-0.5*p.m(27)+p.m(31), 'e1^e2^e3^e5', s, pl);
+		    end
 	        end
             end
 
