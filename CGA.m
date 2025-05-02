@@ -1347,7 +1347,7 @@ R = [
 	       [s, pl] = GA.charifyval_(0.5*p.m(2)+p.m(6), 'e5', s, pl);
 	    end
 
-	    
+	    % 2-blades aren't too bad
 	    if CGA.noni_group()
 	        [s, pl] = GA.charifyval_(p.m(7), 'no^e1', s, pl);
                 [s, pl] = GA.charifyval_(p.m(8), 'no^e2', s, pl);
@@ -1368,7 +1368,7 @@ R = [
               end
 	    end
 
-            if GA.compact_notation()
+            if 0&&GA.compact_notation()
                 if ~CGA.increasing_order()
                     [s, pl] = GA.charifyval_(p.m(14), 'e23', s, pl);
                     [s, pl] = GA.charifyval_(-p.m(12), 'e31', s, pl);
@@ -1532,11 +1532,36 @@ R = [
                 end
             end
 
-	    if CGA.eoei_basis()
- 	      s = strrep(strrep(s,'no','eo'),'ni','ei');
-	    elseif CGA.e0ei_basis()
- 	      s = strrep(strrep(s,'no','e0'),'ni','ei');
-            end
+	    % Here we convert to compact_notation and/or a non-no,ni basis
+	    if GA.compact_notation()
+	       if ~CGA.noni_group() 
+	         s = strrep(s,'^e','');
+	       else
+	         if CGA.noni_basis()
+		   s = strrep(s,'^e','');
+		   s = strrep(s,'no1','noe1');
+		   s = strrep(s,'no2','noe2');
+		   s = strrep(s,'no3','noe3');
+		   s = strrep(s,'^ni','ni');
+		 elseif CGA.e0ei_basis()
+		   s = strrep(s,'no','e0');
+		   s = strrep(s,'ni','ei');
+		   s = strrep(s,'^e','');
+		 elseif CGA.eoei_basis()
+		   s = strrep(s,'no','eo');
+		   s = strrep(s,'ni','ei');
+		   s = strrep(s,'^e','');
+		 else
+		   error('CGA.char: unknown basis');
+		 end
+	       end
+	    else
+	      if CGA.eoei_basis()
+ 	        s = strrep(strrep(s,'no','eo'),'ni','ei');
+	      elseif CGA.e0ei_basis()
+ 	        s = strrep(strrep(s,'no','e0'),'ni','ei');
+              end
+	    end
             if strcmp(pl, ' ')
                 s = '     0';
             end
