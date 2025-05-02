@@ -1324,12 +1324,14 @@ R = [
 
             pl = '';
             s = '';
-            
+
+	    % Constant is same in all bases, notations, orderings
             if p.m(1) ~= 0
                 s = [s pl num2str(p.m(1))];
                 pl = ' + ';
             end
 
+	    % 1-blades are straightforward
 	    if CGA.noni_group() 
                [s, pl] = GA.charifyval_(p.m(2), 'no', s, pl);
 	    end
@@ -1345,6 +1347,7 @@ R = [
 	       [s, pl] = GA.charifyval_(0.5*p.m(2)+p.m(6), 'e5', s, pl);
 	    end
 
+	    
 	    if CGA.noni_group()
 	        [s, pl] = GA.charifyval_(p.m(7), 'no^e1', s, pl);
                 [s, pl] = GA.charifyval_(p.m(8), 'no^e2', s, pl);
@@ -1367,14 +1370,14 @@ R = [
 
             if GA.compact_notation()
                 if ~CGA.increasing_order()
-                    [s, pl] = GA.charifyval_(p.m(11), 'e23', s, pl);
-                    [s, pl] = GA.charifyval_(-p.m(10), 'e31', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(9), 'e12', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(14), 'e23', s, pl);
+                    [s, pl] = GA.charifyval_(-p.m(12), 'e31', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(11), 'e12', s, pl);
 
-                    [s, pl] = GA.charifyval_(-p.m(14), 'e032', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(13), 'e013', s, pl);
-                    [s, pl] = GA.charifyval_(-p.m(12), 'e021', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(15), 'e123', s, pl);
+                    [s, pl] = GA.charifyval_(-p.m(20), 'e032', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(18), 'e013', s, pl);
+                    [s, pl] = GA.charifyval_(-p.m(17), 'e021', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(23), 'e123', s, pl);
                 else 
                     [s, pl] = GA.charifyval_(p.m(11), 'e12', s, pl);
                     [s, pl] = GA.charifyval_(p.m(12), 'e13', s, pl);
@@ -1384,10 +1387,10 @@ R = [
                       [s, pl] = GA.charifyval_(0.5*p.m(7)-1*p.m(13), 'e1^e5', s, pl);
 		    end
 
-                    [s, pl] = GA.charifyval_(p.m(12), 'e012', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(13), 'e013', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(14), 'e023', s, pl);
-                    [s, pl] = GA.charifyval_(p.m(15), 'e123', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(17), 'e012', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(18), 'e013', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(20), 'e023', s, pl);
+                    [s, pl] = GA.charifyval_(p.m(23), 'e123', s, pl);
                 end
 
                 if GA.compact_pseudoscalar()
