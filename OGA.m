@@ -124,7 +124,7 @@ classdef OGA < GA
             
             % By default the increasing_order setting is set to false
             if isempty(currentval)
-                currentval = true;
+                currentval = false;
             end
 
             if isempty(newval)
