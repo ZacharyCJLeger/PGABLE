@@ -1,4 +1,4 @@
-function e = e01234(model)
+function e = e12345(model)
     % e0123
 
     % PGABLE, Copyright (c) 2024, University of Waterloo
@@ -16,11 +16,11 @@ function e = e01234(model)
     
     switch model
         case "CGA"
-            e = CGA(0, 0, 0, 0, 0, 1);
+            e = CGA(0, 0, 0, 0, 0, -1);
         case "PGA"
-            error('Cannot create e01234 element as it does not exist in the PGA model.')
+            error('Cannot create e12345 element as it does not exist in the PGA model.')
         case "OGA"
-            error('Cannot create e01234 element as it does not exist in the OGA model.')
+            error('Cannot create e12345 element as it does not exist in the OGA model.')
         otherwise
             error('Cannot create element due to being in an implemented GA model.')
     end
