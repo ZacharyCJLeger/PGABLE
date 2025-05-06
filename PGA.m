@@ -771,6 +771,14 @@ classdef PGA < GA
                        A.m(16));
         end
 
+        function [scalar_nz, vector_nz, bivector_nz, trivector_nz, fourvector_nz] = grade_status_(A)
+            scalar_nz = (A.m(1) ~= 0);
+            vector_nz = (A.m(2) ~= 0 || A.m(3) ~= 0 || A.m(4) ~= 0 || A.m(5) ~= 0);
+            bivector_nz = (A.m(6) ~= 0 || A.m(7) ~= 0 || A.m(8) ~= 0 || A.m(9) ~= 0 || A.m(10) ~= 0 || A.m(11) ~= 0);
+            trivector_nz = (A.m(12) ~= 0 || A.m(13) ~= 0 || A.m(14) ~= 0 || A.m(15) ~= 0);
+            fourvector_nz = (A.m(16) ~= 0);
+        end
+
         function R = grade_(A, n)
             if nargin == 1 || n == -1
                 [scalar_nz, vector_nz, bivector_nz, trivector_nz, fourvector_nz] = grade_status_(A);
