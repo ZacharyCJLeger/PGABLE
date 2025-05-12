@@ -1,4 +1,17 @@
 function genInnerTable
+% GENINNERTABLE
+%
+% Generate one of the three inner product matrices.
+% The code is based on the formulas in "The Products of Geometric Algebra",
+% by Leo Dorst.  Applications of Geometric Algebra in Computer Science and Engineering, Dorst, Doran, Lasenby (eds), Birkhauser, 2002.
+
+% The approach is to use one of (2.6), (2.7), or (2.9) for computing
+% the inner product (computeInner).  We then put an entry into the
+% Matrix for the product (eg, to compute A . B, we expand A into a matrix
+% that will be used to multiple B).  See The Making of GABLE for the
+% relevant formula (pg 4, formula (1.1)).  But to use the formula,
+% we have to do a reverse lookup of the inner product into a list of
+% basis functions.
     
 IPA = zeros(32);
 
