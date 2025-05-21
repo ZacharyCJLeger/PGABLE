@@ -229,6 +229,7 @@ classdef CGA < GA
 		      CGA.noni_basis(false,true);
 		      CGA.e0ei_basis(false,true);
 		      CGA.eoei_basis(false,true);
+		      CGA.epem_basis(false,true);
 		    end
                     currentval = newval;
 
@@ -237,6 +238,51 @@ classdef CGA < GA
                     end
                 else
                     error('e4e5_basis must have value true or false.')
+                end
+            end
+        end
+
+        function val = epem_basis(newval, surpress_output)
+	    %EPEM_BASIS - Set/retrieve the E4E5_output setting.
+            %   The EPEM_BASIS setting is either true or false.
+            %   When set to true, CGA elements are represented by the basis:
+            %   1, e1, e2, e3, ep, em, etc.
+            %   When set to false, CGA elements are represented by the basis
+            %   dependent on the noni_basis setting.
+            %   If no argument is provided, EPEM_BASIS returns the current
+	    %   value of the EPEM_BASIS setting.
+
+            arguments
+                newval = [];
+                surpress_output = false;
+            end
+
+            persistent currentval;
+            
+            % By default the epem_basis setting is set to true
+            if isempty(currentval)
+                currentval = true;
+            end
+
+            if isempty(newval)
+                % User is trying to retrieve the current value
+                val = currentval;
+            else
+                % User is trying to set the value
+                if islogical(newval)
+		    if newval
+		      CGA.noni_basis(false,true);
+		      CGA.e0ei_basis(false,true);
+		      CGA.eoei_basis(false,true);
+		      CGA.e4e5_basis(false,true);
+		    end
+                    currentval = newval;
+
+                    if ~surpress_output
+                        disp("   epem_basis set to " + currentval)
+                    end
+                else
+                    error('epem_basis must have value true or false.')
                 end
             end
         end
@@ -273,6 +319,7 @@ classdef CGA < GA
 		      CGA.noni_basis(false,true);
 		      CGA.e0ei_basis(false,true);
 		      CGA.e4e5_basis(false,true);
+		      CGA.epem_basis(false,true);
 		    end
                     currentval = newval;
 
@@ -317,6 +364,7 @@ classdef CGA < GA
 		      CGA.noni_basis(false,true);
 		      CGA.eoei_basis(false,true);
 		      CGA.e4e5_basis(false,true);
+		      CGA.epem_basis(false,true);
 		    end
                     currentval = newval;
 
@@ -366,6 +414,7 @@ classdef CGA < GA
 		      CGA.e0ei_basis(false,true);
 		      CGA.eoei_basis(false,true);
 		      CGA.e4e5_basis(false,true);
+		      CGA.epem_basis(false,true);
 		    end
                     currentval = newval;
                     if ~surpress_output
@@ -1348,7 +1397,7 @@ R = [
 
 
 	    % 2-blades aren't too bad
-	    if CGA.e4e5_basis()
+	    if ~CGA.noni_group() %CGA.e4e5_basis()
 	       if CGA.increasing_order()
                  [s, pl] = GA.charifyval_(p.m(11), 'e1^e2', s, pl);
                  [s, pl] = GA.charifyval_(p.m(12), 'e1^e3', s, pl);
@@ -1556,6 +1605,8 @@ R = [
  	        s = strrep(strrep(s,'no','eo'),'ni','ei');
 	      elseif CGA.e0ei_basis()
  	        s = strrep(strrep(s,'no','e0'),'ni','ei');
+	      elseif CGA.epem_basis()
+ 	        s = strrep(strrep(s,'e4','ep'),'e5','em');
               end
 	    end
             if strcmp(pl, ' ')
