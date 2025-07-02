@@ -33,7 +33,7 @@ classdef OGA < GA
     %         (See also GAScene for more information on draw calls)
     %         • grade(A, g)                   to select the grade-g component of a multivector
     %         • isgrade(A, g)                 to determine if a multivector is of grade g
-    %         • hmap(A, g)                    negate the grade-g's components of a multivector
+    %         • hsmap(A, g)                   negate the grade-g's components of a multivector
     %      There are also more advanced operations:
     %         • sqrt(A)                       to compute the square root
     %         • glog(A)                       to compute the geometric log
@@ -512,7 +512,7 @@ classdef OGA < GA
             end
         end
 
-        function R = hmap_(A, n)
+        function R = hsmap_(A, n)
 	    R=A;
 	    if sum(n == 0)>0
 		R.m(1) = -A.m(1); 

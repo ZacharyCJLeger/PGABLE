@@ -37,6 +37,8 @@ classdef CGA < GA
     %         (See also GAScene for more information on draw calls)
     %         • grade(A, g)                   select the grade-g component of a multivector
     %         • isgrade(A, g)                 determine if a multivector is of grade g
+    %         �~@� hsmap(A, g)                negate the grade-g's components of a multivector
+
     %      There are functions for constructing some objects directly:
     %         •gapoint(x,y,z)                 construct a CGA point
     %         •galine(l,p)                    construct a line with direction
@@ -1270,7 +1272,7 @@ R = [
             end
         end
 
-       function R = hmap_(A, n)
+       function R = hsmap_(A, n)
             R=A;
             if sum(n == 0)>0
                 R.m(1) = -A.m(1);
