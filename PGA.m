@@ -40,6 +40,7 @@ classdef PGA < GA
     %         • pclf                          clear all objects including vanishing objects
     %         • grade(A, g)                   select the grade-g component of a multivector
     %         • isgrade(A, g)                 determine if a multivector is of grade g
+    %         • hmap(A, g)                    negate the grade-g's components of a multivector
     %      There are functions for constructing some objects directly:
     %         •gapoint(x,y,z)                 construct a PGA point
     %         •galine(l,p)                    construct a line with direction
@@ -803,6 +804,37 @@ classdef PGA < GA
                 end
             end
         end
+
+	function R = hmap_(A, n)
+            R=A;
+            if sum(n == 0)>0
+                R.m(1) = -A.m(1);
+            end
+            if sum(n == 1)>0
+                R.m(2) = -A.m(2);
+                R.m(3) = -A.m(3);
+                R.m(4) = -A.m(4);
+                R.m(5) = -A.m(5);
+            end
+            if sum(n == 2)>0
+                R.m(6) = -A.m(6);
+                R.m(7) = -A.m(7);
+                R.m(8) = -A.m(8);
+                R.m(9) = -A.m(9);
+                R.m(10) = -A.m(10);
+                R.m(11) = -A.m(11);
+            end
+            if sum(n == 3)>0
+                R.m(12) = -A.m(12);
+                R.m(13) = -A.m(13);
+                R.m(14) = -A.m(14);
+                R.m(15) = -A.m(15);
+            end
+            if sum(n == 4)>0
+                R.m(16) = -A.m(16);
+            end
+        end
+
 
         function b = isgrade_(A, g)
             if g == 0

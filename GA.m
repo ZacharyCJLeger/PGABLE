@@ -873,6 +873,19 @@ classdef (Abstract) GA
             b = isgrade_(A, g);
         end
 
+        function R = hmap(A, n)
+            %HMAP - The Hitzer map.  Return A with its grade 'n' elements
+	    %   negated.
+
+            arguments
+                A GA;
+                n (:, 1) int32 = -1;
+            end
+
+            R = hmap_(A, n);
+        end
+
+
         % Coordinates
 
         function r = getx(A)
@@ -1034,6 +1047,7 @@ classdef (Abstract) GA
         glog_(A);
         grade_(A, n);
         gradeinvolution_(A);
+        hmap_(A, n);
         hodgedual_(A);
         inner_(A, B);
         inverse_(A);

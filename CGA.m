@@ -1270,6 +1270,32 @@ R = [
             end
         end
 
+       function R = hmap_(A, n)
+            R=A;
+            if sum(n == 0)>0
+                R.m(1) = -A.m(1);
+            end
+            if sum(n == 1)>0
+                R.m(2) = -A.m(2);
+                R.m(3) = -A.m(3);
+                R.m(4) = -A.m(4);
+                R.m(5) = -A.m(5);
+                R.m(6) = -A.m(6);
+            end
+            if sum(n == 2)>0
+		R.m(7:16) = -[A.m(7); A.m(8); A.m(9); A.m(10); A.m(11); A.m(12); A.m(13); A.m(14); A.m(15); A.m(16)];
+            end
+            if sum(n == 3)>0
+		R.m(17:26) = -[A.m(17); A.m(18); A.m(19); A.m(20); A.m(21); A.m(22); A.m(23); A.m(24); A.m(25); A.m(26)];
+            end
+            if sum(n == 4)>0
+		R.m(27:31) = [A.m(27); A.m(28); A.m(29); A.m(30); A.m(31)];
+            end
+            if sum(n == 5)>0
+                R.m(32) = -A.m(32);
+            end
+        end
+
         function b = isgrade_(A, g)
             if g == 0
                 b = GAisa_(A, "scalar");
