@@ -37,8 +37,8 @@ classdef CGA < GA
     %         (See also GAScene for more information on draw calls)
     %         • grade(A, g)                   select the grade-g component of a multivector
     %         • isgrade(A, g)                 determine if a multivector is of grade g
-    %         �~@� hsmap(A, g)                negate the grade-g's components of a multivector
-
+    %         • hsmap(A, g)                negate the grade-g's components of a multivector
+    %
     %      There are functions for constructing some objects directly:
     %         •gapoint(x,y,z)                 construct a CGA point
     %         •galine(l,p)                    construct a line with direction
@@ -47,6 +47,12 @@ classdef CGA < GA
     %         • sqrt(A)                       compute the square root
     %         • glog(A)                       compute the geometric log
     %         • gexp(A)                       compute the geometric exponent
+    %      You can also switch the basis of representation:
+    %         • CGA.noni_basis(true)
+    %         • CGA.e0ei_basis(true)
+    %         • CGA.eoei_basis(true)
+    %         • CGA.e4e5_basis(true)
+    %         • CGA.epem_basis(true)
     %
     %   See also GA, OGA, PGA, GAScene.
 
@@ -216,9 +222,9 @@ classdef CGA < GA
 
             persistent currentval;
             
-            % By default the e4e5_basis setting is set to true
+            % By default the e4e5_basis setting is set to false
             if isempty(currentval)
-                currentval = true;
+                currentval = false;
             end
 
             if isempty(newval)
@@ -258,12 +264,12 @@ classdef CGA < GA
                 newval = [];
                 surpress_output = false;
             end
-
+ 
             persistent currentval;
             
-            % By default the epem_basis setting is set to true
+            % By default the epem_basis setting is set to false
             if isempty(currentval)
-                currentval = true;
+                currentval = false;
             end
 
             if isempty(newval)
@@ -306,9 +312,9 @@ classdef CGA < GA
 
             persistent currentval;
             
-            % By default the eoei_basis setting is set to true
+            % By default the eoei_basis setting is set to false
             if isempty(currentval)
-                currentval = true;
+                currentval = false;
             end
 
             if isempty(newval)
@@ -351,9 +357,9 @@ classdef CGA < GA
 
             persistent currentval;
             
-            % By default the e0ei_basis setting is set to true
+            % By default the e0ei_basis setting is set to false
             if isempty(currentval)
-                currentval = true;
+                currentval = false;
             end
 
             if isempty(newval)
@@ -401,7 +407,7 @@ classdef CGA < GA
 
             persistent currentval;
             
-            % By default the noni_basis setting is set to true
+            % By default the noni_basis setting is set to false
             if isempty(currentval)
                 currentval = false;
             end
@@ -1398,6 +1404,12 @@ R = [
                 return;
             end
 
+	    % Hack to get a default basis
+	    if CGA.noni_basis()+CGA.e0ei_basis()+CGA.eoei_basis()+CGA.e4e5_basis()+CGA.epem_basis() ~= 1
+                 CGA.e4e5_basis(true,true);
+	    end
+
+	    
             pl = '';
             s = '';
 
