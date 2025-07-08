@@ -352,12 +352,28 @@ classdef OGA < GA
         end
 
         function R = inverse_(A)
+	  if 0
             rm = productleftexpand_(A);
             if rcond(rm) <= eps
                 error('Inverse of %s does not exist.', char(A))
             end
 
-           R = OGA(rm\OGA(1).m);
+            R = OGA(rm\OGA(1).m);
+	  else
+            % This version of the inverse is from a Hitzer-Sangwine paper,
+            % although see Dimiter Prodanov, Computation of Minimal
+            % Polynomials and Multivector Inverses in Non-Degenerate Clifford
+            % Algebras, Mathematics 2025, 13, 110,
+            % https://doi.org/10.3390/math13071106
+            % for a bit more direct formula (21)
+            numer = conjugate(A)*gradeinvolution(A)*reverse(A);
+            denom = A*conjugate(A)*gradeinvolution(A)*reverse(A);
+            % Shouldn't need to do the grade test, but just in case
+            if grade(zeroepsilons(denom))~=0 || norm(denom) <= eps
+                error('Inverse of %s does not exist.', char(A))
+            end
+            R = numer*(1/denom.double());
+          end
         end
 
         function R = divide_(A, B)
