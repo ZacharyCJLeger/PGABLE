@@ -372,7 +372,7 @@ classdef OGA < GA
             if grade(zeroepsilons(denom))~=0 || norm(denom) <= eps
                 error('Inverse of %s does not exist.', char(A))
             end
-            R = numer*(1/denom.double());
+            R = numer*(1/denom.m(1));
           end
         end
 

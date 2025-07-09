@@ -669,9 +669,10 @@ classdef PGA < GA
 	    denom = (A*conjugate(A))*hsmap(A*conjugate(A),[3,4]);
 	    % Shouldn't need to do the grade test, but just in case
             if grade(zeroepsilons(denom))~=0 || norm(denom) <= eps
+		    denom
                 error('Inverse of %s does not exist.', char(A))
             end
-	    R = numer*(1/denom.double());
+	    R = numer*(1/denom.m(1));
 	end
         end
 
