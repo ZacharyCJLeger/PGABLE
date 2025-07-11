@@ -1909,7 +1909,6 @@ R = [
                 end
                 %A = (1./norm(A))*A
 
-
 	    argsize = size(varargin, 2);
 	    if argsize == 1
 	       if isa(varargin{1}, "char")
@@ -1940,7 +1939,12 @@ R = [
                 %r = sqrt(cpsq-2*E12I/nz)
         %		%r = sqrt(-1/sqrt(norm(A))*double((dual(A)*dual(A))))
                 % Works for a sphere...
-                r = sqrt(-1*double(1./double((A^ni)*(A^ni)) * (A*A)));
+
+		% Troubles with epsilons
+                temp1 = ((A^ni)*(A^ni));
+		temp2 = 1./temp1.m(1) * (A*A);
+		r = sqrt(-1*temp2.m(1));
+                %r = sqrt(-1*double(zeroepsilons(1./double(zeroepsilons((A^ni)*(A^ni))) * (A*A))));
 		isImaginary=0;
 		if ( imag(r) ~= 0 )
 		  r = imag(r);
@@ -2027,7 +2031,6 @@ R = [
     %                end
 
             elseif GAisa(A, 'plane')
-
                 % Don't worry about dual planes for now
                 if isgrade(A,4)
                     A = dual(A);
@@ -2071,7 +2074,7 @@ R = [
                 pgaA = support_vec.e1coeff()*e1(PGA) +...
                 support_vec.e2coeff()*e2(PGA) +...
                 support_vec.e3coeff()*e3(PGA) -...
-                delta*e0(PGA)
+                delta*e0(PGA);
                 h = PGABLEDraw.pointingplaneC(pgaA, pgaoffset, updated_varargin{:});
                 GAScene.addstillitem(GASceneStillItem(A, h));
             else
