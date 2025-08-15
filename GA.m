@@ -268,6 +268,7 @@ classdef (Abstract) GA
             %      OGA: I3 := e1^e2^e3
             %      PGA: I4 := e0^e1^e2^e3
             %      CGA: I5 := no^e1^e2^e3^ni
+	    %   although in some models, you can select the pseudoscalar
             %   When set to false, this notation is not used.
             %   If no argument is provided, COMPACT_PSEUDOSCALAR returns the current value of the COMPACT_PSEUDOSCLAR setting.
             %

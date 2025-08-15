@@ -668,7 +668,8 @@ classdef PGA < GA
 	    numer = conjugate(A)*hsmap(A*conjugate(A),[3,4]);
 	    denom = (A*conjugate(A))*hsmap(A*conjugate(A),[3,4]);
 	    % Shouldn't need to do the grade test, but just in case
-            if grade(zeroepsilons(denom))~=0 || norm(denom) <= eps
+            %if grade(zeroepsilons(denom))~=0 || norm(denom) <= eps
+            if  norm(denom) <= eps
 		    denom
                 error('Inverse of %s does not exist.', char(A))
             end
@@ -1315,6 +1316,16 @@ classdef PGA < GA
                 error('Error is not a point, line, or plane. PGA cannot draw it.');
             end
         end
+
+	function R = lcomp(A)
+	%LCOMP-the left complement of Lengyel
+	  R = hodgedual_(A);
+	end
+
+	function R = rcomp(A)
+	%RCOMP-the right complement of Lengyel
+	  R = inversehodgedual_(A);
+	end
 
         function R = euclidean(A)
             %EUCLIDEAN - Returns the euclidean portion of the multivector.

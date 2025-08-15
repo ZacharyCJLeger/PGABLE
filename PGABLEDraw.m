@@ -550,6 +550,7 @@ classdef PGABLEDraw
             end
         end
 
+
         function h = hairyball(TV, offset, varargin)
             %HAIRYBALL - Draws a ball with hairs pointing inward or outward.
 

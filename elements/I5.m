@@ -14,5 +14,5 @@ function e = I5(model)
     % This function returns the element no^e1^e2^e3^ni, which is the pseudoscalar of CGA.
 
     % TODO: Perhaps throw an error when using this in a non-CGA context.
-    e = -e12345(model);
+    e = -1*CGA.I5sign()*e12345(model);
 end

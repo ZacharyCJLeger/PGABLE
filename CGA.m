@@ -41,8 +41,8 @@ classdef CGA < GA
     %
     %      There are functions for constructing some objects directly:
     %         •gapoint(x,y,z)                 construct a CGA point
-    %         •galine(l,p)                    construct a line with direction
-    %         •galine(l1,l2,l3, p1,p2,p3)     with direction l through point p
+    %         •galine(l,p)                    construct a line with direction l
+    %         •galine(l1,l2,l3, p1,p2,p3)       through point p
     %      There are also more advanced operations:
     %         • sqrt(A)                       compute the square root
     %         • glog(A)                       compute the geometric log
@@ -53,8 +53,9 @@ classdef CGA < GA
     %         • CGA.eoei_basis(true)
     %         • CGA.e4e5_basis(true)
     %         • CGA.epem_basis(true)
+    %         • CGA.SetI5(A)                  set the pseudo-scalar to A
     %
-    %   See also GA, OGA, PGA, GAScene.
+    %   See also GA, OGA, PGA, GAScene.  In particular, see GA.settings
 
     % PGABLE, Copyright (c) 2025, University of Waterloo
     % Copying, use and development for non-commercial purposes permitted.
@@ -132,6 +133,57 @@ classdef CGA < GA
             S4 = signature4;
         end
 
+	function val = SetI5(newval)
+	    %SETI5 - Set the pseudoscalar to use for I5
+	    %  Argument should be the form of the pseudo-scalar
+	    %  that you want I5 to represent.  This sets the sign
+	    %  of the pseudo-scalar.
+
+	    arguments
+                newval = [];
+            end
+
+            if isempty(newval)
+                % User is trying to retrieve the current value
+                val = currentval;
+            else
+                % User is trying to set the value
+                if isgrade(newval,5) && norm(newval)==1
+                    CGA.I5sign(newval.m(32));
+		    val = I5;
+                else
+                    error('New value must grade 5 with norm 1.')
+                end
+            end 
+	end
+	
+	function val = I5sign(newval)
+	    %I5SIGN - Set/retreive the sign used for the pseudoscalar
+
+	    arguments
+                newval = [];
+            end
+
+            persistent currentval;
+            
+            if isempty(currentval)
+                currentval = 1;
+            end
+
+            if isempty(newval)
+                % User is trying to retrieve the current value
+                val = currentval;
+            else
+                % User is trying to set the value
+                if isnumeric(newval) && (newval==1 || newval == -1)
+                    currentval = newval;
+                else
+                    error('I5sign must be 1 or -1.')
+                end
+            end 
+      
+	end
+	
         function val = pointsize(newval, surpress_output)
             %POINTSIZE - Set/retreive the POINTSIZE setting.
             %   The POINTSIZE setting is a double indicated the radius of the octahedron
@@ -1200,7 +1252,7 @@ R = [
         % ***** Dual and Reverse*****
 
         function R = dual_(A)
-	    R = -1*leftcontraction(A,I5);
+	    R = -1*leftcontraction(A,CGA.I5sign()*I5);
         end
 
         function R = inversedual_(A)
@@ -1625,7 +1677,7 @@ R = [
             end
 
             if GA.compact_pseudoscalar()
-                [s, pl] = GA.charifyval_(p.m(32), 'I5', s, pl);
+                [s, pl] = GA.charifyval_(CGA.I5sign()*p.m(32), 'I5', s, pl);
             else
 		if CGA.noni_group()
                   [s, pl] = GA.charifyval_(p.m(32), 'no^e1^e2^e3^ni', s, pl);
@@ -1909,13 +1961,13 @@ R = [
                 end
                 %A = (1./norm(A))*A
 
-	    argsize = size(varargin, 2);
-	    if argsize == 1
-	       if isa(varargin{1}, "char")
-	         varargin = ['Color', varargin];
-	       end
-	    end
-	    updated_varargin = PGABLEDraw.defaultvarargin('Color', 'y', varargin{:});
+	    	argsize = size(varargin, 2);
+		if argsize == 1
+		    if isa(varargin{1}, "char")
+	               varargin = ['Color', varargin];
+	            end
+	        end
+	        updated_varargin = PGABLEDraw.defaultvarargin('LineWidth', 2, 'Color', 'y', varargin{:});
 	    
                 nx = EO23; ny = -EO13; nz = EO12;
 
@@ -1948,7 +2000,7 @@ R = [
 		isImaginary=0;
 		if ( imag(r) ~= 0 )
 		  r = imag(r);
-		  isImaginary=1
+		  isImaginary=1;
 		end
 
                 if abs(unx)<=abs(uny) && abs(unx)<=abs(unz)
@@ -1964,18 +2016,32 @@ R = [
                 vvec = 1./norm(vvec)*vvec;
                 wvec = 1./norm(wvec)*wvec;
                 %draw(cp) % for testing
-                ptB = r*vvec;
-                for ii=0:51
-                    ang = ii/50*2*pi;
+		t = (0:pi/24:2*pi);
+                for ii=1:length(t);
+                    ang = t(ii);
                     ptA = r*cos(ang)*vvec + r*sin(ang)*wvec;
-                    if ii ~= 0 && (~isImaginary || mod(ii,2)==0)
-                        plot3([ptB(1)+cpx ptA(1)+cpx], ...
-                            [ptB(2)+cpy ptA(2)+cpy], ...
-                            [ptB(3)+cpz ptA(3)+cpz], 'LineWidth', 2, updated_varargin{:});
-                        hold on;
-                    end
-                    ptB = ptA;
+		    pts{ii} = gapoint(ptA(1)+cpx, ptA(2)+cpy, ptA(3)+cpz);
                 end
+		hold on;
+		if ~isImaginary
+		   h = PGABLEDraw.plotline(pts,updated_varargin{:});
+		else
+		   h = [];
+		   for ii=1:2:length(t)-1
+		     h = [h PGABLEDraw.plotline({pts{ii},pts{ii+1}}, updated_varargin{:})];
+		   end
+		end
+
+		 % Draw the hairs
+           	 for ii=3:4:length(t)-1
+                     p{1} = pts{ii};
+                     %p{2} = 2.5*(pts{ii}-pts{ii-1}) + pts{ii-1};
+		     ang = t(ii-2);
+		     ptB = 1.2*r*cos(ang)*vvec + 1.2*r*sin(ang)*wvec;
+		     p{2} = gapoint(ptB(1)+cpx, ptB(2)+cpy, ptB(3)+cpz);
+                     h = [h PGABLEDraw.plotline({p{2},p{1}}, 'Color', 'k')];
+ 		 end
+		 GAScene.addstillitem(GASceneStillItem(A,h));
             elseif GAisa(A, 'line')
 
                 offset = [];
