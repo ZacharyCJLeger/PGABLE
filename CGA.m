@@ -1252,7 +1252,7 @@ R = [
         % ***** Dual and Reverse*****
 
         function R = dual_(A)
-	    R = -1*leftcontraction(A,CGA.I5sign()*I5);
+	    R = -1*leftcontraction(A,I5);
         end
 
         function R = inversedual_(A)
